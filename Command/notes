@@ -1,0 +1,331 @@
+So we're now going to take a look at the command design pattern and we're going to use the example that
+
+everybody uses when they discussed the command design pattern that is the example of a bank account
+
+that you want to modify.
+
+So let's suppose you have a class called bank account.
+
+You can think of it as a back end class somewhere on the server that you interact with from let's say
+
+a Web page and for a bank account you want to have a starting balance so let's have a construct at where
+
+we'll have a starting balance with a default value of zero.
+
+I'm just going to store the balance and that's pretty much it for our constructor and now what we want
+
+to be able to do with a bank account is we want to be able to deposit some money into the account and
+
+also withdraw some money from the account.
+
+And the question is how do you implement this so I can just go ahead and implement a couple of methods.
+
+So this is easy.
+
+So you if you want to deposit a certain amount what you do is you just take the balance and you incremented
+
+by that amount.
+
+And we might also want to log some things so for example let's say we deposited a certain amount and
+
+the balances now there's that balance now.
+
+So this tells us that we actually did something we can implement the same thing for the withdrawal Let's
+
+actually make it more interesting I'm going to add an overdraft limit to the bank account so here I'm
+
+going to say bank account dot overdraft limit equals let's say minus five hundred is as low as you can
+
+go in which case when you make the withdrawal you can only withdraw until this limit.
+
+So withdrawal amount is going to be a bit more complicated because first of all we have to make sure
+
+that there is enough money in the account.
+
+So if this not balance minus the amount is greater than or equal to the bank account overdraft limit
+
+then you can actually withdraw.
+
+So this way we do this up balance minus equals amount and we're once again going to log something.
+
+So here I'm going to say that we withdrew a certain amount and the balance is now this dull balance.
+
+And there we go.
+
+OK.
+
+So this is the log and.
+
+Well this will do for now let's also implement a two string although not strictly necessary but let's
+
+just do this anyway so here I am going to return balance.
+
+Colon there's no balance.
+
+There we go.
+
+So very simple implementation and now what we can do is we can start operating on the bank account of
+
+course so we can make a bank account.
+
+Let B.A. equals your bank account.
+
+Let's see what the balance of one hundred and you can deposit some money onto it appeared on deposit.
+
+Let's say one hundred dollars and we can log bank accounts like so.
+
+So we run this and as you can see everything is working correctly we deposit 100 and given the starting
+
+balance of 100.
+
+We now have a balance of 200.
+
+So that's all well and good.
+
+But one of the problems that the command pattern is trying to solve is being able to somehow record
+
+the fact that this change took place to record the fact that somebody did in fact deposit a hundred
+
+so that you can audit that information so that you can roll back this deposit later on.
+
+So this is what we're going to implement.
+
+So in addition to having those deposits and withdrawal methods we're also going to have some sort of
+
+a command thing we're going to have a separate class which is going to encapsulate the action of withdrawal
+
+or deposit of a certain amount of money.
+
+So first of all let me defined a type of action that we're going to do.
+
+So here it's just going to be a simple enumeration.
+
+There's going to be deposit just give it the value of one and withdraw the value of two.
+
+So that's our action.
+
+That's what we're going to do.
+
+And then that's actually defined the command.
+
+So let's make a class called bank account command where we'll have the constructor in the constructor
+
+you have to specify a couple of things.
+
+First of all you have to specify the account you want to operate on.
+
+Then you specify the action whether it's a deposit or a withdrawal.
+
+And finally you specify the amount and in the command we simply store all of these.
+
+So we say this dot account equals account.
+
+This dot action equals action based on a mound equals amount.
+
+So that's pretty much it.
+
+And now what we need to be able to do is we need to be able to call this command to invoke this command
+
+in order to make the change actually happen.
+
+So here in a method called call what I'm going to do is I'll first of all take a look at the action
+
+that the user has requested.
+
+Is it a deposit or a withdrawal.
+
+So if it is a deposit of case action deposit.
+
+So if somebody wants to make a deposit then we say this dot account dot deposit this thought amount
+
+that's pretty much it.
+
+Wait.
+
+Which to do that and that's that's all there is to it.
+
+And just break like so in the case of withdrawal.
+
+Then this thought counts don't withdrawal so withdrawal amount.
+
+And once again the break in here.
+
+OK.
+
+So this is the implementation of a just the invocation of the command.
+
+So now what we can do is we can try and actually making those commands and calling them as well so let's
+
+see them the equals new bank account command.
+
+So I'm going to operate on the account.
+
+B.A. the action that I'm going to do is going to be a deposit and I'm going to deposit 50 dollars.
+
+So by the end of it all we should have one hundred and fifty in the bank account.
+
+So I take the command and I call the command and then we can log the bank accounts stay just to see
+
+what we actually got.
+
+And if I run this you can see that the balance is now one hundred and fifty so everything operated correctly.
+
+So this is the implementation of the command design pattern just getting everything just getting the
+
+action itself encapsulated into a separate class and then having some sort of a call method in that
+
+class in order to be able to actually process the command to apply the changes and to get them to to
+
+act upon the bank account.
+
+In this case.
+
+-------------
+
+
+All right.
+
+So now that we've implemented the command design pattern on the bank account let's talk about undo operations
+
+imagine if you want to roll back a command that's being applied to a bank account.
+
+How do you actually do this.
+
+What's the process of doing it.
+
+Well that's exactly what we're going to implement right now.
+
+So we have a bank account command and it has a call.
+
+So what about also adding some sort of method for undoing things undue.
+
+OK.
+
+So the idea here is that you look at the action that was specified and you do the exact opposite in
+
+order to undo the state to reverse the state to the previous state or the bank account.
+
+So we look at this out action.
+
+In actual fact what I'm going to do is just copy this over so we look at the type of action but if we
+
+want to undo a deposit we need to undo this deposit by making a withdrawal.
+
+And if we want to undo a withdrawal we need to do this by making a deposit so I can just try swapping
+
+these over.
+
+So put withdraw here and put a deposit here.
+
+So that is a very crude way of undoing a particular operation.
+
+And surprisingly enough it's actually going to work surprisingly enough.
+
+If I now do see I'm the adult undo here and I print the bank account once again it's going to go back
+
+to a state of 100 dollars.
+
+Let's actually take a look.
+
+So you can see in the end we end up with a balance of 100 dollars but the implementation and I've just
+
+given you is incorrect the implementation is incorrect because it assumes that an operation always succeeds.
+
+It does a rollback of a withdrawal even if the withdrawal actually fails.
+
+So the question is well first of all let me actually show you how it fails.
+
+So we have 100 dollars in the bank account.
+
+Let's imagine I try to withdraw all 150 now I'm going to run this.
+
+You can see that.
+
+Well actually that has to be a withdrawal here.
+
+So action that withdrawal.
+
+Try this again.
+
+OK.
+
+So as you can see we didn't manage to withdraw 150 of the balances now minus 50 because it is within
+
+the overdraft limit so everything is okay.
+
+But if I go here and I change this to six hundred and fifty and I run this one I'm going to have a very
+
+strange kind of thing.
+
+So you can see that we have a balance of 100 and that balance didn't change when we tried to withdraw
+
+over the overdraft limit.
+
+But when we rolled back the entire transaction we actually ended up depositing and fifty and after the
+
+rollback we ended up bizarrely with a state of seven hundred and fifty dollars.
+
+Even though the starting balance was just one hundred.
+
+So that obviously means that we have to somehow track whether a particular command actually succeeded
+
+or not.
+
+So we have to add this additional piece of information.
+
+So going back into the command I'm going to add another flag here called succeeded and I'm going to
+
+set it to false initially.
+
+Now what I'm going to do is because with the draw can fail.
+
+That's the operation that can fail.
+
+I'm going to return either true or false depending on whether it succeeded.
+
+So if it succeeded I'm going to return true.
+
+And if it failed I'm going to return false.
+
+There we go.
+
+Now we can use this information we can use this data to actually make sure that whenever you call the
+
+operation you also save the state.
+
+So in the case of a deposit we know that a deposit always succeeds you can always put money into the
+
+bank account.
+
+So here we say this that succeeded equals true.
+
+But in the case of the withdrawal this depends on the result of the operation.
+
+So this that succeeded equals the result of this dot account withdrawal.
+
+So if we have enough money that's going to be a true if we don't have enough money it's going to be
+
+a false.
+
+Now what we need to be able to do in the undo operation is check this flag.
+
+So if the operation did not succeed we obviously do not try to roll it back.
+
+We simply return because there is no point for us to actually continue with this whole operation in
+
+the first place.
+
+And now what happens if I sort of run this whole thing you can see that now the whole process works
+
+perfectly.
+
+It works just as intended.
+
+So the operation itself didn't succeed and therefore the balance never got altered even after you perform
+
+the undo operation.
+
+So this is an illustration of how you can correctly implement undo operations with a command design
+
+pattern.
+

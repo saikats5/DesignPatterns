@@ -1,0 +1,605 @@
+All right.
+
+We're now going to take a look at the implementation of the interpreter design pattern.
+
+And this lesson is actually split into two parts in the first part.
+
+We're going to talk about the lexical process in the second part.
+
+We're going to talk about the passing process.
+
+So the flexing process is the idea of splitting up the input into separate tokens.
+
+Now you'll see what I mean in just a moment but let me show you the kind of input that we want to interpret.
+
+So let's suppose that the kind of things we want to write and interpret therefore our simple mathematical
+
+expressions.
+
+So you can have for example 13 plus four minus one twelfth plus one.
+
+I'm just going to restrict myself to addition subtraction and parentheses and this is the kind of thing
+
+that you want to actually evaluate turn into some sort of object oriented representation and then may
+
+be printed or just calculate the value.
+
+So the first thing that we're going to do is we're going to split this into separate tokens.
+
+So we're going to have a token for the opening bracket.
+
+We'll have a token for the number for the plus.
+
+Sorry about that for the plus for the four for the closing bracket for the minus and so on and so forth.
+
+So what we're going to get at the end is a set of tokens.
+
+And the process that we're going to be applying to split the input into tokens is called Lexis.
+
+So we'll have a function called Lex where we provide the input and we'll spend this lesson actually
+
+writing this function going through every single character in the whole thing and basically turning
+
+it into something useful.
+
+But first of all we have to set up a couple of data structures for the different token types that you
+
+can encounter as you pass these mathematical strings.
+
+So let's define a type called token type.
+
+And that's just going to have a couple of a couple of members.
+
+So you know what kind of things can you encounter in the mathematical expression you can encounter an
+
+integer.
+
+So just be giving these dummy values here.
+
+You can meet a plus minus a left parentheses
+
+and the right parentheses.
+
+OK so these are the types that you can encounter and the lexical process is actually going to return
+
+you a sequence of tokens and a token type is a combination of the token type enumeration that we've
+
+defined here as well as the text that represents this token so we're going to have a class called token
+
+where in the constructor you specify two things you specify the token type as well as the text of that
+
+token.
+
+So here I'm just going to store both of these text equals text like so we'll have some sort of two string
+
+implementation.
+
+And in the two string implementation what I'm going to do is I'll actually I'll have a couple of bad
+
+quotes around the actual token so I'll have an additional set of backwards here and the in-between those
+
+I'm going to set this up text call output the text of the token so we can see all the tokens kind of
+
+spread out.
+
+So let's with this setup of what we are going to do is we're going to write indexing function which
+
+is going to return the sequence of these token classes.
+
+That's going to return an array of those.
+
+So I'm going to have a function called Lex which takes the textual inputs and then we'll make an empty
+
+array for storing the result.
+
+OK.
+
+So what is the idea.
+
+Well the idea is very simple we just go through every single character inside the input string.
+
+So four letter equals zero eyes less than input length plus plus I.
+
+So we're going to take a look first of all the character which we are on.
+
+So what character are we on right now input.
+
+That position I saw.
+
+There are a couple of options here like it can be a plus for example.
+
+Now if it's a plus or indeed a minus it's actually really easy because we just say resolved the push
+
+and then we construct a new token.
+
+So we make a new token the token type is A plus here.
+
+And the actual text we know to be a plus.
+
+So that's a break.
+
+We're going to do the same thing for minus and opening and closing parentheses because it's all pretty
+
+much the same kind of code.
+
+So I'm just going to modify this so in case of minus it's going to be a minus here and the minus here
+
+and then opening parentheses his LPN and opening parentheses here.
+
+Whoops that's too much and closing parenthesis here would be our per ran right parentheses and closing
+
+here.
+
+So these four cases are fairly easy.
+
+The only case that really remains is the case of passing the numbers because remember a number can take
+
+up more than one character.
+
+You can have 13 which takes up two characters.
+
+So we have to be careful about this.
+
+And that's what I'm going to stick into the default case.
+
+So inside the default case what I'm going to do is I'm going to make a new buffer which is going to
+
+store the all the numbers all the digits of a number and I'll make a buffer make a buffer which is just
+
+going to be an array.
+
+And the first element of the array is going to be the input element where are right now because I'm
+
+assuming it's a number if it's not a plus or minus or one of the parentheses it has to be a number.
+
+So this is going into the array.
+
+First of all and then we'll make a loop.
+
+So I'll make a counter J starting at I plus 1 and J is going to go all the way up until input length.
+
+So we'll go until the end of the the whole string because you know you can have a number that goes up
+
+until the very end.
+
+So plus plus J here.
+
+And what I'm going to do is I'm first of all going to check whether or not the character at position
+
+J is in fact a digit.
+
+So if and here I'm just going to do a very crude way of checking whether it's a digit.
+
+So if this this array actually includes input at position J then we have a digit and we add it to the
+
+buffer so we say buffer dot push input and J.
+
+And another thing we do is not only do we increment the j as we kind of go through this loop but in
+
+addition we increment eyes as well because when we get back to the outer loop we have to continue from
+
+where from the position after all the positions we've already met.
+
+So I do plus less I hear.
+
+So if we don't have a number that means we are done we now have a whole number a whole integer that
+
+we can actually add to the result.
+
+So here we say result the push and we add the new token actually them and new token here.
+
+So the first the first constructor argument to the token is token type Integer because that's what we
+
+have.
+
+And the second is that buffer that we made.
+
+So the buffer obviously is an array.
+
+So we have to join it.
+
+And that way we get the we get the whole thing in the kind of in a single string so to speak.
+
+Okay.
+
+So that is done.
+
+And then of course outputs another break at the end of the default case.
+
+And that's pretty much the Lexington but there's one thing we haven't done yet and that is to return
+
+the result.
+
+So here up here we have the result and after all these four loops we have to return result because otherwise
+
+nothing is going to work.
+
+So now that we have the tokens let's actually output the tokens.
+
+So I'm going to a log and what I'm going to do is I'll just say tokens dots join outputs two spaces
+
+maybe three spaces in here just so you can see this clearly so that's actually run this.
+
+Let's see what we get.
+
+OK.
+
+So as you can see at the moment we have a bug because there is no way it should be 1 3 1 3 4 1 3 4 bla
+
+bla bla bla bla.
+
+So that's a good good kind of indication that that's something obviously went wrong in our code then
+
+we sort of have to go back and figure out what exactly is going on.
+
+What is the deal with all of this.
+
+So let me just check that we're doing everything correctly.
+
+So J is going from my plus one until the input bla bla bla bla bla there is a break here.
+
+I think we forgot to break somewhere but I'm not sure where.
+
+Yeah actually here.
+
+Yeah.
+
+There should be a break here.
+
+So after you're done you should break from this this for loop because it's no longer relevant so let's
+
+run this once again this time round we are finally getting the correct result.
+
+So we have the opening parentheses and 13 plus for closing parentheses and so on and so forth.
+
+So what we've essentially done is we've broken our input we've broken our input string into separate
+
+tokens and because we now have a sequence of tokens we can be we can go through these tokens first to
+
+last and we can effectively turn them into something meaningful like some sort of object oriented representation
+
+of an expression tree because we're dealing with math here and that's what we're going to see in the
+
+next lecture.
+
+---------------
+
+All right.
+
+In the previous lecture we looked at the lecturing process which is a process of turning our input string
+
+which is just a simple numeric expression into a sequence of tokens and now it's time for us to turn
+
+those tokens into some sort of object oriented structure since we're dealing with a mathematical expression
+
+that's going to be effectively an expression tree and there's going to be composed of just two things
+
+we're going to have numbers.
+
+Obviously numbers make up the expression and we're going to have operations such as plus and minus and
+
+so on the parentheses just imply the order in which the tree is composed.
+
+And that's what we're going to see in just a moment.
+
+So we need to create object oriented meaning class related representations of integers as well as a
+
+binary operation so a class integer is actually going to be very simple.
+
+So I'll have a constructed with a value we set this that value equals value.
+
+And that's pretty much it.
+
+That's all that you need for the for the integer to to actually to be used effectively.
+
+So the second thing is a bit more complicated because we need to define a binary operation so a binary
+
+operation is going to have a constructor.
+
+Now in the constructor we'll set a couple of things to null so there's gonna be a type of the binary
+
+operation.
+
+Notice I'm not adding them to the constructor right here I'm not adding any arguments and the reason
+
+for that is that as we are traversing the whole thing we're going to be customizing an existing binary
+
+operation object rather than creating one from scratch.
+
+So I cannot add all the constructors right here right now.
+
+So I just said a few of these to null.
+
+So we'll have a left and right as well.
+
+So just to explain the type of the binary operation can be either addition or subtraction that's actually
+
+added here.
+
+And that operation
+
+equals.
+
+So we'll have just two options addition and subtraction.
+
+So that's that's all that we're going to have.
+
+So that is the type of the operation and then the left and right are respectively the left and right
+
+sides of the expression.
+
+So if we have a plus b then the type is addition left is a and right is B fairly obvious stuff.
+
+Okay.
+
+So that is that but okay let's let's do this for now For now we're not going to evaluate the actual
+
+result so we need to make a new function which is going to pass the expression which is going to turn
+
+the tokens into some sort of object oriented result.
+
+So down here I'll say let past equals pass tokens.
+
+Okay.
+
+And the kind of thing that we want to do is we want to be able to print the expression as well as evaluate
+
+the expression.
+
+So if we log.
+
+So we want to say that input equals and then calculate the value.
+
+So we want to take the past expression and take its value.
+
+So we'll implement value in just a moment but first of all we have to implement the passing itself.
+
+So how do we do this.
+
+Well we're gonna have a function called Pass which takes a bunch of tokens.
+
+Now the result of this passing operation is always going to be a binary operation.
+
+I'm going to assume that at the very top level there's always going to be a binary operation like addition
+
+or subtraction.
+
+So I'm gonna say that result equals new binary operation.
+
+Notice it doesn't have any construct arguments here Remember I mentioned that we're going to customize
+
+this binary operation as we go through the passing process.
+
+Another flag that I'm going to have here is a flag called have a play chess.
+
+This flag determines whether or not we have the left hand side of the expression because when we meet
+
+a new sub expression like let's say you have a binary operation and you're meeting one of its parts
+
+you don't know if it's the left part and needs to be assigned or the right part.
+
+So we're gonna have this very simple boolean flag to determine whether we already have the left side
+
+or not.
+
+So once again we're going to go through every single token.
+
+So for that I equals zero eyes less than tokens length plus plus.
+
+I want to be able to do is just first of all get the token so that token equals tokens at position i.
+
+And then we want to figure out what kind of token it is.
+
+And here the logic that gets implemented as you construct this this entire expression tree is a bit
+
+more complicated than in the lexicon because in the flexing you're just looking at symbols and you're
+
+saying well if it's this symbol then it has to be this kind of token here is going to be a bit more
+
+weird.
+
+So the first one is an integer.
+
+So we're going to look at the type of the token and if the token type is an integer then we have to
+
+construct and you into your object.
+
+Now we already have a definition for this class so I'm just gonna say let integer equals new integer.
+
+And then when I need to do is I need to take the token text and turn it from a string into an integer.
+
+So that's going to be done using pass and token dot tax I'm taking the tax I'm turning it into an integer
+
+and I'm feeding it into this capital integer class.
+
+So now that I have this class I need to know where I need to put it.
+
+Do I need to put it on the left side of the expression that we're currently working with or on the right
+
+hand side.
+
+So if we don't have if we don't have the left hand side then obviously result the left is equal to integer
+
+and then we have the left hand side.
+
+Otherwise it's the right side that needs to be assigned a result the right equals integer so we assign
+
+the integer and we break at this point.
+
+So if you meet an integer you just put it into either the left or right hand side of the expression
+
+that's pretty much it is it's actually a fairly simple thing.
+
+OK.
+
+So let's deal with the plus and minus tokens those basically just affect whether the result is in addition
+
+or a subtraction.
+
+So if I see a token type of Plus then I know that the type of the result isn't an addition operation.
+
+So Operation additions like so break and we can just duplicate this and have the token type minus format.
+
+It's broken here.
+
+So if it's minus it's obviously subtraction.
+
+Now we go and that's all there is to it.
+
+So when we need a plus or a minus token we just know that the operation has to be customized one way
+
+or another.
+
+Now we're going to handle the left opening parentheses.
+
+We're not going to handle the closing parentheses at all because what we need to do in a case of a an
+
+expression in parentheses like let's suppose there is stuff here.
+
+So what we need to do is we need to take everything between the round brackets and we need to feed it
+
+back into the parse function itself.
+
+So we're going to do a recursive call to actually pass everything as a sub expression and then we're
+
+going to stick it into the left or right hand side appropriately so if we encounter a token type of
+
+left parenthesis then here's what we do.
+
+So I'm going to make a new counter J with an initial value of IE and then I'm going to make a for loop
+
+not going to initialize it here.
+
+So J is going to go up until tokens length.
+
+So for every single remaining token I'm going to increment J.
+
+And if the type of the token if tokens and J Doc type is closing parenthesis
+
+then I'm going to break.
+
+So essentially at the end of it all J is going to give us the position of the closing bracket.
+
+And now we know the starting position and the closing position we can slice the array.
+
+We can give the sub expression that we're interested in so let's sub expression equals tokens slice
+
+some yes slice not splice starting at I plus 1 because remember the position that high is the opening
+
+parenthesis and we want something that goes right after it way that will the parenthesis itself and
+
+the closing position is J.
+
+So that's the same expression now that we have it we can pass it.
+
+So let element equals pass sub expression so we perform the recursive passing call and now we do the
+
+same thing as we did with the integer meaning we check whether or not we have the left hand side if
+
+we don't have the left hand side then result the left equals the element that's the past element that
+
+we just got and we said have HHS equals true.
+
+Otherwise we say result all right equals element.
+
+Okay so now we need to advance the index.
+
+I say I'm going to say I equals J So if we moved on forward we need to update that variable we're going
+
+to do a break here and that's pretty much it.
+
+So all that remains for us is to return the result return result.
+
+There we go.
+
+So now that we've implemented the passing of the expression the final kind of icing on the cake is how
+
+do you evaluate the numeric value.
+
+So we want to actually calculate all of this.
+
+We want to get its actual value now in the case of an integer like you see here we have this that value
+
+equals value so far simple integer we know what the value is.
+
+But what about a binary operation.
+
+How do we calculate the value of a binary operation while obviously this is a recursive procedure where
+
+you have to look at all the constituent parts I'm going to make a getter here get value so I'm going
+
+to look at the type of the operation actually let's listen let's do it like this.
+
+Let's first of all evaluate the left and right sides.
+
+So I'm going to say left left equals this the left not value.
+
+Now this is a recursive call because remember value is a getter.
+
+So if you have a binary operation composed of two binary operations this left of value is going to call
+
+the value get her once again and you have a recursive evaluation which is what we want in a in the first
+
+place and then let right equals this the right value.
+
+Okay so now we can take a look at the type of operation that this is so I'm Ventas which on this type
+
+and in the case of this in the case of addition in the case of addition we just return left plus right.
+
+And in a case of subtraction we return left minus right.
+
+That's pretty much all there is to it if we don't encounter any one of these.
+
+I'm going to reset zero.
+
+But obviously we we don't want this situation to occur in the real world.
+
+So that's pretty much it.
+
+That's all that we actually want and if we look at this console log you can see that I'm using dot value
+
+here.
+
+So just to recap.
+
+Value gets you the evaluated value of that expression.
+
+In the case of an integer value is actually just a field and so when you access this value you just
+
+get the value of the numeric.
+
+But in the case of binary operation you evaluate the left and right hand sides and then depending on
+
+what what they depending on the type of operation you return either that sum or the subtraction result.
+
+So that's run all of us.
+
+Let's see if we get the right result and as you can see we having 13 plus four so that's 17 minus twelve
+
+plus one that's 13 equals four.
+
+So this is how you can This is how you can implement the interpret that design pattern fully.
+
+So just to recap First of all when you have any kind of textual input you split it into separate tokens
+
+using some sort of flexing process and then what you do is you turn the tokens into some sort of object
+
+oriented construct or just just to construct that is more easier to traverse.
+
+In this case it's the passing process that does it.
+
+And the final thing is being able to go through every single element and do something with it like for
+
+example evaluate its value in the case.
+
+So this is something that's quite often done using the visitor design pattern.
+
+But we did it here in a very simple way just without any kind of explicit visit or implementation just
+
+by implementing a value calculation on all types of objects which are involved.
+
+So that's it for the interpret the design pattern.
+
+-------------
+
+

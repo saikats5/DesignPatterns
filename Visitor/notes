@@ -1,0 +1,583 @@
+All right.
+
+We've reached the last of the patterns and here we're going to talk about the visitor design pattern
+
+that we're going to take a look at several different implementations of visitors starting from an intrusive
+
+approach and ending up with the kind of classic approach that most people do and the kind of approach
+
+that you see in programming books.
+
+So what are we going to do with the visitor.
+
+Well let's imagine that we have a object oriented a representation of some numeric expression.
+
+Let's suppose that I decide to represent one plus two plus three in an object oriented fashion.
+
+And I want to evaluate its value.
+
+Now first of all what I'm going to do is I'm going to define the actual classes of which make up this
+
+demo.
+
+So as you can see the expression above is composed of numbers as well as operations such as plus the
+
+brackets don't factor into this whole thing because they're just a way of organizing things.
+
+So we're going to have a class called no expression where the constructor takes a value of some kind.
+
+And we store this value and that's pretty much it for the number.
+
+So I'll just have it like this.
+
+And we also have let's just deal with additions and we're not going to handle subtraction multiplication
+
+all of that.
+
+Let's just have Ed. expressions Ed. expression.
+
+Now a go.
+
+So in the constructor you obviously adding some left side to the right side.
+
+So let's have them as left and right now I'm going to have both of these as fields obviously settle.
+
+Let's have that.
+
+Let's just make a field the make another field here and get rid of all of this.
+
+So we have the two fields.
+
+Now let's suppose that we have a couple of concerns like printing the expression or indeed evaluating
+
+the expressions about it.
+
+But let's talk about printing festival.
+
+So we have this definition we can now use this definition to make an expression.
+
+So I can say let E equals new edition expression and the addition expression is going to have a new
+
+no expression with the value of one and a new edition expression with a new no expression with a value
+
+of two and the value of three.
+
+That what I'm trying to do here is I'm trying to get this numeric expression in object oriented format.
+
+So here's my definition.
+
+Now what I want to do is I want to maybe print this whole thing.
+
+I want to print it so I get a textual representation from this object oriented structure I want to basically
+
+get this string out of this expression and the question is how to do it.
+
+Well there are different ways but the most direct way of printing this expression is what I'm going
+
+to call intrusive.
+
+So what we're going to do is we're going to make a buffer which is just going to be an empty array.
+
+We're going to populate this buffer with a bunch of strings.
+
+Now the way that we're going to do this is by jumping into every single one of your classes in our expression
+
+hierarchy.
+
+So we have the numeric expression of no expression and we have different expression.
+
+I'm basically going to make sure that both of those are principal by modifying them.
+
+So I'm going to have a method called print here which takes a buffer.
+
+And in the case of an ordinary no expression I'm just going to say buffer the push and I'm going to
+
+add the value converted to a string to this buffer.
+
+That's pretty much it.
+
+Now in the case of addition expression Things are a bit more complicated because you probably won the
+
+round brackets around the expression and you won the plus operator and you want to recursively evaluate
+
+the left and right sides.
+
+So let's start with the obvious.
+
+So the edition expression is going to start well I forgot that whole print thing so print buffer.
+
+We're going to start by adding the opening round bracket like so and then somewhere down the line we'll
+
+have a closing round bracket in the middle will have a plus but these locations are the ones that's
+
+interesting so we need to print the left and right hand sides.
+
+So for both the left and the right we say this the left dot print buffer.
+
+And similarly here we say right dot print buffer like so.
+
+So we recursively print the left and right sides and we put everything together into one buffer.
+
+So what I can do now is I can take the expression e that we've made and I can say Ido prints to a buffer
+
+and then we can we can log buffer dot join and sort of get the final value.
+
+So let's run this as you can see we get too many commas here probably because we need to put an empty
+
+string here just just to make sure that it doesn't use commas instead.
+
+So that is that that is the final output as you can see right here one plus two plus three we get a
+
+few more round brackets than we do in the original but that's OK that's what we have.
+
+So let's discuss what's happening here.
+
+Like where is the visitor Exactly.
+
+Well at the moment in the current implementation the visitor is actually the buffer the buffer is the
+
+thing that gets to visit every single type of expression in this entire expression tree so the buffer
+
+gets to visit the print method here.
+
+The print method here but what is the problem with this approach.
+
+While the problem is in separation of concerns and in the open closed principle.
+
+So we have a number expression and we have additions expression.
+
+I suppose that they have been written they have been tested.
+
+And when you want to introducing you concern like printing first of all you shouldn't be adding it directly
+
+to those elements because you might want to have some things which are common to the printing of all
+
+constructs.
+
+And here you would have to modify every single one of them if you decided to change your mind like for
+
+example if you decided that instead of the buffer you want to use just an ordinary string that you append
+
+to for example or something something other than you would have to rewrite every single implementation.
+
+And also this idea of going into existing classes and modifying them to add the print functionality
+
+violates the open closed principle.
+
+So this approach is workable.
+
+This approach is usable but it does require you to completely open the source code and be prepared to
+
+make modifications and here we have just two classes addition expression and no expression but in the
+
+real world you could have lots and lots of classes and modifying every single one of them is a bit painful.
+
+It would be a lot nicer if we could separate out the printing functionality into a separate class.
+
+And that's exactly what we're going to do in the next lecture.
+
+--------
+
+
+So in the previous example we implemented printing for no expressions and additional expressions but
+
+we mentioned that it might make sense to actually move them into a separate class so that's exactly
+
+what we're going to do here and we're going to take a look at yet another implementation of the visitor
+
+and the implementation we're going to look at.
+
+Now it's called the reflective visitor and now reflection is a term that comes from languages like C
+
+shop for example but it's also it's also a good kind of name so I'm going to stick with it.
+
+So I'm going to get rid of prints inside.
+
+No expression and inside.
+
+Well actually not so much that I'm going to get rid of I'm going to move it later on because the idea
+
+is as follows We want to have a separate component for actually doing the printing that is the whole
+
+idea of separation of concerns.
+
+We basically want a separate class called expression printer.
+
+Is going to handle printing specifically.
+
+So here while I'm going to do is I'm going to have a single method which takes the element that you
+
+want to print as well as the buffer the buffer is where we put all the elements and now the question
+
+is well what exactly is this element because depending on the type of the element we might want to treat
+
+it as a number expression then just get the number and add it to the buffer or we might want to treat
+
+it as something more complicated some sort of addition expression.
+
+So I am going to get rid of the prints implementations here I'm going to redo the whole thing inside
+
+the expression printer.
+
+So first of all we need to check the type of E..
+
+So this first argument e it can be a number expression so we can say if he is instance of no expression
+
+then we do one thing.
+
+So in this case we just add the value to the buffer.
+
+So we say buffer that push Ida value.
+
+Now what else can it be what it can be a an addition expression.
+
+So we can say else if e instance of addition expression.
+
+And in this case we do the whole thing as before so we say buffer that push opening brackets than closing
+
+brackets and the plus.
+
+And what's interesting is what we do in between now in the previous case we just called the print method
+
+on both the left and right hand side of the expression this time round is gonna be different because
+
+we're going to do a recursive call remember everything happens inside this new print method inside expression
+
+print.
+
+So what we're going to do is we're going to say that here we want to print.
+
+So we do this dot print.
+
+We take it out left as the elements of print and reuse that buffer so we keep using that buffer and
+
+the same goes for the right hand side.
+
+So here we print the right hand side and that's how you can implement printing of both no expressions
+
+as well as edition expressions.
+
+Let's now modify the rest of examples so here obviously there is no longer a print method for us to
+
+work we have to make an expression printer and you expression printer like so and by the way that method
+
+print up above could have been made static but that's an implementation detail.
+
+So I'm going to print here I'm going to say E and specify the buffer.
+
+And by the way the buffer is something that could be managed by the printer directly instead of having
+
+that buffer being passed in so to speak.
+
+But here we're managing it externally and once again we do buffer the joint so that we get to see the
+
+end result.
+
+So once again let's try running it as you can see we get exactly the same output but we get additional
+
+benefits now we'll get additional benefits in that first of all you can see that we now have a separate
+
+component.
+
+So the printing concern and there might be other concerns like for example how about evaluating this
+
+whole thing you can evaluate the entire expression you would have maybe an expression evaluator which
+
+will be another visitor.
+
+So here well what happens is we have a separate component.
+
+We have a separate class called expression printer it has a method called print which takes the expression
+
+as well as the buffer.
+
+And here we look at the type of the expression that we are dealing with.
+
+So this is why I call it reflective because typically these things in other programming languages they
+
+have to do with reflection you have to figure out the type of the expression and then you operate on
+
+that in JavaScript it's a bit easier because you didn't have to perform any casts so you just use the
+
+use the attributes of a particular class straight away so you assume that if e is an ember expression
+
+it has a field called value and you use this field without any problems and the same goes for additional
+
+expression we use the left and right fields without any problems here.
+
+So this is an implementation which is OK but the only real problem with this implementation is that
+
+you have to manage this list of if cases.
+
+So once again it's not very convenient it would be nice if you had some sort of interface definition
+
+so that whenever you did any kind of a visitor on on expressions that you would be mandated to implement
+
+several methods for a single method for handling no expressions and other methods for handling additional
+
+expressions and so on and so forth instead of bundling everything into just this infinite kind of if
+
+else structure so that's what we're going to take a look in the next lesson.
+
+
+
+-----------
+
+
+All right so we've looked at both an intrusive approach to the visitor design pattern as well as a reflective
+
+approach.
+
+And finally we've reached the classic visitor.
+
+The classic approach to implementing a visitor.
+
+So how are we going to do this.
+
+Well first of all I'm going to get rid of the expression printed once again because we are now going
+
+to rewrite the whole thing using an entirely different paradigm.
+
+Now remember in the previous lessons I said that you should not be modifying no expression an edition
+
+expression but the classic visitor does in fact allow you to modify them but you modify them just once
+
+in order to support a particular paradigm.
+
+And that paradigm is for every single element in the hierarchy so we have no expressions additions expressions
+
+you can think of other expressions like multiplication or power or exponential Asian expressions.
+
+You can have every single element in the hierarchy accepting a visitor.
+
+And for this what you do is you give every single class a method called except which takes a visitor.
+
+And the only thing it does is it calls a visitor.
+
+Dot visits followed by the name of the element that we're trying to visit right now.
+
+So here we are visiting a number and you pass this as the argument you do the same thing for Ed. expressions
+
+so here you accept a visitor.
+
+And here you say visitor don't visit Ed. passing in this and you can imagine other elements other classes
+
+if you had any would be doing a similar thing.
+
+So if you had multiplication you would have a method called except we shakes a visitor which would be
+
+calling visitor adult visit multiplication.
+
+OK.
+
+So what is the point of all of this.
+
+Well the point is that you can have a little let's have a base class.
+
+Let's have some sort of base class called visitor.
+
+So this base class is not intended to be used directly but it can have certain useful things like for
+
+example we know that most of all the most of our visitors they they can have let's say a buffer of text
+
+that they collect.
+
+So here I can for example in the constructor I can make a buffer of just just an empty array that you
+
+can put things into.
+
+In addition what you can do is you can define the interface of the visitor to determine specifically
+
+what kind of elements they can visit.
+
+So we know that a visitor in our model can visit either a number so we can say visit number where the
+
+expression is gonna be called E. I'm going to leave it blank here and we can also visit in addition
+
+once again I'll leave it blank like so.
+
+So this is a base class called visitor.
+
+Now what kind of things do we want to do with our expressions.
+
+Well one thing as we've done previously is we want to print them.
+
+So here you make a class called expression printer which would extend this visitor class
+
+let's just make a constructor where you call super like so.
+
+Now what we're going to do is we're going to override all of the methods so I'll generate the overrides
+
+for visit number and for a visit Ed..
+
+Now since we're printing these what we want to do is we want to perform a printing of the value.
+
+So here if somebody calls visit number we take the value and we add it to the buffer.
+
+Remember we got the buffer from the base class so here I can say this that buffer helped push the value
+
+and in a similar case in the case where we want to visit additions Well we do something like the following.
+
+So this is something we've done countless times before so we add the opening bracket to the buffer but
+
+then notice these two lines these are interesting.
+
+So instead of just using dot left as a kind of recursive call inside the visitor we instead get to call
+
+E dot left dot accept passing the visitor as the argument.
+
+Now the reason why this is happening is because when we do this call when we perform e dot left dot
+
+except you'll see that if we end up in a number of expression for example let's say we end up here with
+
+the visitor then we tell the visitor the visit has to visit a number.
+
+So it specifically has to visit a number passing in ourselves as the argument now from this location
+
+we end up here and we end up adding the value like so so there is a kind of double hop that is happening
+
+when we perform this call and similarly when we perform this call okay.
+
+So I'm going to implement a two string here on the expression printer remember this time round we are
+
+managing the buffer so here I'm going to say reset return this that buffer don't join with an empty
+
+string.
+
+So that is that that is something that is going to lead us to actually print the expression once again
+
+and we can reuse this expression as before.
+
+So this time round we don't need the buffer anymore.
+
+I'm going to take the expression print there and this time round what I do is I don't use EPO print
+
+and say I say EPO don't visit and here I have to specify what kind of type I have at the level I know
+
+that I have an edition expression so I'm going to call visit addition passing in that argument E which
+
+is my expression and from then on what I can do is I can get rid of all of this I can simply take the
+
+expression visitor and just just get it get the string representation.
+
+And here I can run this and I get the same output as before.
+
+So why is this approach better.
+
+Well this approach is better because it is scalable let's suppose that we also want to have an expression
+
+calculator one some class that actually calculates the numeric value of.
+
+In our case one plus two plus three.
+
+So that should be a six.
+
+Let's do this using the visitor design pattern.
+
+So we're gonna have a class called expression calculator which also extends visitor like so.
+
+So going to have a constructor.
+
+Now for this visitor we need a numeric result.
+
+So this visitor is actually going to fall apart from calling the base class.
+
+It's going to have some sort of result which all initially assigned to zero.
+
+And as we hold things up we're going to get the value.
+
+So then we generate the overrides for visit Ed. And visit numbers.
+
+So here they are now in the case of visit.
+
+No we simply set the result to the numeric value.
+
+So we say this that result equals Ito value.
+
+Now in the case of addition things become a bit more tricky because this visitor unlike the previous
+
+visitor is actually stayed for.
+
+He uses the result field to store the result of some calculation or rather.
+
+But unfortunately this has to this gets overwritten.
+
+So if you visit the left side you going to set the result to the left side.
+
+And then if you visit the right site you will overwrite that result which is a bit of a problem.
+
+So what are we going to do.
+
+We're going to visit the left side of the expression first.
+
+I'm going to say he thought left dot accept this.
+
+So this is how we go through the left side and then I'm going to store this result in a variable so
+
+I'm going to say let temp equals this dot result.
+
+Now I'm going to visit the right hand side so you don't write dot except this and then I'm going to
+
+have the result incremented by the temporary variable so we calculate the left side we put it into a
+
+temporary we calculate the right side which overrides result.
+
+And so I take the temporary and added to the result and that way we get the total sum of the left and
+
+right hand sides.
+
+So this is something that we can use to actually calculate the expressions value.
+
+So here I'm going to say let's E C equals new expression calculator.
+
+So making you expression calculator I'm going to say once again ECD to visit addition feeding in that
+
+value.
+
+And here we can output something a bit more exciting so let's log.
+
+We're going to print both expression as well as the results so here I'm going to basically say that
+
+let's have BP out to string so AP gives you the expression printer and two string gives you the actual
+
+printed expression equals and then I'm going to see use ECD results so easy remember is the expression
+
+calculated will get its results so we get it to evaluate.
+
+Basically we get it to evaluate the whole thing.
+
+Okay.
+
+So let's run this and let's see what we get and we get exactly what we wanted.
+
+One plus two plus three equals six.
+
+So we're using the expression printer on the left hand side to generate the string and we're using the
+
+expression calculator on the right hand side to traverse of the entire tree the entire expression tree
+
+and get the final numeric value.
+
+So what I'm showing you right now is the classic implementation of the visitor design pattern.
+
+The only variation compared to other programming languages is the naming of the visit method.
+
+So in other programming languages you would have several methods called visit and they would take typed
+
+arguments like numeric expression and addition expression.
+
+Unfortunately in JavaScript that's impossible because there is no typing.
+
+So instead we kind of imbue the type into the name of the method.
+
+So here we say visit no passing in E and here we see visit additions passing in E and the assumption
+
+is that this is a no expression and this is an addition expression Don't mess those up but I hope you
+
+want.
+
+So this is the implementation of the classic visitor at the visitor that you find in all the books and
+
+generally just about everywhere.
+
+In most programming languages.

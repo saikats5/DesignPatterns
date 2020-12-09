@@ -1,0 +1,473 @@
+A value proxy is the simplest kind of proxy that you can build because it's a proxy over a simple value
+
+type like an integer or a floating point value.
+
+And the question is Well why would you want to have a proxy over a number.
+
+Well because sometimes a number doesn't behave just as an ordinary number.
+
+A typical example that we give everywhere for a value proxy is a percentage.
+
+So a percentage is similar to an ordinary value except that when you multiply by the percentage you
+
+are not really multiplying by the percentage value.
+
+So if I say that I have 50 percent of something multiplying by 50 percent is not the same as multiplying
+
+by 50 and you can verified by opening Microsoft Excel because that that is the typical example where
+
+that this works correctly.
+
+So let me show you what we want to achieve.
+
+We want to achieve the following.
+
+We want to have some sort of way of defining a percentage as a value type.
+
+So saying for example let 5 percent equals new percentage of 5.
+
+But then what we want to be able to do is we want to be able to actually multiply some value by 5 percent
+
+and actually get 5 percent of that value as opposed to having that value multiplied by five.
+
+Which would be 500 percent of that value.
+
+So for example the kind of thing I want to do is I want to be able to take 5 percent off 50 and I want
+
+to be able to calculate it using 50 multiplied by 5 percent.
+
+So that's what I want.
+
+The question is how do I actually get it.
+
+Well in actual fact in JavaScript it's not really that difficult so first of all in the constructor
+
+where we take the percent value with simply store it.
+
+So this stuff percent equals percent.
+
+So this is going to be typically a number from zero to 100 a week.
+
+We can also have some sort of two string representation so that we actually get to print the value if
+
+we wanted to so this would be just you know just just the value followed by a percentage sine we can
+
+actually try this.
+
+We can we can sort of log 5 percent to string here or so.
+
+So we can we can do that.
+
+But the key here is how do we perform this calculation.
+
+How do we multiply 50 by 5 percent and not end up with two hundred and fifty for some reason.
+
+And the reason the answer to this puzzle is that we provide a function or a method called value off.
+
+So value off is precisely what's going to give us an actual value that we are meant to be using and
+
+all the calculations because we're not meant to be using the percent directly instead what we need to
+
+do is we need to return a percent divided by 100 because you have to divide it by 100 when you use it
+
+in any kind of calculations.
+
+So now we can run all this.
+
+You can see that the output here is 5 percent and the actual string that we get is 5 percent of 50 is
+
+2.5.
+
+That's the correct answer.
+
+So this is a very simple example of a proxy.
+
+So essentially once you've constructed 5 percent you can treat it as if it were a number.
+
+And it keeps its two string implementation showing the actual percentage but when you use it in calculations
+
+it uses a slightly different value because we modify this value here.
+
+So value proxies are sometimes useful for representing concepts which are almost directly map on two
+
+numbers for example but not exactly.
+
+So we kind of alter the behavior here slightly and get the functionality that we want.
+
+------------
+
+
+So one type of proxy that people sometimes build is called a probably proxy and that is the idea that
+
+instead of using a property like you're expected to be using it like mapping onto a field what happens
+
+is a property maps onto an instance of a class.
+
+Now the user is completely oblivious to this whole thing but the property is actually working behind
+
+the scenes and doing whatever it is that you need to be doing for example probably is might have logging
+
+to make sure that every single change to a property gets recorded.
+
+So how would you do this.
+
+Well let's let's imagine that you have some sort of computer game where you have creatures walking around
+
+and those creatures have certain stats that you can modify.
+
+So the idea is that as you construct your creature for example you have certain properties like strength
+
+agility whatever and instead of having them as just ordinary fields or ordinary properties what you
+
+do is you expose the getters and setters by the old map onto something else and that's something behaves
+
+as an ordinary kind of value but it also does other things in addition to to just being able to assign
+
+values and get values.
+
+So let me show how this can work.
+
+Let's suppose I make a class called property so a property is going to have a constructive way you can
+
+construct a property with a default value.
+
+So you can specify what the initial value is but you can also give a property name explicitly as a string.
+
+And the reason why you'd want to do this is because the name can actually be used for logging for example.
+
+So in our property what I'm going to do is I'm going to make sure that the center of that property actually
+
+performs a certain amount of logging so here what I'm going to do is I'm going to store the value I'll
+
+use an underscore here equals value and I'll also store the name.
+
+And then inside this property class I'm going to provide the getters and setters for this property so
+
+the ghetto is going to be fairly obvious because I'm just going to return this dot on this call value.
+
+So there's nothing special here there's nothing worth discussing.
+
+But the center is going to be different.
+
+So let's suppose that here you value.
+
+Let's suppose that in the set.
+
+What I want to do is I want to make sure that the property has in fact changed and if it did change
+
+I want to perform some logging.
+
+So first of all I'm going to say if this underscore value is already equal to the new value you're providing
+
+I'm just going to return so that we don't perform any unnecessary logging because we haven't changed
+
+the value.
+
+And then what I'm going to do is I'm going to log this whole thing.
+
+So I'm going to say that we're assigning we're assigning new value to a property and we have the properties
+
+name by the way.
+
+So I can say assigning new value to this name and then we can perform the actual assignment.
+
+So this dot on this call value equals new value like so.
+
+Okay.
+
+So we can use this property class inside the creature to actually specify certain properties of that
+
+creature.
+
+So for example I can say that the creature is going to have a property called agility.
+
+So inside the constructor I am going to assign a field called underscore agility.
+
+So this is not something that you meant to be.
+
+The client isn't meant to be touching this directly and this is going to be new property.
+
+So it's going to be a new property with a default value of 10 it is going to be called agility so I'm
+
+passing the string in there.
+
+So that subsequently I can do the logging.
+
+And then what you typically do is you provide the getters and setters for this property.
+
+So get agility is going to return this dot underscore agility you've got value like so and set agility
+
+to some value is going to assign that value.
+
+So this does underscore agility and value equals value.
+
+Now remember when you perform this kind of assignment what you essentially ending up with is you're
+
+ending up somewhere here.
+
+And so you end up doing the logging which is what we wanted in the first place and when you build up
+
+the creature with additional properties like strength intelligence whatever you're all automatically
+
+going to get the logging functionality so long as you use the property class to actually initialize
+
+although the backing fields which are then used to expose the properties.
+
+So let's make a creature
+
+and then we can try changing the agility so you don't.
+
+Agility equals twelve.
+
+And then let's duplicate this let's do this again to 13.
+
+Okay.
+
+So as I run this you can see that we have the logging output so the property has added additional functionality
+
+in this case it performs logging and also checks for self assignment.
+
+Among other things and here it's saying assigning 12 to agility assigning 13 to agility.
+
+So this is one of the simpler proxies because essentially it all it does is it masquerades as if it
+
+were just an ordinary value it has the getter in the center here.
+
+But it does special things inside of the setter.
+
+And you can suddenly do special things inside the getter as well.
+
+So this is what we typically call a property proxy.
+
+-------------
+
+
+A protection proxy is the kind of proxy that you add in order to control access to a particular resource.
+
+So first of all you have a resource and a kind of unguarded state and then you make a wrapper which
+
+tries to mimic as much as it's possible the interface of the original object so that it can be sort
+
+of hot swapped in almost but it performs additional checks additional protections.
+
+So let me show how this can work.
+
+So let's suppose you have a class called car.
+
+The car can be driven and if it's driven then we just outputs in a log that the car is being driven.
+
+However at some point in time you decide that in actual fact you have to authenticate the user you have
+
+to make sure that the driver is actually old enough.
+
+So if you think about driver definition just a classical driver which is going to have let's say the
+
+driver's age.
+
+So we just store the age here and then from now on we specify that whenever somebody wants to use the
+
+car they have to not just use the car directly as in car the drive but they have to use a proxy now
+
+a proxy is also going to have a method called Drive.
+
+So in that respect it's a proper proxy in that it replicates the interface but it's going to have something
+
+extra.
+
+So our car proxy could have called it something like protect that car or whatever is going to have a
+
+construct which actually takes a driver.
+
+So this time round was slightly changing the interface was saying that you can only have a car if you
+
+tell us who the driver is which is kind of how it works in the real world.
+
+Surprise surprise.
+
+So here we still are the driver and we also store the car.
+
+I can actually use an underscore here so it's a hint that we're not meant to be accessing indirectly
+
+so we're storing the car.
+
+So yeah the car proxy is a car and it also specifies it also requests of the driver's presence here.
+
+And then we can implement a similar interface so we can implement the drive method here.
+
+But this time round because it's a protection proxy we need to make sure that the driver is actually
+
+allowed to drive.
+
+So if this thought driver Doug age is greater than or equal to 16 then everything is OK and we can use
+
+the underlying object to actually drive the car so we can say this dot on this score card that drive.
+
+Otherwise what we can do is we can complain.
+
+So otherwise we can log we can say driver to you never go.
+
+So this is a very simple scenario of a protection proxy.
+
+So let me just show you in the old scenario what we had is we had a car like so and you could just say
+
+car drive and it would drive unconditionally.
+
+So you would run that and you would see cars being driven but in the new scenario what you have to do
+
+is you have to make a car where there is a driver.
+
+So there has to be a new driver here.
+
+And if the driver is too young like if the drivers twelve years old for example if you do car to drive
+
+then it's not going to work.
+
+Basically it's going to tell you that the driver is too young but if you do provide a proper age here
+
+like if the driver is an ancient one hundred twenty year old person then it says car and being is being
+
+driven in both cases because now the driver is actually old enough to drive.
+
+Although I would argue that one hundred and twenty is probably not the age you want to be driving a
+
+car either.
+
+OK.
+
+So this scenario basically shows you something called a protection proxy.
+
+So you added protection proxy to control access to a particular resource while preserving the interface
+
+as much as you can and making sure that only those who are allowed to touch the resource can actually
+
+call the underlying resource and everyone else can get some sort of error message or some sort of exception
+
+or warning or whatever it is that you want to have in your application.
+
+--------------
+
+
+A virtual proxy is a unique kind of proxy that shows you that you have a resource even though in reality
+
+you might not have it yet so it masquerades as a real object.
+
+While not exactly being real.
+
+So don't want to confuse a let me show you an example.
+
+Let's suppose that you have some sort of application which shows peoples images.
+
+So you load images.
+
+That's a people's photos and then you draw them at some point in time.
+
+So a naive implementation of the image might be something like the following You have a constructor
+
+of that image where you specify the U.R.L. where to load the image from.
+
+So here we say we stole the euro RL And that's a let's assume that we actually load the image from this
+
+address right here so I'm going to log that we are loading the image from from the euro and somewhere
+
+down the line you want to perform the actual drawing all that image.
+
+So remember we've already loaded the image supposedly so now we can log that we are drawing the image
+
+from from the URL.
+
+OK so this might look like an OK implementation but there is a problem with it and the problem is that
+
+if you never call draw You've already wasted computational time on actually loading the image from the
+
+remote your URL because it's not a free operation.
+
+So the question is well how can you set things up so that when somebody calls when somebody never calls
+
+draw you never actually load the image.
+
+And that's where a virtual proxy comes in.
+
+So let me first of all give a bit of a demo so we're gonna have a function called draw image where you
+
+specify the image and I'm going to add a couple of informations a couple of logging statements here.
+
+So I'm going to say that we're about to draw the image then I'm actually going to do.
+
+I am to draw to draw the image and then I'm going to log that we are done drawing the image.
+
+So if we make an ordinary image as we've defined just now it's going to look like the following led
+
+I am G equals new image.
+
+So you specify the U.R.L. Pokémon dot com picture that PMG so you get the image and then you draw a
+
+image.
+
+If we run this right now let's take a look at the actual sequence of events so we are loading the image
+
+from the RL we're about to draw the image then we draw the image and then we are done drawing the image.
+
+So here here is the thing.
+
+If I comb it out draw image then if we run this we're still loading the image.
+
+That's the problem.
+
+That's what we want to try to avoid.
+
+So in these kinds of situations you might want to use something called a virtual proxy which only gives
+
+you the impression that you actually have the image but you don't have the image up until the point
+
+where you actually need to draw the image.
+
+So it would look something like the following we would make a lazy image.
+
+Now the constructor is the same and in actual fact the whole interface is the same because it's also
+
+going to have a draw method but in the constructor all that we do is we say this that you are all equals
+
+you are all OK.
+
+Now inside the draw method things are a bit more interesting so we obviously want to make an underlying
+
+image at this point because we needed on this we've already constructed.
+
+So unless we already have an image I'm going to say this that the image equals new image specifying
+
+the U.R.L. OK.
+
+So that's when you actually construct the image unless it's already been constructed and then you use
+
+the underlying image to perform the actual drawing.
+
+So now what we can do is we can just make a single change here so instead of using image we use lazy
+
+image like so and if we run this you can see that the sequence has changed so we're about to draw the
+
+image and only then when we are about to draw the image we actually load the image from that location
+
+and then we draw the image.
+
+And this is how you implement a virtual proxy.
+
+Now let me just comment commentate Joy image.
+
+So we let's suppose we never actually draw the image in the first place.
+
+In this case as I run this you can see that we have an empty output.
+
+There is nothing here.
+
+The image hasn't been loaded because nobody has ever used it.
+
+So the virtual proxy here has done us a great service in not actually initializing not performing any
+
+work up until the point where that work was actually required and this is what the virtual proxy is
+
+all about.
+
+It's basically an object that's masquerading as something that's present whereas it might not really
+
+be there until the moment when you actually need it.
+

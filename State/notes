@@ -1,0 +1,564 @@
+The original state design pattern as it was described by the Gang of Four is significantly different
+
+to the state design pattern as we use it today.
+
+Today we talk about state machines and will see how those work.
+
+In just a moment but first of all I want to begin by looking at a classic example of the state design
+
+pattern as the original authors of the gang of four authors in actual fact have shown it to be.
+
+So this is going to be a very strange demonstration this is going to be very weird and it's not something
+
+that we do in real life.
+
+So what we're going to do is we're going to model a simple light switch using the classic approach to
+
+this day design pattern.
+
+So we're gonna have a switch that's going to be a class in the constructor we're going to have this
+
+which be in a certain state which will store as a state field and initially we'll assume that the switch
+
+is in the off state.
+
+Now under this approach what we're going to do is we're going to describe each of the states and there's
+
+only two states on and off we're going to describe them using separate classes not something that's
+
+done in the real world often but here we are going to do it.
+
+So I'm going to define that the current state of this which is in the off state OK so we don't have
+
+any state classes yet we're going to introduce a base class called state.
+
+Now in typical object oriented programming languages this class would actually be abstract and we can
+
+sort of make it abstract in javascript if we wanted to.
+
+So here in the constructor I can say that if this dot constructor is equal to stay then we can raise
+
+some sort of error saying that this class is abstract.
+
+You should not be instantiating it directly.
+
+So I can throw a new arrow here saying that's you know this is an abstract class just like this.
+
+It's not strictly necessary but it's a nice idea.
+
+So the idea behind the classic state is that the state itself the base class the abstract base class
+
+that you're not supposed to instantiate has two methods which are called on and off.
+
+So let me make both of them like so and then we're going to populate them.
+
+So for each of these the actual interface takes a switch.
+
+So it takes us which right here which how colors w n it takes us which right here as well.
+
+So in the case of the on we're going to do something really weird.
+
+This is where it gets really interesting because now for the on method we're going to say that the light
+
+is already on.
+
+Now I know you might think this is just bizarre.
+
+Everything about this everything about this demo is completely nuts but that's true.
+
+But you'll see it in a moment.
+
+And for the off method will say light is already off.
+
+OK so now that we have this base class what we can do is we can inherit from this base class and define
+
+the on and off state so let's define the on state which extends state.
+
+There we go.
+
+So in the constructor let's make a constructor.
+
+We have to call super and we can also perform a log.
+
+So once you instantiate the on stage you've turned on the light so we can say lights turned on.
+
+Now here is the interesting part.
+
+We are now going to implement only the off method.
+
+So remember if you look at the state class you will see that the state class has both on and off methods.
+
+We're only going to implement off here.
+
+Why are we only implementing off.
+
+Because if you're in the on state.
+
+There is no sense for you to switch the light on again.
+
+In actual fact you already have a method for switching the light on and it's available right here.
+
+And that explains why we say light is already on.
+
+So if somebody calls on state on they get they end up right here.
+
+But if somebody wants to switch the light off we do two things First of all we do some output.
+
+As always we're going to say turning light off and then what I'm going to do is I'm going to take the
+
+switch and change it states.
+
+I'm going to say as W state equals new off state so I'm using the switch to actually change the state.
+
+Yes it's a bit bizarre.
+
+I know it's the whole thing is just completely crazy.
+
+Now let's implement the off state in a similar fashion
+
+so once again you have a constructor which I'm going to copy from here.
+
+So the constructor is going to say lights on and off and then we only implements the on method.
+
+So for the on we log turning lights on and we say as w dot state equals and you on stake.
+
+All right.
+
+So this entire demo as I said is a bit weird but we are going to run it.
+
+So here I'm going to make a new switch.
+
+Let us W equals new switch like so.
+
+And there are a couple of things that we forgot we forgot to implement the actual switch.
+
+So coming back to the switch obviously we want to switch to flick two on and off position.
+
+So in the on position when somebody turns the light on what we do is we say this dot state DOT on this.
+
+And similarly for the off method we do this dot state DOT off this logo.
+
+OK.
+
+So let's first of all build a demo and run it and then we're going to discuss what's going on here so
+
+I'm gonna take the switch and I'll turn it on then I'll turn off the switch and then I'll do it again
+
+I'll turn try to turn it off twice.
+
+Let's run this demo.
+
+Let's see what we get.
+
+OK.
+
+So originally when we start out with this switch the light is turned off.
+
+Then we turn the light on and the light gets turned on.
+
+Then we turn the light off and the light gets turned off and then we tried to turn off the light that's
+
+already off and that is where we get the output that light is already off so let's jump back to the
+
+code and discuss what's actually going on here.
+
+So this example is very convoluted because even though you only have two states on and off you end up
+
+with no less than four classes to actually run the whole thing.
+
+So first of all you have this which this which is kind of the interface this which is what the client
+
+is actually going to call to change the different states.
+
+However the way that the states are changed are through the states themselves.
+
+So you'll notice that what we're doing is we're taking the current state and we're invoking methods
+
+on the current state.
+
+This is not something that we do in the real world but this is done here.
+
+So when we take this dot state you are either taking the on state or the off state and you're calling
+
+on and off on it passing in this which that you are actually using to kind of flick the lights.
+
+So the base class is mainly used so that the default implementations or of on or off actually tell you
+
+that you are in that state already so you can subsequently reuse these implementations alternatively
+
+what you could do is you could take for example the on from here and you could stick it into here you
+
+could take the off from here and you could stick it into here but this is kind of the classic demo kind
+
+of something that everybody shows when they start discussing the state design pattern.
+
+So this example is great for studying what I recommend you do is you download this source code and you
+
+actually take a look at this yourself and see what's going on here because you can see that the states
+
+for example they take this which itself as an argument and then they operate on this state by assigning
+
+a new state and there's plenty of the instantiation is here.
+
+So we're not using a known admiration we're not just saying object or freeze and freezing a couple of
+
+numeric properties for example.
+
+It's a bit more convoluted and this is not something that we do in real programming but it's a good
+
+academic demo.
+
+It's a good demo for showing you the kind of thinking that went into the state design pattern originally
+
+when the Gang of Four wrote that book.
+
+--------------
+
+Now that we looked at the classic implementation of the state design pattern let's actually build something
+
+a more realistic something that's more closer to what you would actually be building in the real world.
+
+So what I'm going to do is I'm going to build a small simulator for a phone call now a phone call has
+
+a bunch of different states like the phone being off the hook or being connected or being on hold if
+
+you're somebody you can be placed on hold and the phone also has transitions like for example when you
+
+have a phone in your hand and somebody places you on hold you can hang up the phone and that is a transition
+
+or a trigger which causes the transition from one state to another.
+
+So don't worry we'll we'll get through all of this in this day.
+
+Most have first of all let's try to encode the states that the phone can be in so I'll have let's state
+
+equals I'll use object don't freeze.
+
+So we get a fixed set off fixed set of fields for the states of the phone so the phone for example can
+
+be off hook.
+
+Well I'm going to do here is I'll actually have strings for every single one of these cases because
+
+those strings are going to be useful for us actually printing out the different states of the phone.
+
+So we're gonna have a state called off hook.
+
+We'll have a state called Connecting which once again just have as a string and let me just to save
+
+you some time I'm going to paste in a few of the other states that we want to be working with.
+
+So we have a connected state on hold and on the hook obviously we have to start from some states so
+
+some state would be the starting state probably the Off Hook state is the state you want to be in.
+
+Initially when you are kind of making preparations to dial a number and get some response.
+
+OK.
+
+So the whole idea of a state machine and this is precisely what we're building we're building a state
+
+machine we're building something that transitions you from one state to another state and that thing
+
+which transitions or moves you from one state to another is typically called a trigger so a trigger
+
+is quite simply an action or an event that happens in the system which causes that transition.
+
+So here are some of the triggers that we can have in our system.
+
+So for example you can dial a call you can hang up you can get the call connected you can be placed
+
+on hold all of these move you from one state to another.
+
+Now of course in order to define these movements you have to have a set of rules.
+
+So here I'm just going to have a dictionary of different Eurozone we're going to populate them with
+
+various transitions so the idea is that the key the name of each of the attributes of rules is going
+
+to be a state that we're moving from and the value is going to be an array.
+
+Notice and the rain not just just a single value but an array of pairs.
+
+So let me show you how this will work.
+
+For example let's suppose you're in the off hook state.
+
+So we're going to say rules at State off hook equals and then we'll begin an array so there can be several
+
+transitions that can take you from the Off Hook stage to some other stage for example.
+
+Well imagine you've taken the phone off the hook.
+
+What can you do.
+
+Well one of the things you can do is you can decide you don't want to make a phone call in the first
+
+place and you put the phone back on the hook.
+
+So that is one transition.
+
+Another one is you dial a call so suppose you want to dial a call.
+
+That means you have to specify a pair.
+
+You have to specify the trigger the action that you want to do in this case.
+
+We want the call to be dialed.
+
+So we say call dialed and then you need to also specify the state you want to end up in.
+
+So whenever somebody has the phone off the hook when they dial a call they end up in a particular state
+
+in this case you end up in the connecting state.
+
+So that is how you define every single transition that is allowed in your system.
+
+So essentially you can add these to a dictionary.
+
+I'm just going to once again draw up a few more rules into our system so that we have a complete example.
+
+So here you can see I have a state for connecting which actually has two transitions.
+
+So you can either hang up in which case the phone is still on the hook while gets placed on the hook
+
+rather or you can get connected in which case your state is connected and you can see some of the other
+
+rules here.
+
+So for example when you're on hold you can be taken off hold or you can just go ahead and hang up.
+
+So that is that that is our state machine we've defined the rules the triggers and everything that needs
+
+to happen.
+
+So now we need to start actually running this scenario.
+
+Now I'm going to actually make this an interactive scenario.
+
+So what I'm going to do just up here is I'm going to import read line which is a no just module for
+
+reading from command line input.
+
+So that's require read line like so.
+
+And I'm also going to say let out wall read lined up create interface interface where we'll have the
+
+input be process as to the end and the output and be process has started out again.
+
+OK.
+
+So with all of this setup let me just check that we have everything that we need here.
+
+So with all of this setup what we're going to do is we are going to run the state machine so what we
+
+need is we need the starting state and we also need the exit state.
+
+The state after which the execution of the state machine is no longer necessary.
+
+So let's define those.
+
+So the initial state and also the state that we're going to be changing is going to be off the hook
+
+and the exit state is going to be state on the hook.
+
+Now we go.
+
+OK.
+
+So now what I'm going to do is I'm going to just define a method called Get input get input.
+
+That's going to be not a method a function.
+
+And that's what we're going to do.
+
+All of the things that we plan to do so first of all let's make a prompt so a prompt is going to be
+
+just the phone is currently in state and you kind of specify what's next.
+
+So we're going to offer the user to specify a couple of actions on what what else we need to do from
+
+the current state.
+
+So we're going to list all the transitions and we're going to number them as well so I'm going to have
+
+a for loop that i equals zero eyes less than rules at State length plus plus I.
+
+So what we want to do is we first of all want to get the trigger so to get the trigger which I'm going
+
+to call t. We need rules at a particular state the state we're currently in that position.
+
+I and Dot trigger because remember those are state trigger paths.
+
+So we need just the trigger.
+
+And then what we can do is we can say prompt up push.
+
+So that's going to be the prompt we showed to the user.
+
+So first of all I'll put the index of the element then at DOT and then the actual trigger no go.
+
+Okay.
+
+So now we have a prompt.
+
+Let's let's also add an extra line break that prompts the push.
+
+Just just an empty line because we're going to join them using line breaks effectively.
+
+Let me put a semicolon in here.
+
+Okay.
+
+So now I'm going to use the reed line functionality to ask a question of the user.
+
+So I'm going to say prompt to join backslash and.
+
+And when I get an answer what I'm going to do is process it.
+
+So first of all I need to get the input as a number so input equals pass and no no answer rather No
+
+a guy.
+
+Now I have the input I can get the state at this particular input so I can say state equals rules at
+
+State at inputs dot state.
+
+So that's the state we're going to.
+
+Now if that state happens to be an exit state then we will continue onwards we continue running this
+
+simulation.
+
+Otherwise we kind of exit the whole thing.
+
+So if the state is not equal to the exit state what we do is we just run this whole loop again.
+
+So this is why I made a separate function because now we get to call it gets a call get input and run
+
+the whole thing again.
+
+Otherwise we are done with the whole simulation so we can log that we are done using the phone and I
+
+can say our old clothes and we are done with the whole thing.
+
+So now at the very end I just have to call get input and we can run this whole thing.
+
+Now I'm going to do something.
+
+So behind the scenes here I'm just going to check that I have the right No j ust stuff for things like
+
+read line.
+
+Hopefully that does actually nothing extra that I need.
+
+Let me just let me just check that I have everything.
+
+One moment that I'm doo doo doo doo doo doo.
+
+It's all failing I can't actually install read line for some reason let me just try to run it as is
+
+maybe it will work just fine.
+
+Okay.
+
+I cannot find.
+
+Oh yes.
+
+See that's the problem.
+
+It's not read online.
+
+It's read line that's you know sometimes I type things too quickly.
+
+So go again.
+
+And now we have our simulation finally.
+
+So here the phone is currently off the hook.
+
+And I get asked what's next.
+
+The option here is to dial the number this really nothing else I'm going to dial a number.
+
+Now we are connecting to somebody so once again we have a couple of options on what's next.
+
+We can hang up home.
+
+We can get the call connected.
+
+So I choose one call is connected.
+
+Now the phone is connected and I can leave a message I can hang up or I can be placed on hold if I get
+
+placed on hold then my state is on hold.
+
+You can see it right here.
+
+The state is on hold so what's next.
+
+Once again I can be taken off hold or I can hang up.
+
+So let's suppose I get taken off hold and now I can leave a message or I can hang up for example.
+
+So let's suppose I hang up and we are done using the phone that's where the execution of the state machine
+
+actually ends.
+
+OK.
+
+So this entire example basically shows you how to do a state machine by hand how to define.
+
+So there are just three things that you need to define you need to define the states that the system
+
+can be in all of the states that you can end up in.
+
+Then you need to define the triggers.
+
+Those are essentially the things that cause the transition from one state to another.
+
+And then you need to define the rules the rules define the relationships between the triggers and the
+
+state.
+
+So here what I've done is I've defined a simple dictionary where you have the starting state and you
+
+have a set of triggers and associated end states.
+
+In some cases there is just one trigger in some cases as you can see here for example there are two
+
+different triggers that take you to different states from the current state and then finally all you
+
+have to do is you have to define the current state.
+
+That would be the starting state as well as the exit state when you no longer care about the execution
+
+of the state machine some state machines are not finite they run forever and that's also OK.
+
+So if you have continuous user interaction like for example I don't know you have some sort of some
+
+sort of game or something maybe that that is kind of never ending then you don't really need to have
+
+an exit state at all.
+
+Though with most things you do think things that there is some sort of final state where you are done
+
+and you are you're sort of finished with this system with the interaction with the system perhaps overall
+
+but some things like like for example on the back end if you have some sort of database processing functions
+
+on the backhand where you have a queue of tasks maybe that need to be performed there is never a need
+
+for an exit state because this service is meant to run for forever it's meant to be you know reliable
+
+and never fails so.
+
+So this is this has been just an illustration of how to do a state machine by hand obviously there are
+
+libraries that can do this for you but this is a good starting point.
+
+If you just need something very simple.
+
+-------------
+

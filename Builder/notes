@@ -1,0 +1,903 @@
+Before we get to the design patents themselves there is just one more piece of housekeeping that I wanted
+
+to mention and that has to do with these so-called gamma categorization.
+
+So typically in design panda literature regardless of which language of design patterns we're talking
+
+about we are splitting all the design patterns into several different categories.
+
+Now these categories are often called gamma categorization and this is a name that comes after Eric
+
+gamma who happens to be one of the authors of the original Gang of Four book the book that uses C++
+
+and smalltalk.
+
+So first of all you have creation of patters.
+
+Now these patterns as the name suggests they are dealing with the creation or construction of objects.
+
+Now you might think that hey construction of an object is quite simply invoking the constructor.
+
+But in actual fact things are quite often a bit more complicated so sure you have explicit creation
+
+that's when you call the constructor you provide a few arguments and you get your initialized object
+
+but there was all always situations where the creation of an object is actually implicit.
+
+So for example you might be using a dependency injection framework or you might be using reflection
+
+or some other mechanism which actually creates the object behind the scenes.
+
+That's also creation but it's not explicit creation in the sense of you calling you constructor to initialize
+
+something so that's worth mentioning and in addition there are different processes for actually initializing
+
+the objects before they are ready to use.
+
+So sometimes you'll have wholesale creation of an object meaning that a single statement like a single
+
+constructor call is actually sufficient to initialize the object but in certain situations initialization
+
+itself is a complicated process.
+
+And this is where we get the so-called peace wise or step by step initialization that's when you need
+
+to have several statements or several steps that need to be taken before an object is actually initialized
+
+and ready to use.
+
+So after the creation of patters we're going to see the second category which is structural pattern.
+
+Now as the name suggests it's mainly concerned with the structure of the classes that are involved here
+
+so it's concerned with class members it's concerned with things like the class adhering to some interface
+
+or other.
+
+So what we're going to see here is we're going to see for example many patterns which are wrappers which
+
+mimic the underlying interface.
+
+So you have a wrapper around the class and that wrapper tries to mimic as much as possible the underlying
+
+class the class.
+
+It's actually wrapping.
+
+So this is an example of a structure approach here and a structural design panel generally put extra
+
+weight on the importance of good API design and part some of the patterns are actually all about this
+
+idea of replicating the interface as much as possible or making the interface has convenient to use
+
+as possible so in studying structural patters you're going to see some good applications of just good
+
+API design that makes objects usable and makes API is usable for other people.
+
+Finally we're going to take a look at behavioral design patterns.
+
+Now unlike the creation of patterns and structure patterns behavior patterns don't really follow any
+
+central theme.
+
+They're all different they're all doing their own thing.
+
+There is some overlap here and there.
+
+So for example the strategy in the template method design pattern is they're kind of doing the same
+
+thing but they're doing it using completely different object oriented mechanisms so there's gonna be
+
+some overlap here and there but generally most of the behavioral design patterns are unique in their
+
+approach meaning that they solve a particular problem they solve it in a particular way they have a
+
+particular set of concerns and some we're going to cover all of them as well.
+
+So these are the three categories of patterns that we're going to see as part of this course.
+
+
+
+-----------
+
+
+All right so let's talk about the build a design pattern.
+
+Now a builder is something that helps you construct a particular object.
+
+Now what could that object be.
+
+Well the example we're going to take a look at is the building up of just a chunk of HDMI.
+
+So let's suppose you want to generate the chunk of HDMI all so that you could serve it took line for
+
+example or inserted into a web page.
+
+Now we're going to talk with a simple example let's suppose that you won just a single paragraph and
+
+you won that paragraph to contain some would like hello for example.
+
+So if I were to just start writing javascript it would be rather verbose to be honest so I would maybe
+
+have.
+
+Hello.
+
+Ask a string like so and then I would have some sort of H to email array way.
+
+I would actually collect all the elements that I want to add.
+
+And here I need to actually decide how I want to generate my paragraph so maybe I will do it like this
+
+maybe I would say HDMI dot push and add the opening tag and at some point I'll have the closing tag
+
+as well and then between those two I would add the actual word that I want to add.
+
+And having made all of this what we can do is we can just output all of this to the console and see
+
+see what we get.
+
+Console the log HDMI join.
+
+So that's the way in which I'm going to be building up strings in this entire course by using arrays.
+
+So just joining everything together and running it you can see fairly obvious output.
+
+Now obviously what we've done is overkill if you just want the single paragraph with a word in it.
+
+You can use string interpolation or you can just use the plus operator on strings you don't really have
+
+to make it this complicated where it gets interesting is when you have something more complicated than
+
+a paragraph.
+
+Let's suppose you want to make a list of words.
+
+So we have a bunch of words.
+
+We have the words hello hello and world like so and we want to make a list out of them maybe an unordered
+
+list.
+
+So here are the idea would be fairly similar in the sense that we have HDMI which is just an array that
+
+we're subsequently going to concatenate together and the first thing we would add is maybe the opening
+
+tag.
+
+So the unordered list and I would put a line break at the end of it because I want nice formatting in
+
+addition to just being able to turn out HMO and then we can go through every single word so I can say
+
+for left word of words and for every single word that I can do HDMI that push and here I would I would
+
+in fact use string interpolation.
+
+So here we can say list item and then we would specify the word that we actually want to use.
+
+And then the closing list item like so and then a line break at the end of it.
+
+So we added the hello and well the separate list items.
+
+Now you need to actually close the tag.
+
+So here I would have the closing on order.
+
+Listen this is something that we can once again print.
+
+So if I go in here I'm just going to say to them I'll go join and let's run this and see what we've
+
+got.
+
+Okay.
+
+So as you can see what we have here is we have a really nice representation of the items.
+
+Hello world.
+
+As part of a list and HCM list.
+
+Now as you can see as things get more and more complicated you are going to be writing more and more
+
+of these annoying HDMI held up push.
+
+And you'll also notice that we're managing things like indentation here.
+
+So for example here you can see the two spaces that I've added to indent the inner elements and in a
+
+large enough scenario having just this kind of string manipulation is not realistic you have to make
+
+some sort of structure to take care of it at a higher level.
+
+So let's see if we can adopt a more structured approach to how we can output HDMI out.
+
+And this is the core of how the build a pattern works in the real life.
+
+So let's suppose that we want to have a class called tag so a tag is going to represent a single HDMI
+
+tag but a single tag can also have children as well so let's add the p constructor to this tag.
+
+So we're going to have name and text as part of the tag.
+
+Now obviously not every single HDMI tag has a text but all of them should have a name.
+
+But I'm going to add some defaults here just so that we can initialize it in the black kind of state
+
+so I'll just add a couple of empty lines here.
+
+Instead what you can do is you can put in undefined or now here if you want it's really up to you.
+
+So I'm going to say this that name equals name and this dot text equals text and I'm also going to define
+
+that children.
+
+So if this is like an unloaded list tag then obviously you can have a bunch of list items so we define
+
+this dot children and I'm just going to define it as an empty array that you can subsequently expand
+
+to actually add the children.
+
+Now what is special about this tag the special part about this tag is that we can print it in a very
+
+nice way in the sense that we get the formatting of all the inner elements implemented correctly and
+
+whatnot.
+
+Now this is actually rather tedious.
+
+Let me just go ahead and paste the code in here and you can take a look at what we've done here so essentially
+
+when we call to string on the tag to output it we actually internally call to string email with a value
+
+of zero which refers to the level of depth that we're at.
+
+Because remember we're essentially traversing a tree because tags can contain tags which in turn can
+
+more tax to infinity so that's what we're doing and here we're building up this HDMI chunk.
+
+You'll notice that I'm also using indentation here from tag adult in Den size and tagged out in Den
+
+size is something that we can simply define as a constant.
+
+So I'm not going to have it as a variable values.
+
+So here we can just have a static getter and you can change this value from two to whatever you want
+
+for your indentation size.
+
+Okay so having said all of this sub what we can do now is we can actually start using this tag somehow
+
+but in order to make it easier to use this tag we're actually going to make a builder.
+
+And this takes us to the core of the builder design pattern so the builder is essentially a separate
+
+component that helps you build tags on top of tag.
+
+So helps you effectively build up those paragraphs or lists or whatever it is that you're doing.
+
+So we're gonna have a class called H2 AML builder.
+
+There we go.
+
+So in the constructor to this class I'm going to specify the root name.
+
+So the root name is the name of the root element.
+
+Like if you are building an entire web page the root element would probably be called HDMI Mal if you
+
+are building just a table for example the root element will be called table so we will define the following.
+
+So we would define the roots of the overall structure as a new tag.
+
+Remember that's why we build the whole tag thing specifying the name like so.
+
+And in addition we'll store the root name by itself so that we can subsequently reset this whole thing.
+
+So I'll also say this that name equals root name.
+
+It's useful to have both because at some point we might want to annihilate the entire root tag.
+
+OK.
+
+So what do you want to have as part of the builder.
+
+Well the builder should help you build up HDMI.
+
+For example you might want to be able to add children to the current root to the current element.
+
+So the way you would implement this is something like the following You would have a method called add
+
+child where you would specify the child name as well as the child text like so.
+
+And here we can just make a new child.
+
+So let child equals a tag where you specify the child name and the child text and then you can say this
+
+dot roots Dot.
+
+Children don't push.
+
+So we add the child to the set of children of the current root element.
+
+Okay.
+
+So there are a couple of more service things shall we say that we need to add to this entire structure.
+
+Because we want to make the whole process a bit more convenient.
+
+So for example one thing I'm going to add is I'll add a two string implementation to the female Boulder
+
+itself.
+
+Just returning the roots convert it to a string.
+
+So this is going to save one extra step.
+
+And we also need some way of actually exposing the root.
+
+Once we're done building up the root.
+
+So the way you can expose it and of course we just have it as a member is so you can just make an HMO
+
+brother and then grab the root but you can be explicit about it.
+
+You can have some sort of method which actually returns the roots and that way it's a way of signifying
+
+to whoever is actually working with this code that there is a way of kind of stopping the building process
+
+so to speak not the date specifically needs to set up in this particular case because you can continue
+
+onwards.
+
+But anyways let's take a look at how this approach can actually be used in order to sort of start working
+
+with a demo now.
+
+One thing that you can do in addition to just so first of all let's actually take a look at the way
+
+that the builder gets initialized before we start customizing it so you make a new age female builder.
+
+Let's suppose we want to make an unwanted list.
+
+You Well OK so we are making an unordered list and here we might want to take that set of words that
+
+we have up above.
+
+So here we have hello and world.
+
+Maybe you want to have those as list items so you would say something like the following you would say
+
+four letter word of words and you would say builder dot add child and you would specify the name as
+
+a list item and the text would be that word that we've just read.
+
+So having made all of this we can now put this to the consoles or console log we can grab the builder.
+
+We can do builder the build dot to string of course really what's happening here is the roof is actually
+
+exposed so you can say builder dot roots to string is really up to you whether you want to maybe put
+
+an underscore in front of the roof to indicate that people shouldn't be working with it directly it's
+
+really an implementation detail in JavaScript So this is how you would actually output something that's
+
+actually run this.
+
+And as you can see here is what we've just generate it.
+
+So it's even nicer formatting that when we had in the previous example because now we're taking care
+
+of the kind of inner textual elements as well.
+
+OK so this setup is almost complete and all I'm going to do here is I'm going to show you a couple of
+
+ways of customizing the entire process.
+
+So first of all how do you actually indicate to the user that they should not be working with the tag
+
+class directly.
+
+How do you tell them that it's really best to just use the builder.
+
+Well one way is creating some sort of static method to actually return the building so it can have a
+
+static method called Create where you specify the name of the overall root.
+
+And here you return a new age game El builder specifying that name has the constructor argument.
+
+So what does this give us.
+
+Well it gives us a different way of actually working with the builder so instead of initializing it
+
+directly you initialize it through the object that it actually intends to build.
+
+Now you'll notice that this does introduce coupling in the sense that you now have this sort of bi directional
+
+dependency between the builder as well as the object that builds it up.
+
+So it's a slight violation of the open closed principle because if you imagine another builder being
+
+constructed then you might want to go back and let's say make another create method that does something
+
+differently somehow.
+
+But here's how you would use it.
+
+So basically you'd say led builder equals tag adult create you well.
+
+So this doesn't really change much the operation is exactly the same.
+
+But now we're using this static method in order to get the builder right from the object that is intended
+
+to be building that object so to speak.
+
+So this is how you would go about using that.
+
+The other thing that I want to show you is a fluent interface something that is very convenient and
+
+it allows us to chain calls on builders and this is quite often require that it's a very common kind
+
+of thing.
+
+So first of all what I'm going to do is I'm going to add a clear method which actually clears the builder
+
+here so I'm going to have clear now what I'm going to do is I'm just going to replace the root so I'm
+
+going to say that the root is a new tag where we reuse the name but the root itself gets destroyed.
+
+So a new root is created with the same identical name.
+
+Now the reason I want this is so that I can show you the next example so we're going to clear the builder
+
+using that method I just made.
+
+And then we're going to add a couple of list items that we're going to do them by hand as opposed to
+
+iterating some sort of collection or something.
+
+So how do we do this.
+
+Well first of all I want to show you a different implementation of ADD child so here we have at Child
+
+which doesn't really return anything.
+
+Now I'm going to copy it like so and I'm going to rename it to add child fluent and here when I'm meant
+
+to do is I'm going to return this.
+
+Now this is a very common approach in lots of object oriented programming languages when you're done
+
+with an interface methods like like here when you're done with a chunk of the interface you return effectively
+
+a reference to the containing objects so to speak.
+
+Now why would you want this well you'd want this because now what I can do is I can use the builder
+
+to actually add several children to the list that we're making but I can do this in a single statement
+
+as opposed to several statements so here's what I can do I can say builder dot add child fluent and
+
+I can add a list item called foo and then I can do this again and I can add a list item called let's
+
+say bar for example like so and this duplicate this again and half that.
+
+So you'll notice it's just a single statement because at the end of every add child fluent invocation
+
+and we've written this.
+
+And this of course has a method called ADD child fluid that we can continue invoking until until we're
+
+tired basically and now I can console log the whole thing once again so I can do a build or dot to string
+
+here and we can see what we get in this case.
+
+So as you can see we're getting some some problems because I misspelled something.
+
+It should be a builder with a D like so and see if we get this again.
+
+So here is our list.
+
+You can see that we have three items.
+
+We have a foo bar and bars.
+
+So it works.
+
+So the takeaway from this example is that a builder is essentially just a separate component that helps
+
+you build up a particular object but also sometimes what happens is you have a scenario where you don't
+
+have any special objects like we don't have any special objects for building up chunks of HDL but then
+
+you go ahead and you create one.
+
+So you effectively you manufacture a brand new class like we did here the tag class which is designed
+
+specifically to work with the builder.
+
+So essentially you don't really need the tag you can just work with string.
+
+Kathy nation but it gets really really complicated very quickly and it's very difficult to just work
+
+with ordinary strings so we end up with this kind of object oriented approach and of course then we
+
+have the builder which uses that element uses that tag in order to create a tree of dependency that
+
+you can make it as deep as you want really.
+
+So you make this tree and then you add some sort of utility methods for actually building the object.
+
+So these are builder methods effectively had the child adds a child to the current root and you can
+
+think of different ways of actually adding grandchildren then whatever.
+
+There is lots of scope for creativity here but this is the bird's eye view of the builder.
+
+So it's just a component that helps you figure out the whole business of building up complicated objects
+
+meaning objects which are impossible to construct just by using a single line constructor call for example.
+
+So it's four really complicated objects way you want to make the process of building up an object understandable
+
+and convenient and easy to use so to speak.
+
+
+
+-------------
+
+
+
+All right.
+
+So in the previous example we looked at how to basically implement the builder pattern to build up a
+
+particular object but I'm not going to show you something that's even more complicated.
+
+You see there are situations where a single builder is insufficient for actually building up an object.
+
+Sometimes you want to have different aspects of an object built up using different builders.
+
+And the question is Well how do those builders interact with one another.
+
+How does the whole thing work.
+
+So what I'm going to do here is I'm going to give you an example of a rather simple object which has
+
+two aspects to it and then we're going to build very simple kind of builders that are going to work
+
+on that object but it's their interaction that's going to be interesting.
+
+So the class that I'm going to make that we're going to build up is called person.
+
+So in the constructor of person I'm going to have a couple of defaults for different information that
+
+we store about a person.
+
+So let's suppose that there are two completely different aspects of a person.
+
+So one is address information.
+
+So you want for example street address or you want postcode or maybe you want the city where the person
+
+lives in.
+
+And I'm going to initialize those to an empty string.
+
+Now this is one side of person and other part of a person could be their employment info.
+
+So the employment info could have things like for example the company name or their position or their
+
+annual income so let's have those as well so I'll have company name and of this position that's also
+
+going to be an empty string and I also have annual income having the value of zero.
+
+So let's suppose that instead of initializing it through the constructor we are actually interested
+
+in having separate builders for the address and the employment.
+
+Now in the real world you'll have an object that's so complicated that the two different parts of that
+
+object or however many parts you want to initialize it would actually be a lot more complicated than
+
+this because all that's happening here is just just member assignment here.
+
+But let's let's take a look at how this works so first of all what I'm going to do is I'm going to drop
+
+in a two string implementation so we can actually print the object so there's just tells us that the
+
+person lives at such an address city post code and works at the company name earning a certain amount
+
+of money.
+
+So with all of this what we're going to do is we're going to have separate builders for specifying the
+
+address information as well as the employment information.
+
+And every single one of those builders is going to be simple because the core here is to show you how
+
+several builders can interact with one another.
+
+So we're going to have two builders and in order to have those builders we're going to have three different
+
+classes.
+
+So this two builders but there's going to be a third class and that class is going to be a base class
+
+called Person build.
+
+So person builder is essentially a class which is going to store the object that we're initializing
+
+and the constructor of person brother is going to be it rather strange it's going to be different to
+
+what you might expect.
+
+So the constructor is going to take a person but it's also going to have a default value.
+
+And the default value here is going to be a new person.
+
+So this might seem a little weird but essentially what we're going to do here is we're going to initialize
+
+the object.
+
+So we're going to say this that person equals person and then what we're going to do is from this class
+
+we'll begin to do is we're going to expose the builders that are required for specifying the address
+
+information as well as the employment information.
+
+So when you are talking about a person you say that a person lives somewhere.
+
+So we're going to have lives but not as just a method.
+
+We're going to have it as a property.
+
+So we're gonna have a getter called lives like so and here what I'm about to do is I'm going to return
+
+a new person address builder in which we're going to do in the moment and I'm going to specify this
+
+person.
+
+That's the critical thing.
+
+And similarly we're going to have a getter called works which is going to return a new person.
+
+Job builder once again specifying this person.
+
+OK.
+
+Now the final thing I want is I want a method called Build which actually returns the object that we're
+
+building up.
+
+So this is this person.
+
+And that's what we're going to return.
+
+Once we're done initializing all the appropriate parts of that person.
+
+And now let's talk about these two sub builders person address builder and person job builder.
+
+Now both of these are going to be inheritors of the original person builder.
+
+So I'm going to go down here and I'll have a class called Person job builder.
+
+So a person job builder actually extends Person builder and because it extends Person builder it automatically
+
+gets the methods such as lives of works and build.
+
+So that's good.
+
+But in addition it has methods for actually building up the person.
+
+Now the first thing we need to do is we need to specify a constructor like so.
+
+And here we take a person as the argument and we simply call the base constructor.
+
+OK.
+
+Now we need to make a pause here because this part is particularly complicated.
+
+You can see that I'm calling the superclass constructor from this constructor and I have this rather
+
+funny looking default here.
+
+So let's try to discuss what's actually going on.
+
+So as you can probably guess if you're using multiple builders they are all working on a single object
+
+just one object they're not making copies and copies of objects they're all building up a single object
+
+and then the question is Where do you want that object to be stored.
+
+Now in here what I'm doing is I'm making a design decision that I'm going to store this object inside
+
+the person builder.
+
+So whenever somebody calls the person builder with a particular constructor they're going to basically
+
+call the empty constructor and we're going to initialize person with a default value new person.
+
+Now the question is why aren't we doing it between the curly braces why are we doing it right here.
+
+And the answer is this sub builders.
+
+So we want each of the sub builders to also operate on this single object but how do they know about
+
+this object.
+
+And the answer is they know about this object because they get past this object in the constructor.
+
+So we pass this initialized Person object in the constructor and then going into the constructor well
+
+you can see is that here we are simply calling super and all that super does.
+
+If we jump now back into the person build a constructor all that super does is its doors that reference
+
+so every single sub builder ends up working on the same single object whoever calls person builder when
+
+they construct the person builder they actually get to initialize the person that's being built up.
+
+So that's the idea.
+
+Okay.
+
+So the constructor is hopefully clear to you by now and then we can have utility methods for actually
+
+building up the different parts of a person's job information.
+
+So for example we can say that a person works at a particular company.
+
+So you specify the particular company name and here what you do is you say this person not company name
+
+equals company name.
+
+And then you return this.
+
+So as you can see we're making a fluent interface here.
+
+So we specify that a person works at a particular company.
+
+We can also say that they are working at a particular position so we can specify that they are working
+
+as an engineer or doctor or whatever.
+
+So we specify the position here and similarly we specify their annual income so effectively if you look
+
+at this from the perspective of like a single statement it's going to be basically saying that a person
+
+lives or person works at Fabry cam as an engineer earning one hundred thousand dollars for example so
+
+in a similar fashion we're going to build up person address builder.
+
+So the idea here is fairly similar I'm going to be building up the different parts of the person's address.
+
+So here we have the same constructor as before the constructor that simply forwards on the person reference
+
+and we get specified that a person works at a particular address with a particular postcode in a particular
+
+city.
+
+So as you can see the actual builder code in my example is very simple.
+
+So in my example all I'm doing is I'm setting things like for example I'm setting different attributes
+
+of a person in the real world.
+
+If you have several sub builders they might perform calculations that might be doing all sorts of different
+
+things.
+
+So here I'm just trying to illustrate this nature of having a several builders for a single object.
+
+So now that we have all of this let's try putting all of this together and finally see what kind of
+
+code we can actually write with this approach.
+
+So I'm gonna make a person builder so I'm going to make a new person builder.
+
+Notice I'm not providing anything in the constructor I'm leaving the constructor empty leaving person
+
+builder to actually initialize a new object and none of what I'm doing is I'm saying let person equals
+
+person builder.
+
+And then here is where the fun starts.
+
+Because first of all we can specify the residents we can specify where the person actually lives.
+
+So we can say dot lives.
+
+Notice this is a property getter so we don't have to put any kind of round brackets here is just say
+
+dot lives.
+
+And so we specify 123 all London roads for example and then using the fluent interface I can say that
+
+they live in London and they live with postcode as W twelve B.C. for example so that's their address
+
+information and then going to the new line here I can specify the employment information so I can see
+
+works as out or at Fabry cam.
+
+The order doesn't really matter.
+
+I can do as a festival as an engineer
+
+earning one hundred twenty three thousand for example.
+
+So having made all of this I can say don't build.
+
+Which builds up the final object then and I can console the log of that no object and actually get it
+
+to be printed to the console as a string for example.
+
+Now before we look at the output what I want to explain is the little piece of magic that allows us
+
+to jump between one builder and another.
+
+And the explanation is actually right here.
+
+So person builder has the type of person builder obviously so it has the properties for both lives and
+
+works but every single sub builder which gets returned at this point.
+
+So once you call lives you get a sub builder every sub builder is also by virtue of your inheritance.
+
+A person builder.
+
+So this sub builder that is represented here also happens to have a property called works because it
+
+inherited this property from the base class and the same goes for the other builder.
+
+So this builder actually has a property called lives that you could call at any point.
+
+So here for example was the very antique could save lives and that would be completely valid then you
+
+would jump back into the person address builder.
+
+So this is how you can actually jump from one builder to another essentially you have the base class.
+
+In this case it's person builder and the base class has ways of returning the different builders passing
+
+on the respective references to the object that's actually being built up.
+
+If you find this explanation a bit too fast for you I recommend you download the source code to this
+
+lecture.
+
+It's attached to the lecture just like all the other examples are attached to their respective lectures.
+
+Take a look at the source code and figure out what's going on.
+
+This is a particularly kind of clever trickery in using inheritance to pass around these references.
+
+But finally that's actually run the whole thing.
+
+Let's take a look at the output.
+
+So as you can see what we have here is we have a couple of gaps.
+
+We have a person lives at and then the whole thing seems to be missing.
+
+So one question you might have is like what's going on.
+
+Then the answer is that when we called super here we forgot to call a person like so.
+
+So let's just do this again and this time around everything is okay.
+
+So this time round we have the full initialization and everything and just goes to show that you have
+
+to be very careful with calling the base class constructors.
+
+In actual fact because remember we had a super call and without the argument to just initialize the
+
+new object and so we ended up not filling in the right parts of the object that we were interested in.
+
+But the takeaway from this entire example is that sometimes your code gets so complicated that you need
+
+several builders to build up different aspects of your object in which case you can introduce a kind
+
+of parent builder or a base class builder that allows you to jump from one builder to another using
+
+a fluent interface.
+

@@ -1,0 +1,808 @@
+All right.
+
+So now we're going to talk about the factory design pattern.
+
+Now why would you want to use a factory.
+
+Well let me show you a very simple scenario where you probably going to want to use a factory to begin
+
+with.
+
+Let's suppose that you're working with some sort of geometry and you have this class called point now
+
+a point.
+
+Initially you can initialize it with x and y coordinates so you make a constructor which just takes
+
+the x and y coordinates sending you initialize them so you say this X equals X this Y equals Y.
+
+And everything is okay.
+
+Now let's suppose that somewhere the point later in time you decide that you also want to initialize
+
+this point and this is a Cartesian point.
+
+So the X and Y are Cartesian coordinates.
+
+Let's imagine you want to initialize them with polar coordinates instead.
+
+So what you might be tempted to write is something like the following constructor which takes let's
+
+say Rho and theta and then you perform the modifications so you say these are x equals.
+
+Well it would be a row multiplied by a course of theta.
+
+And similarly there's the Y would be wrong multiplied by the sign of theta.
+
+Now unfortunately you cannot do this.
+
+You cannot have two constructors and you know is simply not allowed and there are languages where it
+
+is allowed like for example swift or objective c but it's not allowed in JavaScript.
+
+You cannot do this kind of thing.
+
+So what do you do about this.
+
+Well if you don't want to if you want to have just a single constructor which handles both of these
+
+situations you end up building lots of other stuff lots of more complicated things shall we say.
+
+So for example what you can do is you can define you can define the nomination a coordinate system so
+
+I'm just going to define it very simply.
+
+So occur coordinate system might be just you know two different values.
+
+So you might have Cartesian with a value of zero and then you have polar where the value of one and
+
+what you would then do is you would say well none of these constructors are going to work for us because
+
+none of them are correct.
+
+None of them are going to work.
+
+So we would build a different constructor which takes two values let's call them A and B as well as
+
+a specification of which coordinate system we want to use.
+
+So you would have a construct a which looks like the following You would have A and B and you'd also
+
+specify the coordinate system which by default can be for example Cartesian.
+
+OK.
+
+So here you would do you would do a switch.
+
+You would look at the coordinate system and you would say well if the coordinate system is Cartesian
+
+then everything is OK because we could just copy a and b onto x and y so you would say this not X equals
+
+A.
+
+And this the wife was B and the break and if it were in fact a pulley system.
+
+So if you would have case a coordinate system to polar then you would do something different.
+
+So in this case you would say this that X equals a multiplied by the cause of B.
+
+And similarly the Y here would be a lot of times sine of B.
+
+Once again you do a break.
+
+So this might seem like a solution but there are lots of problems with the solution.
+
+So first of all you have these argument names.
+
+So the parameters are called A and B they don't really tell you what is expected to be provided in here.
+
+Like does a correspond to the x coordinate or the y coordinate.
+
+Does it correspond to the row or the theta.
+
+So this is one particular problem but there are more problems like what would happen if you wanted to
+
+add a third coordinate system to initialize from like spherical coordinates.
+
+Let's suppose you wanted to have another system in here where you would have to do as you would have
+
+to jump back into this constructor and add another case which performs the certain kind of modifications
+
+so it's a violation of the open closed principle because you would have to jump into both the enumeration
+
+into the sets of elements that sets of coordinate systems that we are allowed to have and then you would
+
+also jump into the constructor and modify it somehow so this is something that we want to avoid if possible.
+
+And we also want to be explicit we want to be explicit that the coordinate system where initializing
+
+from is treating the coordinate the argument names in a particular way.
+
+So whatever we want is I do really want to have these names being row and theta.
+
+If I initialize from polar coordinates I do want them to be X and Y if I'm initializing from Cartesian
+
+coordinates.
+
+So how can we get away from all of this and the answer is Well we can have factory methods to begin
+
+with.
+
+So the first thing before we talk about factories as such we're going to talk about factory methods.
+
+Now a factory method is quite simply a method which allows you to create an object and the great thing
+
+about factory method is it doesn't have to be called constructor.
+
+It can be called virtually anything you want so let's go down here and let's actually implement this.
+
+Now first of all what I'm going to do is I'm going to remove the comments from the ordinary constructor
+
+which initialize as the X and the Y.
+
+This is a useful constructor and it's actually something that we can keep here because well it kind
+
+of the Xs and the wise map onto the inner variables of this particular type.
+
+Now what I'm going to do is I'm going to provide a couple of static methods which are going to initialize
+
+the point from both Cartesian as well as polar coordinates so first of all let's have the obvious new
+
+Cartesian point specifying x and y here the result is obviously returned a new point with coordinates
+
+x and y.
+
+So of course we still have the constructor and people can use the constructor if they want but this
+
+is the kind of fancy way of initializing this point using x and y coordinates.
+
+And now you can see that here inside the very name of the method we are giving a hint of the user asked
+
+to what they're expecting to be doing they are expecting to provide Cartesian coordinates into initialize
+
+a point and similarly if I were to make a factory method for a polar point call let's call this new
+
+polar point.
+
+Here I can specify the proper parameter names I can specify row and Theta.
+
+You could even make them Greek if you wanted to.
+
+And here I would return a new point and once again C I'm using the constructor here where the X would
+
+be.
+
+While those values that we calculated before.
+
+So let me just copy them over.
+
+So it would be like this and you would have a sign here.
+
+So we're getting numerous benefits here.
+
+So one of the benefits is that the name of the method actually tells you what's going on.
+
+The other benefit is that the names of the parameters tell you what's going on.
+
+So it's a lot more clearer to the user as to what's actually happening here.
+
+So we can start using all of us.
+
+So in the kind of previous approach what you would be doing is you would be saying things like let P
+
+1 equals new points and you would specify 2 and 3 and then the coordinate system so you would be specifying
+
+like i1 Cartesian but you don't have to do this anymore you don't have to do any of this because what
+
+you can do now is you can use the factory or the factory method rather.
+
+So yeah I can say let P equals point dot new Cartesian point with coordinates 4 and 5 for example.
+
+That's actually a console log of the whole thing so PDA to string all right.
+
+That's actually right.
+
+P hopefully it outputs the the internals so to speak and as I run this you can see that we're getting
+
+a point with X equals 4 and y equals 5 and similarly if you want let's say if you want a polar point
+
+let p 2.
+
+So I can say polar point dot new polar point with coordinates lets a 5 and pi over 2 for example so
+
+console the log let's log P2 and obviously in this case we're going to get some fractional values because
+
+essentially the conversion takes place.
+
+So this value you can see it's three point something by ten to the minus sixteen.
+
+It's actually supposed to be zero because guess what.
+
+The sign off by over 2 is supposed to be zero.
+
+Am I right or is it the cosine now the cosine of pi over to is supposed to be zero.
+
+But as you can see what's happening here is that we're not quite getting this value it doesn't really
+
+matter.
+
+It's just the limitations of the math functions in that they'll never give you a perfect results and
+
+they'll give you something fairly close.
+
+So this is the kind of thing that your you're getting with using just the factory methods.
+
+So just to recap what is a factory method a factory method is a method and it's quite often a static
+
+method as you can see here.
+
+It's a method for creating something.
+
+It's a method for manufacturing a new object and it gives you certain benefits in addition to being
+
+able to be very explicit about the naming so you have the name inside the method itself.
+
+You have the name of the arguments the name of the parameters being set correctly you also have additional
+
+benefits like you don't have to return the point from here.
+
+Well when we talk about the constructor you typically expected to return the type of the underlying
+
+object so the constructor of a point is expected to return that point.
+
+Whereas here you can return some special point so you can return something which is let's say a proxy
+
+to a point or an inheritor of a point or something to that effect.
+
+So you're not restricted by type.
+
+You can also return undefined or no here and that would be OK as well.
+
+So you have all of this flexibility just by using factory methods.
+
+
+
+--------------
+
+
+
+Let's continue this discussion of factory methods and now we're going to move from factory methods to
+
+something that's called the factory.
+
+What is a factory.
+
+What is the idea.
+
+Well the idea is actually very simple and it goes to this principle of separation of concerns or the
+
+Single Responsibility Principle.
+
+Basically what we're saying is that if we have this separate responsibility of creating objects using
+
+a factory and the factory might have no methods inside it that are specific to do it.
+
+Doing some sort of calculations doing some sort of maybe even storing some data it might make sense
+
+to follow the Single Responsibility Principle and actually take them out of the object and put them
+
+into a separate class and that's exactly what we're going to be doing here.
+
+So here's how it goes you basically make a separate class in this case we'll call it point factory.
+
+And this class is going to have just a single responsibility and that responsibility is the creation
+
+of points so now we take all of these static methods we cut them from point and we put them into point
+
+factory.
+
+So here you would obviously modify your code to actually kind of call the new thing now so point factory
+
+is a different object it's a separate object that also knows how to work with points.
+
+The implementation stays pretty much the same.
+
+There's really nothing to change here because the methods they are working just fine they're all using
+
+the Point constructor in order to return the initialize points and we have just updated our usages to
+
+make those factories.
+
+Now it's really up to you how to expose the factories themselves.
+
+So here obviously I have it so that you can call the static methods without initializing a point factory.
+
+You can also get rid of the static here in which case you will allow people to instantiate their own
+
+factories thereby making different instances of a factory and this only makes sense if a factory actually
+
+needs to store some data store some per instance data let's suppose that you have a factory which uses
+
+a floating point values in a factory which uses encoded strings or something else in which case you
+
+would have some sort of setting inside a factory.
+
+So I'm not going to delve into this too much because it's hopefully fairly self-explanatory.
+
+Another thing that you can do if you want to kind of suggest to the user that they should not be using
+
+the constructor but they should be using a factory instead is you might want to expose the factory right
+
+from the object which the factory creates.
+
+Now obviously this introduces a bit of coupling because all of a sudden the factory and the object are
+
+couple together and this breaks the open closed principle but it does give you the benefit of a nicer
+
+API.
+
+So here what we can do is we can say static get factory.
+
+So I'm making a static getter and here I'm just returning a new point factory.
+
+OK so how does this work in terms of the API that we actually consume.
+
+So instead of saying point factory what we can do is we can say point dot factory.
+
+So essentially whenever somebody looks at the point class they see that there is a factory getter there
+
+and they can use that.
+
+Get her to actually get an instance of factory.
+
+And once again it's really up to you whether you want to always return one instance off point factory.
+
+That would be a singleton or whether you want to return a brand new instance every time somebody actually
+
+calls this getter it's really up to you in this particular scenario which approach to go for and you're
+
+going to see this approach in other programming languages quite a lot obviously in JavaScript it's really
+
+not as essential but this is something that you can also implement.
+
+So the takeaway from this lesson is very simple if factory is just a separate class or a separate component
+
+which takes on the responsibility of creating objects of a particular type and once again you have flexibility
+
+here.
+
+So for example let's suppose that in addition to just ordinary points you also have three dimensional
+
+points it's really up to you whether you want like a point 2D factory endpoint 3D factory or if you
+
+just want a single factory which creates two types of objects.
+
+So it's you have to use common sense here.
+
+There is no kind of straight answer that for example I'm not saying that a factory has to have a one
+
+to one correspondence with the object it creates a factory can have several different objects that that
+
+creates it can leverage polymorphism in order to create families of objects.
+
+That's something we're going to take a look at in a moment.
+
+So it's really up to you what kind of design decisions you want to make in terms of factories both factories
+
+are generally a good idea.
+
+They are just another way of kind of grouping related functionality and then hearing to the Single Responsibility
+
+Principle.
+
+--------------
+
+
+The idea of an Abstract Factory is a more complicated idea.
+
+It doesn't map a very neatly to javascript but it's still worth discussing just in the general sense.
+
+So the idea behind the Abstract Factory design pattern is that you can have a hierarchy of objects and
+
+you can have a related hierarchy of types and then what you can do is you can group the factories in
+
+for example expose them as some sort of list.
+
+So I know it sounds very abstract so what we're going to do is we're actually going to build a very
+
+simple scenario which leverages the Abstract Factory design pattern and we're going to be talking about
+
+a typical hot drinks machine like a machine which makes tea and coffee and whatever.
+
+So first of all what I'm going to do is I'll make some sort of base class called Hot drink so a hot
+
+drink is going to have some sort of consume method.
+
+Now in JavaScript you really have abstract members as such.
+
+So if you want something that the inheritors can implement you can leave it blank but you cannot really
+
+say this is abstract or anything like that.
+
+So what we're going to do is we're going to have a couple of inherit this so for example you might have
+
+t so T extends hot drink and here what we can do is we can override the consume method and instead of
+
+calling the base class because obviously the base doesn't really do anything.
+
+I'm just going to output the message to the log so I'm going to say this t is nice with lemon.
+
+So what I'm doing here is I'm essentially emulating the process of consuming t so t that consume would
+
+let you actually drink that C and the same can go for coffee.
+
+So once again you would extend a drink and override the consume method that once again getting rid of
+
+the default implementation here and here I would lock something else so maybe this coffee is delicious.
+
+We go.
+
+Okay.
+
+So the tea and the coffee in this example they they form a hierarchy so they are both of type hot drink
+
+because they extend from hot drink and even the hot drink by itself doesn't do much.
+
+They are all kind of related.
+
+We know what kind of API they expose because we can look at the base class and we can sort of make inferences
+
+from that.
+
+So it's not like a proper abstract abstract member in the sense of like C++ or Java but it will do for
+
+our purposes.
+
+So what we're going to do now is in addition to this hierarchy of drinks we're going to have a corresponding
+
+hierarchy of factories which are used to manufacture those drinks so if you think about tea and coffee
+
+a tea factory or a coffee factory it could be a single coffee machine.
+
+And in the case of getting a coffee you just take the cup in there and you press a button in the case
+
+of getting tea you what you have to do is you get the hot water out of the coffee machine and then you
+
+put in the tea bag and you have it you have your tea basically so we're going to have a base class we're
+
+going to have a hot drink factory and that's just going to have a single method called prepare which
+
+is going to you specify basically the amount of drink that you want and once again this is a kind of
+
+abstract in the sense that this method doesn't really do anything but it is a guide.
+
+It is a kind of suggestion to the inheritance as to what kind of method they should actually be providing
+
+an implementation for.
+
+So you would have a tea factory which extends hard drink factory and here if we just go and we override
+
+prepare what we would do here is well first of all I'll just put some some sort of message like we in
+
+the case of tea for example what we do is we put in tea bag.
+
+We boil the water we pour a certain amount milliliters and that's it.
+
+You can enjoy it.
+
+And here I'm going to return and you'd see so this is the object that the factory actually makes.
+
+Now it's typically what you would do here is you would sort of customize it to how you want you might
+
+pass arguments to the tea constructor you might initialize the tea with the default constructor and
+
+then just set a bunch of properties of that tea for instance and then you would return it here I'm just
+
+sort of taking a shortcut because I'm showing the overall sort of high level organization and then you
+
+would have the coffee factory so your coffee factory would also extend a hard drink drink factory.
+
+It's interesting that I didn't get completion here ordering factory though ago.
+
+So here once again let's do the override.
+
+And let me actually just just copy over the the implementation so here.
+
+What I would do is I would grind some beans I would boil the water you pour a certain amount and once
+
+again I'm returning just a default kind of coffee object that you you might want to customize like like
+
+the type of coffee that it is and so on and so forth.
+
+It all might get a bit more complicated.
+
+Okay.
+
+So now that we have this setup what we want to be able to drink is we want to be able to build some
+
+sort of hot drink machine.
+
+We want to be able to drink one of these hot beverages obviously but before we do that we have to actually
+
+build a machine and we want to somehow interact with that machine and get get some information from
+
+it.
+
+So let's let's talk about the most simple kind of a factory person you can make.
+
+So for example let's suppose that the hot drink machine just you tell it what kind of drink you want
+
+then it gives you kind of a default value in this case you would have some sort of make drink method
+
+where you specify the type of a drink that you want and depending on that type depending on that type
+
+you get either a tea or coffee.
+
+So in a case of tea for example what you would do here is you would use a new tea factory and you would
+
+prepare a certain amount let's say 200 mil if we're talking about C and in case a coffee you would do
+
+something very similar so you would use a new coffee factory so a coffee factory like so and you would
+
+prepare maybe a smaller map.
+
+Maybe it's in this process.
+
+It's like 50 though and you would also have some sort of default where you can do error handling for
+
+example if you don't if you don't know how to make this drink sold.
+
+Throw new era.
+
+I'm just going to leave this blank.
+
+You can.
+
+You can sort of imagine that we don't know how to make the drink of a particular type.
+
+So with this set up it's for now we're not really using the Abstract Factory we just explicitly making
+
+these factories and we are we're sort of doing them by hand which is a particularly bad approach.
+
+Once again you have to you have to kind of.
+
+It has to click and you had that you're breaking of the breaking the open closed principle because whenever
+
+you have a new factory you would have to go into this method and you would have to explicitly modify
+
+to support that new factory which is kind of complicated shall we say.
+
+But this is this is the starting point so what we can do is we can make a new machine that machine equals
+
+new hot drink machine and then we can use this machine to actually ask the user what kind of drink they
+
+want.
+
+Now for this we we need some models here so we need read line read line equals require a read line read
+
+a line now and go so lateral equals read line create interface where the input is processed at the end
+
+and output is processed as to out there we go.
+
+OK.
+
+So now we have read line and what we can do is we can just get the user's input here and keep in mind
+
+that read line in under no guess where I'm showing this is actually an asynchronous kind of thing.
+
+It's really annoying to work with if you're used to the synchronous mindset.
+
+Anyway what we're gonna do is we're going to ask the user we're going to ask the user which drink they
+
+want which drink question mark and then we're going to take their answer and we're going to just use
+
+the make drink method.
+
+This particular method to make the drink that they want.
+
+So we're gonna say let drink equals machine don't make drink specifying the answer we're going to consume
+
+that drink we're going to close the whole thing.
+
+Close the red line.
+
+OK.
+
+So having said all of this up we can actually we can actually start using this hopefully runs let's
+
+let's see what's going on so it's asking as we drink we want we want tea for example I'm going to press
+
+return here.
+
+So we put in the tea bag ball of the water we pour 200 milliliters and this is nice with lemon.
+
+So this is how you would go about just just using the factory's explicitly.
+
+But what we really want is we want to have a some sort of association between the factory and the object
+
+that this factory actually makes and at the moment this association is done by hand.
+
+We have a switch with a bunch of strings which is really a really pedestrian approach so we say we want
+
+to we want to be a bit more explicit about this.
+
+So first of all because javascript doesn't really have reflection we cannot just go ahead and say oh
+
+can you please find all the inheritors of the hot drink factory type.
+
+We cannot do this.
+
+And as a result we are bound to have some sort of enumeration we're bound to have some sort of list
+
+all the different types that we actually store.
+
+So here what I'm going to do is I'm going to make an object which lists all the factories as well as
+
+their respective types and I'm going to call it available drink so available drink is going to be as
+
+follows.
+
+So I'm going to have coffee and if it's coffee.
+
+The key is going to be coffee and the value is going to be coffee factory and the same goes for tea.
+
+So if the key is tea then the value is tea factory.
+
+There we go.
+
+So this is my enumeration.
+
+And what I can now do in the constructor all the hot drinks machine is I can actually instantiate every
+
+single factory that is available to me so let me show you how this works.
+
+So in the constructor what I'm going to do is I'm going to say this that factories equals I'll just
+
+initialize it to a blank object and then I'm going to go through every single element in this enumeration
+
+that we just made and I'm going to actually take each of these factories make an instance of it and
+
+then added to the set of elements.
+
+Now remember when we're talking about coffee factory here this is a type.
+
+So this selected element here is a type but we actually want an instance of that type where we don't
+
+show on the type we want and instantiated object.
+
+So for every single drink.
+
+So for lit drink in the available drink.
+
+So drink is actually the key.
+
+So we say this the factories at drink equals and here is the interesting part.
+
+We make a new available drink at drink round bracket.
+
+So what's going on here well available drink is just enumeration is just an object which has a couple
+
+of fixed fixed values that we want to take.
+
+So we take every single one of them by using these square brackets to get to the actual type like coffee
+
+factory or tea factory.
+
+And then we use the round brackets to instantiate that factory.
+
+So what we end up with is we end up with having factories where the keys are still the names like coffee
+
+and tea for example.
+
+But the values are instances of the coffee factory in the tea factory.
+
+So now that we've set up all of this what we can do is we can have a kind of interactive experience
+
+for the user.
+
+So instead of just asking them a question in this way what we're going to do is we're going to have
+
+the machine provide some sort of some sort of interface member for interacting with it.
+
+So we're going to have a method called interact where we'll also specify the consumer now that the consumer
+
+is going to be a function that actually consumes the drink once it's prepared.
+
+So once the drink is done you can provide a continuation for what you want to do with the drink so to
+
+speak.
+
+So here once again we'll do our old question as before.
+
+And first of all we'll ask the user to provide both the drink and maybe we'll also specify we'll ask
+
+the user what amount of drink they want.
+
+So we're gonna say Please specify drink and.
+
+So let's let's actually give the user examples of for example you might have t space 50.
+
+So this is how you would specify that you want a cup of tea and you're only 150 moolah years because
+
+maybe it's some really strong tea or something.
+
+So once we get the answer let's actually specify what we want to do with it.
+
+So first of all we're getting two string parts.
+
+So let's get the parts by taking the answer and splitting it on a space like so and then let's get the
+
+name of the drink.
+
+So that name equals parts at position 0.
+
+Now once we have the name what we can do.
+
+Well let's get the amount as well.
+
+So little amount equals and the amount needs to be passed from a string.
+
+So parts at one needs to be turned from a string into an integer.
+
+But now what we can do is we can get the right factory and we can call prepare on that factory so we're
+
+gonna say let drink let the equals visit factories at name so remember name is the key that gets us
+
+the corresponding factory which has already been created for us.
+
+And then we just call prepare specifying the amount of drink that we want we call our old clothes so
+
+we close the input but what we do is we call the continuation so remember this is what gets passed into
+
+interact.
+
+So we basically say consumer of these.
+
+So we push the drink towards the function that actually wants to consume it.
+
+So from the kind of user's experience it might look something like the following.
+
+So we say machine that interact.
+
+And the first argument has to be the consumer the first argument has to be some sort of function which
+
+takes the drink and then we can do something with that drink.
+
+Like for example we can consume it.
+
+There we go.
+
+So this is a scenario set up and let's actually run the whole thing.
+
+So here we have to specify the kind of drink that we want as well as the amount so I can say coffee
+
+and 50 for example and when I press return you see that this is the process of grinding some beans boiling
+
+the water pouring 50 mil and then I get the coffee and I consume it and I say that this coffee is in
+
+fact delicious.
+
+So the takeaway from this entire example is as follows.
+
+Basically sometimes you end up with situations where you have a hierarchy of types and in this case
+
+we have a hot drink hierarchy which is made up of tea and coffee and you have a corresponding hierarchy
+
+of the factories which are actually instantiate those type.
+
+So we have a hot drink factory and we have different ways of making tea and coffee and what you can
+
+do is you can find different ways of putting them into a one to one correspondence because we don't
+
+have any kind of special language features for specifying that this is a factory for this type but you
+
+can make lists you can make tables you can make whatever constructs you feel are necessary to make the
+
+connection between one and another and then you can you can sort of invoke them in a very general way.
+
+So what I've done here for example is I just put them all into a single object where the key is the
+
+name of the drawing that you want to have and the value is actually in instantiated factory that you
+
+can subsequently just call methods on and have that thing manufactured for you.
+
+So this is the gist of the abstract factory design pattern.
+
+-------------
+
+

@@ -1,0 +1,645 @@
+But now good to take a look at another example of the flyway design pattern.
+
+And this time round we're going to talk about formatted text.
+
+So the idea is that you have text which you might want to format using some some specifies like like
+
+in the typical text editor you might want to make the bold the text bold or italic or underline it or
+
+something to that effect.
+
+And we're going to emulate some of these processes here.
+
+Once again show you where the flyway pattern can be relevant.
+
+So let's suppose that I want to make a class full formatted text.
+
+So whenever you construct such an object you want to specify some sort of plain text that you subsequently
+
+want to format.
+
+So we'll store that
+
+but in addition you also want to add some sort of formatting.
+
+Now let's suppose you want to have formatting which capitalizes certain characters in the plain text.
+
+Question is how do you actually implement this.
+
+So one brute force approach would be to make another array of boolean effectively.
+
+So you make an array of boolean values where for every single character there is a billion value indicating
+
+whether that character should be capitalized or not.
+
+So this is something we can try.
+
+We can say this that caps equals and then I'll just make a new array of plaintext the length and we
+
+might also want to actually specialize this array in the sense that we might want to simply return false
+
+here so that it becomes just a bunch of boolean values effectively.
+
+So we make an array of whatever input length there was and we put a false in every single one of them.
+
+Now subsequently what we want to be able to do is we want to be able to capitalize a certain range inside
+
+the text.
+
+We want to capitalize from the starting position towards the ending position which means that you go
+
+through the caps array and you basically flip every single every single boolean in that range.
+
+So for let I equals start i is less than or equal to and plus plus I.
+
+What you basically say is you save this that caps position i equals true.
+
+So that's how you capitalize a range of letters and then we can implement to shrink to actually print
+
+healthy.
+
+So essentially what we need to do because we need to transform the whole thing.
+
+We need to make a buffer which is going to be an empty array and then we'll go through every single
+
+letter or indeed every single position inside the plaintext so for that I in this plain text what we're
+
+going to do is we'll gather characters.
+
+So let's see equals this plain text adds position high but then we're going to push either this character
+
+or this character capitalized depending on whether whether or not this this is actually required.
+
+So I'm going to say buffer dot push and here what I'm going to say is that if we have caps at position
+
+i then we need to capitalize the whole thing.
+
+So we need to take C and do to uppercase.
+
+Otherwise we just take C as it is and we add everything to the buffer and at the end we just return
+
+a buffer that joint that would go OK.
+
+So with this setup what we can do is we can already start using it.
+
+We can already start using this format text so here I'm going to define some text.
+
+This is a brave new world.
+
+Let's suppose that I want to capitalize the word the word Bray for example.
+
+So let's see how that goes.
+
+So I make formatted text let FTE equals new formatted text and I specify the range from 10th to the
+
+15th letter and then.
+
+Well actually no that's that's not where we specified here we provide the text but then I say FTD are
+
+capitalized.
+
+So we want to capitalize from 10th to the 15th position and then I can console the log.
+
+Just taking the formatted text to a string.
+
+OK.
+
+So let's let's actually run this.
+
+Let's see what we get.
+
+So we get what we wanted.
+
+This is a brave new world you see the blood brave here are being capitalized but then fortunately we
+
+paid a lot of memory for the privilege we paid a lot of memory for the ability to do this now does it
+
+really make sense for us to account to have a bully and value for every single letter.
+
+Well if you think about a large text like War and Peace for example then you're going to waste huge
+
+amounts of memory just storing that empty boolean.
+
+And even if a single word out of the entire war and peace story gets capitalized you're still going
+
+to pay the price in terms of memory for actually you know having all that formatting so clearly there
+
+must be a better way.
+
+There must be a way to just store the ranges as well as information about what kind of formatting should
+
+happen in those ranges.
+
+And that's exactly what we're going to do so we're going to make a class called Better formatted text
+
+better formatted text is going to have a constructor which also takes plaintext we store the plaintext
+
+here and in addition we're going to store some formatting.
+
+So this time round I'm going to say this the formatting equals empty array and that's something that
+
+we're going to populate later on.
+
+Now the question is what exactly do we get.
+
+Do we put what kind of objects do we put inside formatting.
+
+Now what I propose is we make a new class called text range.
+
+Now it's X range is our typical kind of flyweight object it basically stores information about the start
+
+and end of a range as well as what you want to do with that range.
+
+So what kind of formatting you want to apply.
+
+So in a constructor you have to specify the start and end positions of that range which we store.
+
+This does start this dot and equals.
+
+And and then this range also specifies certain amount of formatting like for example do you want to
+
+capitalize this or do you want to make it bold italic whatever.
+
+So here I will say for example this that capitalized equals false and you can add other options here
+
+later on.
+
+So the idea is that you would take this text range and then you can set the capitalized property to
+
+True and that may.
+
+That means that the range from starting position to ending position is actually going to be capitalized.
+
+We're going to have a utility method here called covers which tells us whether or not this range covers
+
+a particular position.
+
+Now this one is very easy.
+
+We just return that position is greater than or equal to this start and position is less than or equal
+
+to this.
+
+And this way we know whether or not text range covers a particular point because we're going to go through
+
+every single point every single character from left to right in the plain text.
+
+We want to know whether the whether there's any formatting that's applicable.
+
+So now coming back to better formatted text we can now have a utility method called get range.
+
+So get range does two things.
+
+It first of all it gives you a range and initialized range from the starting position towards the end
+
+position.
+
+But the second thing it does is it also stores it in our formatting array.
+
+And the reason for that is that subsequently when somebody customize is that range we do actually use
+
+it in the output.
+
+So I make a range it's going to be a new text range from start to end and then I say this dot formatting
+
+dot push range so I store the range internally and I return the range as well so that the user can subsequently
+
+customize that range for example they can set the capitalized flag to true and thereby you know get
+
+everything to work and finally we have to implement to string once again.
+
+So this time around we're also going to go through every single character but instead of looking at
+
+some sort of boolean array or a set of boolean arrays for how every single character should be treated
+
+we check whether or not that particular point is inside the ranges that are specified in the formatting
+
+array.
+
+So let's make a buffer as before and then we'll begin to do is we're going to go through every single
+
+index in plaintext and I'm going to get the character so let's see equals this plaintext and position
+
+I.
+
+And then what I'm going to go do is I'm going to go through every single range inside our formatting
+
+so for let range of formatting and if the range covers the point and position I and you want to capitalize
+
+it then we're going to capitalize the letter.
+
+So if range covers position I and we do want capitalization then we change C the letter C we say C equals
+
+seed up to uppercase There we go.
+
+So at the end of it all what happens is you either you modify the letter C or you didn't modify you
+
+add it to the buffer so you add the buffer the other seeds of the buffer and you return buffer don't
+
+join like so so that you you get the you get the right you get the collected string so to speak.
+
+OK.
+
+So now we can try this we can make a better formatted text down here so I'll say let BFC equals new
+
+better formatted text specifying the text as before and then here's how it goes.
+
+So in order to capitalize arrange for example the first thing you do is you call get range so you get
+
+a range of letters.
+
+So for example if I want to capitalize the word new I would get the range from 16th to 19th position
+
+and now I have this range object which is given to me but it's also stored inside of the formatting
+
+array inside of use it too.
+
+So here what I can do is I can say capitalized equals true and that sets the capitalization flag.
+
+Now if I log B FTD ought to string.
+
+Well let's actually take a look at what the output is.
+
+So as you can see it works exactly as we want.
+
+So we capitalized the word new.
+
+So once again we looked at an implementation of the flyway design pattern where instead of storing lots
+
+and lots of data as we did when we made an array up here when we made a huge array of boolean values
+
+what we instead do is we try to circumvent this idea so we hear here we're also making an array but
+
+it's only going to have one element per every instance of formatting and so it's not such a big deal.
+
+Now there are other optimizations that can be made here for example this idea of going through every
+
+single range and checking whether or not it covers a particular point is not the most efficient one
+
+and you probably want to for example sort all the formatting by indexes so that you go from left to
+
+right and you don't have to go through every single element over and over again.
+
+But apart from these optimizations This is a pretty good solution.
+
+So it's a solution which keeps the formatting kind of externally.
+
+And then once again it allows you to kind of index into the formatting index into the text whenever
+
+you actually need to apply it.
+
+--------------
+
+
+All right.
+
+So the first example of the flyway design pattern that I want to show you involves the storage of people's
+
+names.
+
+So imagine if you have some sort of server backend where you actually have to store lots of different
+
+people's names.
+
+Now when you have just a few people participating in let's say some sort of chat room or some social
+
+network whatever the setting just you know any ordinary setting where people enter their full names
+
+you're going to have lots of duplication.
+
+So let's imagine that you have some sort of class called User.
+
+And for the sake of demonstration I'm not going to have any extra properties of the user apart from
+
+their full name.
+
+So the most obvious solution if you're going to store a full name might be just to write something like
+
+this.
+
+So just just just store it completely and continue working with it.
+
+Now this is OK if you don't have many users.
+
+If you have lots of uses you're going to have lots of duplication because well imagine you have a user
+
+called Adam Smith.
+
+Now there are a few things you can guarantee about this.
+
+First of all if you have lots of uses you're going to have lots of uses called Adam Smith.
+
+Exactly.
+
+There's gonna be more than one user and as it stands for every single user with that name you're going
+
+to be creating a new string and that is going to waste memory.
+
+But in addition you're also going to have lots of users who might have a different let's say first names
+
+you'll have John Smith and you have Jane Smith and then you'll have Adam Jones for example and Jane
+
+Jones and you're going to have duplication both of first name as well the last name.
+
+So there is a potential for saving lots and lots of memory here and well we're going to do an experiment
+
+we're actually going to do a pseudoscientific actually very unscientific experiment in trying to measure
+
+how much memory we're going to occupy.
+
+So what I'm going to do is I'm going to just basically create 10000 users and that's going to require
+
+a few utility functions first of all.
+
+I'll have a function for getting around them in nature given some sort of maximum value that's actually
+
+going to be used for generating random strings of first and last names because we want to have let's
+
+say 100 unique first names 100 unique class names and then we're going to make 10000 users out of them
+
+so here for making around him integer I'm just going to do this quickly so I want the floor of a random
+
+number that I remember math random actually gives you a number from 0 to 1 so I'm going to multiplied
+
+by Max in this case and that's that's pretty much it.
+
+So now what we can do is we can make a function called random string
+
+choosing a different function definition style here.
+
+So what I'm going to do is I'm going to make an array for the result and then I'm going to make every
+
+single string 10 characters long.
+
+So for that x equals zero x is less than 10 increment x 1 I'm going to do is I'm going to take the result
+
+and I'm going to make a new letter new letter so string from Char code and we'll start with the letter
+
+A and then we're going to add a number from zero to 25 so that's going to be get random and 26.
+
+So.
+
+OK so this is a function for making a random string but I'm going to do that which is going to make
+
+lots and lots of uses.
+
+Well first of all let's make a bunch of first names and last names actually.
+
+So let's first names equals empty string let's duplicate this and let's have far last names as well
+
+so what I'm going to do is have a loop with I going from zero to 100.
+
+And in here I'm going to first names that push I'm going to add a first name taken from a random string
+
+that's why we did that random string thing and then the same goes for last names.
+
+So now I have 100 first names 100 last names we can actually generate 10000 different uses.
+
+Now I don't know how realistic it is to have this kind of overlap in the real world when you have real
+
+people's names but this is a good enough approximation.
+
+So for Let's first off first names so we go through every single first name for let's last.
+
+Off last names I'm going to make a new array here uses and that's where we're going to put those 10000
+
+uses.
+
+So here I'm going to say uses they'll push a new user and let's interpolate the first name with a space
+
+and then last name.
+
+OK.
+
+Now in order to measure the amount of memory that's occupied by all of this I'm going to do a very unscientific
+
+thing I'm going to serialize everything into Jason and then I'm going to measure the length of the resulting
+
+string.
+
+Now obviously that's not a correct way of measuring things because remember in Jason you're going to
+
+have the name of every single field being read it over and over and over again.
+
+And that can actually take up more memory than how the strings have themselves even though we have 10
+
+character strings but that's a ballpark figure which is going to kind of it's going to be added to both
+
+of the scenarios.
+
+So we're going to see some.
+
+Well it's going to be OK.
+
+Is what I'm trying to say.
+
+So let's let's try logging this So 10000 users take off approximately and then let's let's actually
+
+try to measure it.
+
+So what I'm going to do is I'm going to say Jason dot stringy Phi.
+
+So I'm going to string you Phi all the users and take the length of the resulting string.
+
+And this is how many characters it actually takes so that's actually run this and you can see that 10000
+
+uses when serialized into Jason I'm going to take up approximately three hundred and fifty thousand
+
+characters.
+
+Okay.
+
+So how can we how can we optimize this situation.
+
+Well in actual fact this is why we are gathered here today to discuss the flyway design pattern.
+
+So the idea of a fly weight is that instead of storing the full data over and over again you prevent
+
+as much of the duplication as possible.
+
+And here what we're going to do is we're going to build a new class.
+
+Let's go.
+
+Use it to say use it.
+
+Who is going to be different.
+
+Because while the signature is going to be the same so the constructor is also going to take a full
+
+name.
+
+But everything that happens internally is going to be different.
+
+What we're going to do is we're going to give every single user to instance we're going to give them
+
+a common storage for the string so I'm going to say use it to adult strings equals and just make an
+
+empty array here.
+
+OK.
+
+So the array is going to store every single unique string.
+
+And whenever we get a full name we're going to break it apart into first and last.
+
+So we're basically split it using the space separator into separate elements and then we're going to
+
+look at each of the elements and see whether or not it's inside our strings array if it's inside the
+
+strings array.
+
+We'll get the index from there.
+
+Otherwise we'll just add it as a brand new element so here's how it goes.
+
+I'm going to take full name.
+
+I'm going to split it on a space I'm going to basically turn John Doe into strings.
+
+John and DOE as part of an array.
+
+And then I'm going to map every single element of an array using a function called Get or add.
+
+Okay.
+
+And then I'm going to say this dot names.
+
+Okay.
+
+So get around is going to either get the element from the strings array or it's going to add that element
+
+and it's going to in both cases returns the index of that element so let's actually write this function.
+
+So get or add is going to be a function which takes a string and the first thing we're going to do is
+
+is check whether or not this string is actually in the set of strings already so I'll get the index
+
+off that string inside.
+
+Use it to the strings.
+
+So I'll say use it so that strings dot index of an index of string as if this value is not equal to
+
+negative one then we can just return that index.
+
+So if index is not equal to negative 1 we just return the index.
+
+Otherwise what we do is we added to the set of strings.
+
+So we say use it to strings dot push as.
+
+And then we return the index of that element now obviously this is the last elements of we take this.
+
+Strings length.
+
+We subtract one and that's what we return.
+
+So return use it to dot strings dot length minus one like so.
+
+Okay.
+
+So this is the setup.
+
+So at the end of this dot names becomes an array of integers and this is precisely what the flyweight
+
+pattern is all about.
+
+So instead of having every single string duplicated all the time you now have just a bunch of integers
+
+which tell you where the string is in this one big strings array.
+
+Okay.
+
+So let's see how much memory all of this actually takes up.
+
+So what I'm going to do is I'll replicate this.
+
+So we'll have a new array called uses too.
+
+And when it comes to this approach I'll just duplicate this line as well so use this to is going to
+
+add a new user to with the same first and last name.
+
+And then we're going to serialize everything to Jason now this time around it's going to be a bit different
+
+because in order to serialize things into Jason not only do we have to take the users to array but we
+
+also have to take all the strings data from use it to because that is not going to be saved by default.
+
+So let uses to length equal so the two things that we need to serialize to Jason are going to be uses
+
+two as well as use it to adopt strings.
+
+So these are the things where we have to map them to Jason lengths and then add them up together.
+
+So I'm going to map.
+
+So X goes to Jason dots stringy fi so I'm going to string ify the get the string representation of that
+
+element as Jason and then take the length of the resulting string and then I'm going to add them up
+
+together.
+
+So reduce or reduce X come a y then goes to X plus Y.
+
+So that gets us there total.
+
+OK.
+
+So now let's output this so we can say that 10000 flyweight uses take approximately.
+
+And then let's actually measure it.
+
+Well we already have the number actually we they have the numbers so that's uses to the length characters.
+
+There we go.
+
+OK.
+
+So let's round this let's see what we get.
+
+OK.
+
+So as you can see 10000 users take up approximately three hundred and fifty characters three hundred
+
+fifty thousand characters and 10000 flyweight users take up well less than half of that.
+
+So this is a kind of real world demonstration of the fact that we are saving some memory even though
+
+the test is completely unscientific.
+
+So the takeaway from this lesson is that sometimes it's worth basically caching the data.
+
+So where caching the data into some sort of common storage and then instead of storing that data and
+
+allowing for duplication we store indices we basically store what are effectively pointers into the
+
+array of the strings.
+
+So these names is essentially just just an array of numbers every single number points somewhere into
+
+the strings array and that's where we get the items from.
+
+So it is a tradeoff.
+
+It is obviously a tradeoff because you have more computational requirements because for example let's
+
+suppose you want to actually print the full name of the person in in the User class or you have to do
+
+is you have to take this full day because you already got it.
+
+But in use it too you don't have the full name.
+
+You have a bunch of integers.
+
+So you have to take those integers you have to map them onto.
+
+So you have to do a map to get the actual strings and then you have to join the strings using the space
+
+separator.
+
+So it's a bit more complicated but this is a clear example of a tradeoff.
+
+So you save up significantly on memory and you pay a small price in terms of computational performance.
+

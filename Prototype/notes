@@ -1,0 +1,737 @@
+So the essence of the prototype design pattern is all about our ability to copy objects so let's take
+
+a look at this scenario where this would become relevant.
+
+So for example let's suppose I make a class called Person.
+
+So we're going to describe a person in terms of their name as well as their address.
+
+So in the constructor I'll take the name and the address and I'll just set them.
+
+This name equals name this address equals address like so and then let's define interest as well because
+
+the address is going to be a composite object as well so address.
+
+It's going to be a class will have a constructor where you specify the actual street address the city
+
+as well as the country you can think of other things too and here like postcode for example.
+
+So a street address equals street address city equals city country equals country.
+
+No go.
+
+So now that we have this definition of person what we can do is we can create one person.
+
+So let's make John.
+
+So John there's going to be a new person with a name John and their address is going to be a new address
+
+where we specify the street address can be a 123 London Road.
+
+And suppose they live in London and in the United Kingdom.
+
+So that's John.
+
+Now John can serve as a prototype for additional people that happen to live in the same building as
+
+John.
+
+Meaning that instead of instantiating their address once again we might want to copy it while we might
+
+want to customize a little bit in the case that it's not exactly there the same building but it might
+
+be their neighbor or something.
+
+So how do you copy objects in javascript.
+
+That is the key question of the whole prototype design pattern.
+
+So the way you can try copying it is by writing something like the following let j equals John.
+
+Now this is obviously wrong but let's just flesh out why it is wrong.
+
+So I'm going to have this new object Jane that I'm going to customize it.
+
+So let's suppose the Jane also happens to live in London in the U.K. but her name is different and her
+
+street address is different.
+
+So we can say Jane that name equals Jane and we can say Jane dot address I got street address equals
+
+321 Angel Street.
+
+I didn't even know if there is such a street in London maybe there is.
+
+So now that we've got this let's try actually printing both John and Jane and seeing what we get.
+
+So I'm going to log John and I'm going to similarly log Jane.
+
+Now I do wonder if I'm going to get any nice output here because I haven't implemented to a string as
+
+you can see we just get a bunch of objects which isn't particularly exciting so let's go back into the
+
+code that actually implement something that shows the object in a nice a way.
+
+So for the address let's implement to string here I'm going to return the actual address.
+
+So the actual address is going to be a street address.
+
+And let's also have obviously the city.
+
+So city and country.
+
+There we go.
+
+So this is the address and we also want to string for the person themselves.
+
+So let's do that.
+
+So here I'll define this string as follows.
+
+So what I'm going to do is I'm going to return.
+
+Let's specify their address and actually we probably also want their name before we do the address.
+
+So yeah let's do it like this.
+
+So we're going to have this name lives at this dot address.
+
+Okay.
+
+So that should hopefully work and we can try this again now OK so as you can see we already have a problem
+
+because we are printing both John and Jane but we're getting exactly the same results which shouldn't
+
+really surprise you because if you look at the code if you look at this line that we wrote what we really
+
+did is we just overrode the reference so we now have both Jane and Joe and actually refer to the same
+
+object the same memory effectively.
+
+So when we write Jane and three to one Angel Street we write it to the same memory for both John and
+
+Jane because they refer to the same object.
+
+So the question is well we don't really want them to refer to the same memory.
+
+How can we actually get them to refer to different memory.
+
+So there are different ways of approaching this but the one we're going to go for is where we're going
+
+to basically support copying explicitly so we're going to support this idea of just just copying the
+
+object wholesale.
+
+So let's suppose that we go into person and we define some sort of deep copy method.
+
+Okay.
+
+So the idea is that whenever you want to copy a person you make a new person with the same attributes.
+
+So you return the new person which has this name and this other address.
+
+So it's as if you're actually copying the whole thing.
+
+But this will not work either.
+
+Let's now go down here so what if I do the deep copy now.
+
+So I am supposedly trying to make a replica of the object that we can customize.
+
+But if I run this now you'll see that we still have a problem.
+
+So their names are now different which is good because obviously we copy the name over but their addresses
+
+happen to be the same.
+
+Why is this happening.
+
+What is the problem here.
+
+Well the problem is that when we pass the address in here unlike with a string where it gets copied
+
+wholesale and you can customize it The address is still a reference.
+
+So both objects both the original object as well as a deep copy object they still refer to the same
+
+address.
+
+So what we need to do as you may have guessed is we need to deep copy the address as well.
+
+And of course in order to implement this you have to have the copy inside the dress.
+
+So inside that dress you would return the new address where you would take the street address and city
+
+and country like so.
+
+And after implementing this this is actually going to work.
+
+So if I run this you see that now the objects are completely different.
+
+So what did we do here.
+
+Well we made a prototype.
+
+So John is effectively a prototype that you make copies of you customize those copies and then you ever
+
+use them for whatever kind of tasks you need the there is a limitation to this approach.
+
+There is a fairly obvious limitation if you have objects which use other objects which use other objects
+
+in a very complicated kind of tree like relationship then you have to implement deep copy for every
+
+single composite object inside your entire object model.
+
+So if you want an object to be deep copy appeal you you also need all of its non primitive members to
+
+be deep copy as well.
+
+And this is a bit of a headache in terms of how much work you have to do to actually support those operations.
+
+-------------
+
+
+So in the previous example we saw this idea of implementing some sort of deep copy method for every
+
+single object that you want to be call people and the question is can we avoid doing this.
+
+Can we do less work and not implement this ourselves.
+
+Because in a complicated scenario this could be a lot of work.
+
+The answer is yes.
+
+The answer is that we can in fact copy objects without writing their own deep copy methods and this
+
+can be done by simply civilizing the objects to some data format and then D.C. realizing them from that
+
+format.
+
+So if you already have a framework which can take an entire object and save it as a chunk of text and
+
+then read from that text then hopefully you should get all the data.
+
+But there are issues to this and that's why we're going to take this example.
+
+We're going to modify it so as to see those issues and we're going to run all of it.
+
+So what I'm going to do is I'm going to remove the deep copy implementations from both address as well
+
+as person.
+
+And another thing that I'm going to do is I'm going to change Paris and I'm going to add a new method
+
+called grit.
+
+So a method called Greed is going to basically take the well let's make a greeting let's just make a
+
+greeting using console log.
+
+So here what I'm going to say is something like Hi my name is this name and I live at this thought address
+
+to a string go.
+
+So this is something that we're going to just have as a member so now person has this member called
+
+greed.
+
+The reason why I'm showing this is because we're going to have sudden problems in actually getting this
+
+to getting this member to be present when we kind of serialize and decentralize the object.
+
+So what is the idea like what is the overall idea of the serialization approach.
+
+The idea is as follows so instead of using deep copy which we just deleted we just remove those methods
+
+we can serialize to some format and we can then pass this format.
+
+So for example I can use Jason so I can say Jason that stringy fi so I can turn John into a string and
+
+then a what I can do is I can say Jason dot pass.
+
+So I turn John into a string into adjacent string and then I pass that string and reconstruct the entire
+
+object.
+
+So this might seem like something that is going to work but unfortunately it will only work to some
+
+degree.
+
+So if if I run this demo you can see that there are certain limitations shall we say in the sense that
+
+when we call Jane dot to string we get an object object that doesn't look particularly good and furthermore
+
+if I try to do the breathing if I tried to say Jane Doe agrees then as you may have already guessed
+
+this is actually going to fail.
+
+So we are going to won't be able to even find that Jane Doe.
+
+Greed exists.
+
+And the reason for that of course is when you Jason does pass something you basically have just data
+
+structure that has no relation to the class person whatsoever.
+
+It's just a dictionary of different values and this dictionary does not have greed and it's and its
+
+default to string implementation is of course one that just shows you object object which doesn't really
+
+help much either but this course is in there because greed quite simply isn't there.
+
+So what we need to do is we need to build some sort of serialize that is aware of the types that we
+
+are turning those strings into so we want a dedicated object which actually serialize us and Lisa realizes
+
+objects and this is the complicated part of this entire prototype implementation because if we're going
+
+to be writing a lot of code we're going to be writing code that is aware of the types that you see realizing
+
+and these.
+
+But we have to do that so let's do this.
+
+We're going to have a class called serialize.
+
+So serialize there is going to be aware of the types that it supports.
+
+So it's going to have a constructor where you specify the types that can be serialized and these serialized
+
+once again just like in the deep copy example this puts certain limitations on the the whole model because
+
+you have to basically be aware of the types that you do have to serialize.
+
+So in this case you know that person and address are the types that need to be set realizable.
+
+So we store the types here inside the class this types equals types and subsequently what we need to
+
+do is we need to make sure that the information about the types somehow gets preserved when you actually
+
+clone the object.
+
+So how do you clone the object.
+
+How do you make a deep copy of the object.
+
+So let's make a method for that.
+
+So this method is going to serialize the object and decide realize it.
+
+Now before we do this there is something that we need to do when you serialized an object into Jason.
+
+No part of that Jason contains information about what type this object was.
+
+So what we can do is we can mark those objects with additional information specifying the types of those
+
+objects that are actually being serialized or these serialized.
+
+So we're going to have a separate method called Mark recursive.
+
+So Mark because it takes an object and it basically goes through the entire object in a recursive fashion
+
+it tries to find the types inside these types corresponding through the different parts of the object
+
+and if it finds those types then it adds them as just additional data of that object.
+
+So first of all we have to find the index of the object for this particular type.
+
+So this particular object has a type so I say let Ida X equals this dot types not find index layer for
+
+a given type t what we need to do is we need to compare the name of T with the name of the constructor
+
+of the object we're looking at.
+
+So the index is when T don't name is equal to object to construct her name.
+
+So the and they actually tells us the name of the object and then what we do is we compare it to the
+
+list of names that we already know and if they match.
+
+Then there you go.
+
+There you have an index of the type.
+
+Inside this dot types.
+
+So if the index is not equal to negative one meaning if we actually did find a time then what we need
+
+to do is we need to imbue the object that we're working with with the index of that type.
+
+So the way we can do this is as follows We can say object type index.
+
+So type index is just a name that I chose you can choose a different name so long as you're sure it
+
+doesn't clash with any of the existing members and you give it the value of Ida x.
+
+So now every single composite object who that we know about has an index inside it.
+
+But of course we have to do this recursively so we go through every key inside the object and if the
+
+object has its own property with a key what we do is we call this method recursively so we say this
+
+dot Mark recursive and we provide object at key.
+
+So this way we go through every single member of this object and we mark all of them.
+
+We basically mark all of them with the type index provide that we actually know the type index of course.
+
+OK so this is how you sort of mock all the objects recursively and that's the first operation that you
+
+do when you actually clone the object.
+
+So you say this dot Mark recursive and you provide the object in here.
+
+OK.
+
+So now what happens is we actually perform the copy so we say let's copy equals and we do the whole
+
+Jason thing.
+
+So we say Jason dot string you fly.
+
+Or rather we do Jason pass.
+
+Jason does stringy fly and we provide the object.
+
+So now what we get inside copy is we get a kind of replica of the object but without any type information.
+
+Unfortunately this just like in the example that I've shown when we had all those type terrorism whatever
+
+we just get raw data we don't get an association between the type and its members.
+
+So hug we.
+
+How can we reconstruct the whole thing.
+
+Well in actual fact we can reconstruct it.
+
+And this is done using yet another method which is going to be called reconstruct because of a matching
+
+because of that just so that you can clearly understand that this is because of operation that goes
+
+through every single member.
+
+So how does reconstruct recursive work
+
+so you take an object.
+
+And so the first thing we need to do is we need to check whether this object has a type index remember
+
+we gave every single known type every single object of a known type.
+
+We gave it a type index so that we know what type it is so here we say if object has own property off
+
+type index well then this is something that we can work with.
+
+So what do we need to do.
+
+Well first of all we need to get that associated type led type equals this all types at object dot type
+
+index No.
+
+So we get the associated type and now what we can do is we can make an instance of that type.
+
+So let LBJ equals new type.
+
+Like so.
+
+So we're making an instance of this type.
+
+What we need to do then is we need to make sure that every single property of that object actually gets
+
+assigned to what we got from the original object.
+
+So every single property of object has to be written into LBJ.
+
+But remember this has to be a recursive reconstructive operation because if O'Bagy has an address if
+
+it's a person and it has an address the address also has to be reconstructed using this same method.
+
+So what we do here is we go through every single key so for let key in object and we do the following.
+
+We check that the object has a property for for this because well we might get a mismatch or something.
+
+So if object has own property off with a name key and object at key is not equal to now just an extra
+
+kind of safety check because if the actual object doesn't it has has this value of null then that's
+
+not something we can perform recursion on.
+
+So that's just the limitation in my approach.
+
+So if that all succeeds we take the object and we say well object that key is going to be reconstructed
+
+copy of the the original this dot reconstruct recursive object at key So what's happening here is for
+
+every single member we assign that member to the instantiated object which has type information but
+
+we do it in a way that also that also reconstructs these sub elements recursively so we don't miss anything
+
+out.
+
+So now that all of this is down what we can do is we can actually delete the type index because we no
+
+longer needed
+
+because type indexes is irrelevant and we return the reconstructed object.
+
+Of course this only happens if you had to type index to begin with.
+
+Otherwise you just return the original object because there is nothing for us to do.
+
+So this completes the implementation of clone and what we can now do is we can use the serialize her
+
+and actually perform the appropriate changes so let S equals new serialize her where we have to specify
+
+the support at times which are a person and address like.
+
+So once again this is a pain point because you have to know what what types are involved in the serialization
+
+and here you say as that clone John as that clone Joan we can now on comment Jane Doe grief and everything
+
+should work correctly so as I run here.
+
+Well let's let's see what's going on I made a small mistake but let's just do this again.
+
+Index is not defined.
+
+Let's see it's actually Ida x.
+
+It's fun fixing those errors at real time so here is the final result.
+
+So as you can see everything is functioning just as it should in the sense that not only are we making
+
+a copy of the data but we're actually reconstructing the type information as well and that is what my
+
+handmade Sarah Eliza is all about.
+
+So this approach is a bit more robust because you'll never going to forget to implement some interface
+
+members some deep copy of some composite object but on the other hand you can forget to include it in
+
+the list of types that are passed into the constructor of the serialize errors.
+
+So in a way the problem hasn't really gone away.
+
+Just got moved from one location to another but suddenly this way you don't have to mess about with
+
+implementing your own methods like deep copy for example.
+
+They are no longer required because you can just take the serialize there and you can you can just start
+
+using it straight away.
+
+So having this type list is the only limitation that we have in this approach.
+
+Apart from that it's a perfect the works just fine.
+
+---------------
+
+All right.
+
+In the previous lesson we basically spend all of our time discussing the serialize the type which is
+
+a useful type for actually copying objects while preserving their type.
+
+Because otherwise you would just get a raw chunk of data that you cannot really call any methods on.
+
+So this is how you would implement the serialize her.
+
+And in this lesson I want to show you a merger of the prototype and factory design pattern.
+
+Now why would you want to do this.
+
+Well the reason why you'd want to do this is so that you can actually have a couple of predefined objects
+
+and a very nice interface on top of that that takes these objects customize them and gives you a nice
+
+API gives you a nice set of methods for actually making those copies instead of you having to use the
+
+serialize they're explicitly and instead of you having to maybe store the objects inside let's say on
+
+the global scope somewhere stole the prototypes instead we were going to wrap them nicely into a prototype
+
+factory enough.
+
+So let me show you the objects that we're going to be working with.
+
+So it's very similar to what we had in the previous example so we're going to have two objects.
+
+One is the address.
+
+Now this time round we're going to talk about kind of employment scenarios.
+
+So here the address is composed of a suite number as well as the street address and the city and the
+
+ideas that you as a company you might have a finite number of offices all of the offices share different
+
+all of the office as a share of the sort of street address and city in the sense that if you've got
+
+100 people working in a particular office they are all going to have the same street address and city
+
+but the suite number is the thing that gets customized and of course when it comes to employee that's
+
+the other object that we're going to be working with the employee's name gets customized whereas their
+
+address is only customized partly because we only want to customize the the actual street address or
+
+specifically the suite number the street address and the city are going to come from the prototype.
+
+Okay.
+
+So with this scenario we're going to build a prototype factory.
+
+We're going to be using this serialized that we've built obviously a son let's go down here and let's
+
+actually build a prototype factory.
+
+So how is this going to work.
+
+Well first of all I'm going to define the actual prototype.
+
+So if we have a class called Employee factory let's just keep it blank for now what I'm going to do
+
+is I'm going to define the offices where people can work so I'm going to say employee factory main equals
+
+new employee.
+
+So that's going to be my prototype.
+
+Now the name of the employee is going to be null.
+
+And remember we have all sorts of null checks all over the place.
+
+Like for example we have a null check here and we have a null check here.
+
+Also very important.
+
+The reason why we have these no checks is because I'm kind of assuming that I'm going to leave the blanks
+
+with null as opposed to undefined if use undefined your code will change slightly but not significantly.
+
+So here for the main prototype we make a new address where the suite number is not something we care
+
+about so once again we put a now here because those are the two parts that are actually going to be
+
+customized.
+
+What we do need to specify the street address as well as the city so the street address is going to
+
+be 123 East Drive.
+
+And the city is going to be London.
+
+And in addition we can have another prototype.
+
+So here employee factory dot a new X so an auxiliary office.
+
+We're also going to have an employee of that salary office with a name of NOL to begin with.
+
+And we're going to define a new address where the suite number is now but we specify the address so
+
+that can be 200 London Road in Oxford for example.
+
+There we go.
+
+So we now have two prototypes.
+
+Now another thing that I'm going to add to the employee factory at the class level is I'm going to have
+
+to serialize it.
+
+So I'm going to instantiate the serialize.
+
+So here I'll say employee factory don't serialize our equals new serialize there and here yes we once
+
+again have to provide all the types of the serialize it knows about.
+
+So that would be employee as well as address.
+
+There we go.
+
+OK.
+
+So coming back to employee factory now what we need to do first of all is we need to have some sort
+
+of utility method some sort of non-public shall we say method in the sense of you know no being exposed
+
+directly to the public or suggesting to the people that they should not be calling this method.
+
+So I'm gonna start it with an underscore and then I'm gonna call it new employee.
+
+So this method is going to create a new employee from a given prototype so you specify the prototype
+
+you specify the name and the suite and you make a copy of that object so the way you do this is you
+
+say let's copy equals.
+
+And then you take the serialize so employee factory serialize the.
+
+So you use that cloning functionality to clone the prototype into a brand new object with brand new
+
+members and then you customize it you say Copy that name equals name you say copy dot street dot address
+
+dot suite equals suite and then you've customize the object and you can return it return copy there
+
+we go.
+
+So this is something that's meant to be used internally this method.
+
+And now we have the sort of public shall we say methods the methods that people are supposed to be using
+
+and those methods would be used for creating new main office employees as well as new auxiliary office
+
+employees.
+
+So let's have static methods for those so new main office employee where you specified just the name
+
+as well as the suite.
+
+And here we use that new employee method.
+
+So we return this on this score new employee and we specify the prototype as employee factory domain
+
+and we customize the name and the suite and we do pretty much the same thing for the existing office
+
+employees.
+
+So here I would I would say new exhilarating office employee like so and I would change this prototype
+
+from Maine to a new x.
+
+So we are now done we essentially have set up a scenario where you have two different factory methods
+
+that you can call to customize the instances provided by the factory so let's let's actually see how
+
+this works so let's suppose we want to make John which is a main office employee.
+
+So you say employee factory dot new main office employee you specify the name John and you specify the
+
+suite number as for three two one.
+
+Similarly we can have Jane and Jane is going to be an auxiliary office employee.
+
+So once again I'm using a factory method for a new auxiliary office employee specifying Jane as the
+
+name and office number two to two.
+
+There we go so let's log both of them.
+
+So John does to a string and let's duplicate this and put Jane to a string and let's see what we get
+
+here.
+
+So as I run this you can see that we now have two instances which have been created from the prototype
+
+factories they've been customized with the suite numbers as well as their names and these instances
+
+are now ready to work with.
+
+So the take away from this example is that if you have a finite set of different prototypes that you
+
+want to work with.
+
+It might make sense to put them into a separate factory and furthermore you can use that factory to
+
+provide useful factory methods for actually instantiating customized copies of these prototypes.
+

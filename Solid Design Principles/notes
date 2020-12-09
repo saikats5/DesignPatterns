@@ -1,0 +1,1693 @@
+All right.
+
+So the first principle of the solid design principles that we're going to take a look at is called the
+
+Single Responsibility Principle and it's a very simple principle because it tells you that a class should
+
+have a single primary responsibility and as a consequence it should only have one reason to change.
+
+That reason being somehow related to its responsibility in other words it's a bad idea to add more than
+
+one responsibility to a class.
+
+So let's take a look at how this can actually work.
+
+Let's suppose you decide to make a class called journal which you're going to do to use to store your
+
+most intimate thoughts.
+
+So in the constructor for the Journal what you might want to have is you might want to just initialize
+
+a bunch of entries.
+
+And these are the journal entries that we're going to populate.
+
+We're also going to count the number of entries.
+
+So here I'm just going to say General dot count equals zero.
+
+And we're going to increment this whenever we add the entry.
+
+So the primary responsibility of the journal is to add entries and remove entries.
+
+So first of all I'll have the added entry method where you specify the text you want to add to the Journal.
+
+We're going to prefix this text with an incremented journal count so first of all say let's see equals
+
+plus plus journal count.
+
+So I get a one or two and so on for every single entry then I generate the entry itself.
+
+So let entry equals and then just format the entry prefix by that count.
+
+So the entry and then the text here and then I added to the set of entries so I say this duck entries
+
+at position journal count or in actual fact we can use the variable C because that's what we're using
+
+so there's that entries at position C is equal to the entry and then we return c and that's pretty much
+
+all there is to it.
+
+So that's how we actually assign the entry and we can also remove entries as well because at the end
+
+of it all you can see that we're returning the the index of the entries so that the actual key of the
+
+entries so you can have a method called remove entry at a particular index where you just delete this
+
+entries at a particular index.
+
+That's very simple.
+
+Let's also add a two string implementation so we can actually print the journal.
+
+So to string here is just going to take all the values of the general object the entries object rather
+
+and turn them into a one big string line separated so I'm going to return object up values from this
+
+the entries and I'm going to join them altogether using backslash pen.
+
+So that's pretty much it.
+
+We can now start using the journal so I can make in your journal here I can add a couple of entries
+
+has entry I cried today let's add another one let's say I ate a bug and then we can actually print this
+
+so I can say Jade up to string and we can print this journal let's just run this let's see.
+
+So here is the output I cried today I ate a bug you can see I'm preface pretty fixing it by the index
+
+of the entries starting at position 1 OK so coming back to the code everything is fine so far because
+
+the Journal was just handling its primary responsibility which is the keeping of entries it kind of
+
+makes sense that a journal is something that keeps entries so you had entries you maybe remove entries
+
+and that's pretty much it but imagine that you decide that you also want to be able to save the journal
+
+where do you put this functionality where it might be really tempting for you to actually add this functionality
+
+right into the journal itself so you might go ahead and let's just import the file system so
+
+like says I'm going to import the file system and then we're going to use it to save the journal so
+
+let's suppose that write inside that journal you add a method for saving to a particular file name and
+
+here you'd use the file system maybe you use Wright's file sync to the file name taking just a journal
+
+as a string representation.
+
+So this is something that is going to work just fine but the problem is that subsequently you want to
+
+have additional interaction with the file system you might want to load from a file name you might want
+
+to load from a file name I'm not going to implement this but later on you might also want to load from
+
+somewhere else so let's say you want to load from your well for example load from your URL and you specify
+
+the euro and you load it from the web.
+
+So the big problem with all of this is that you now added a second responsibility to the Journal class
+
+why is this a problem.
+
+Why can't we have a second responsibility.
+
+Well imagine you have some behaviors which are specific to serialization specific to the saving and
+
+writing of data.
+
+Let's suppose that instead of doing two string you want to remove those indices before you have the
+
+entry serialized.
+
+Let's imagine that remember up here I'm adding the index of the entry before the entry.
+
+Let's suppose you want to remove them whenever you save.
+
+And let's suppose you also want to have some processing when you load that maybe you save them with
+
+the indices but you load them without the indices.
+
+So you have some common operations which will be here and here for example.
+
+Now the problem with all of this is that imagine that a journal isn't the only object in your system
+
+imagine that you have to 10 different types that you want to serialize to files and load from files
+
+and maybe load from some.
+
+You are right somewhere.
+
+How can you have common operations on all of these.
+
+And the answer as well it's going to be very difficult for you.
+
+So it might make sense to take all of these operations related to persistence because that's what it
+
+is persistent stuff.
+
+You might want to take all of them remove them from this class and just add them to a separate component
+
+that can subsequently be generalized forward.
+
+They're handling different types of objects not just journal entries but other things as well.
+
+So a good idea would be to take everything from here and just make a separate class.
+
+Make a class let's call it persistence manager so you could have a class like this which has a save
+
+to file functionality for it which might take a journal it might take the file name and then it would
+
+do pretty much the same thing.
+
+So you would write file to a particular file name just taking the Journal to string and you could modify
+
+it later on to just sort of process the journal somehow in a method.
+
+Once again you could have a method here for pre processing the journal which would do something and
+
+you would apply this method uniformly across the entire persistence manager instead of having to hunt
+
+through lots and lots of classes modifying their serialization operations you just keep everything local
+
+so you keep everything right where you persistence functionality is.
+
+So it it's better for organization and better for understanding what the code actually does and where
+
+the modifications need to happen.
+
+So you know that if your files on being saved correctly you're not going to be looking in like 10 different
+
+places you're going to be looking inside the persistence manager.
+
+So here the idea would be as follows.
+
+So instead of just theorizing you'd you're making you persistence manager and then you'd specify the
+
+file name.
+
+And while I'm on windows so let's do see temp journal the.
+
+And this is what you would use to actually save the Journal to a file so you would just write something
+
+like this and run it.
+
+Obviously when I'm going to see any output here.
+
+Well we are going to see some errors from I guess the imports on yet aren't yet ready.
+
+So let's let's see a constant fast equals require let's do it like this.
+
+So there's gonna be a lot simpler.
+
+So this is you know we haven't we're not showing anything extra because we're just sterilizing things.
+
+But the real takeaway here is what you see in the code that it's better to group functionality by class
+
+instead of sticking all of the functionality into a single class for example.
+
+In actual fact there is an antsy pattern and the anti pattern is like a pattern that shows up which
+
+is bad as opposed to good.
+
+There is a nasty pattern called a gold object a god object is basically like this one huge massive class
+
+that has lots and lots and lots of responsibilities lots of spaghetti code very difficult to figure
+
+out.
+
+So the single responsibility principle is the exact opposite of that is the idea that you basically
+
+have to have just one responsibility and if you need additional responsibilities then just make other
+
+classes they don't really cost you anything.
+
+Another term that we use quite often is called separation of concerns.
+
+So separation of concerns is what you do when you refactor for example so let's suppose you find a really
+
+complicated algorithm what you're trying to do is you try to split it up into several different parts
+
+which are somehow related.
+
+So this idea of separation of concerns is once again this idea that you have several different concerns
+
+like persistence like it.
+
+I don't know like some sort of post-processing for example like I don't know parallelism whatever happens
+
+to be then you separate those into separate components so as to make the entire system easier to easier
+
+to figure out easier to manage easier to refactor as well.
+
+-----------
+
+We're now going to take a look at the second of the SOLID principles which is called the open closed
+
+principle.
+
+But also there is a bit of an added benefit here in that in addition to looking at OCP the open closed
+
+principle.
+
+I'm also going to show you one of the enterprise design pattern.
+
+Now this course isn't about enterprise pattern.
+
+It's about the classic design pattern.
+
+But we are going to see one of those enterprise patterns in this core.
+
+So let me first of all explain to you what's going on.
+
+So let's imagine that you have some sort of web site or something like Amazon and you allow people to
+
+search for different products based on certain criteria.
+
+So let's suppose that we have a class called product so a product is going to have a couple of attributes
+
+is gonna have a name but this can also have let's say a color and a size as well.
+
+And we're going to keep all of those as fields as color equals color does that any size equals size
+
+rather.
+
+And we might want to define a couple of enumeration is now.
+
+Javascript doesn't have enough.
+
+So it's just going to do as the good old fashioned way by defining objects which are frozen.
+
+So we're going to say object dot freeze and I'm just going to have let's say the color.
+
+We're going to have three colors red green and blue.
+
+I'm just going to keep them as strings as opposed to any kind of composite object.
+
+So I'm going to have red being defined as a string I'm going to have green also a string green and blue
+
+below.
+
+There we go.
+
+Okay.
+
+So in addition we might have different sizes of objects.
+
+So once again I'm going to do exactly the same thing I'm going to define size has this object where
+
+I'm going to have small I'll have medium
+
+medium and I also have large
+
+large like so now we go.
+
+So we now have a way of speaking out the different objects.
+
+Now what we want to be able to do is want to filter objects by certain criteria.
+
+So you might be tempted to build some sort of product filter.
+
+So a product filter is going to have a couple of methods which take a bunch of product as well as some
+
+criterion and they're going to filter those.
+
+Now you're probably wondering well hold on.
+
+Can't we just like take a function somewhere.
+
+Can't we just take a predicate and then do it on the product.
+
+Well if you think about a Web site like Amazon they don't really let you filter on every single criteria
+
+of an object.
+
+They only let you filter on some of them some predefined criteria and besides you know in the real world
+
+filtering bias and criteria can be optimized for example you can do some of the filtering on the GP
+
+as opposed to this stuff like that.
+
+So let's imagine we want to filter products by color so we make a method called filter by color where
+
+you take a bunch of products and you also take the color you want to filter by and the implementation
+
+is really easy you just take products not filter and then you for each product you have to make sure
+
+that the color matches like so.
+
+So that's pretty much it.
+
+This is something that we can actually already work with in the sense of building our scenario.
+
+So let me make a couple of these.
+
+Suppose it products that we're going to sell so we're gonna be selling an apple which is gonna be a
+
+product called Apple which is going to be green and small.
+
+Okay.
+
+Now in addition we'll have a tree.
+
+I'm just going to assume that you can sell trees and well gardening supplies and all that.
+
+So we're gonna have a product called the tree which is also going to be green but it's gonna be large.
+
+And in addition we'll have a house now a house is gonna be a product which is called House.
+
+It's going to be maybe some other color maybe blue and it's going to be large as well although a house
+
+is larger than a tree but it's all relative.
+
+So we're gonna have this list of products so that products just gonna put them into an array so apple
+
+tree house.
+
+That's what we want to filter.
+
+Now we already have a way of filtering by color.
+
+So what we can do now is we can find all the green products so I can say let P.F. equals new product
+
+filter and then I can let's output some log message here.
+
+Green products using the old approach because then we're going to do it in a brand new way.
+
+So I'm gonna go through every product P of product filter dot filter by color and then filter by color
+
+I specify the products as well as the color I want to filter by like for example color green.
+
+So I want to find all the items which are green and output them to the console.
+
+So here I'm just going to say well Pete our name is Green.
+
+Now we go.
+
+So this is something we can run and as you can see here is the output.
+
+So Apple is green and tree is green so everything is working correctly.
+
+Now suppose that our boss comes back and the boss says Well can you please Aldo Phil also filter by
+
+size.
+
+So this is of course doable and we can go back to product filter and we can add another method we can
+
+for example filter by size products color blah blah blah.
+
+And here are the implementation is gonna be very similar.
+
+In fact it's almost like a cut and paste programming.
+
+You just specify size here and not just here but also in the argument and also here as well.
+
+So this is how you implement this.
+
+Now this is where we actually get to talk about the open closed principle.
+
+What is it all about.
+
+Well essentially the open closed principle states that objects are open for extension.
+
+Let me just write this down open for extension closed for modification.
+
+So what do we mean by extension what would do what do we mean by modification.
+
+Well as soon as I jump into a product filter and I start adding additional methods that's modification
+
+I'm modifying a class that might have already been tested might have already been deployed somewhere
+
+and I'm making changes to it.
+
+This is considered not as good as actually extension and by extension we mean a lot of things but typically
+
+we mean inheritance we mean that a class inherits from another class and automatically acquires some
+
+of its field some of its members and then adds additional functionality.
+
+So the whole idea of OCP the open closed principle is that this filter once it's defined once you add
+
+the filter by caller you've tested it you've put it into production you don't modify the class anymore
+
+and we are breaking the open closed principle by adding another filter here because imagine well we
+
+put this filter into production and it goes a gets tested it gets put into production and actually runs
+
+on the Web site and then the bus comes back and the boss says Well can you also please filter by both
+
+sides and call it because some of our users want to filter by both.
+
+So we we go ahead and we implement yet another method size and color.
+
+So you take a bunch of products you take the size you take the color and here you do a similar thing
+
+and so you turn products not filter.
+
+So here you have to return you have to specify that piece size is equal to size and product color is
+
+equal to color.
+
+So this isn't really a problem to write but if you think about this thing kind of scaling out what you're
+
+going to have is you going to have something called the state's base explosion
+
+meaning that this this entire approach doesn't work to infinity meaning that the boss can come back
+
+and say Can you please filter by size or color.
+
+So either the size matches all the color matches.
+
+Imagine if you have instead of just having size and color you have three criteria and you want to filter
+
+using the end operator you want to filter by all combinations.
+
+That's going to be seven different methods because you filter let's say you filter by color size and
+
+price.
+
+So you have color size price color size size Carla Carla Price and then all three of them.
+
+So that's seven different methods.
+
+There is no way we're going to write seven different methods for actually performing this kind of filtering
+
+it's not practical.
+
+You have to have a different kind of architecture for implementing this.
+
+And this is where we come to the specification pattern.
+
+So the specification pattern is going to take us away from this approach of exploding numbers of methods
+
+and is going to allow us to write something which is very modular and very easy to work with.
+
+So what is the idea.
+
+The idea is that whenever you want to have a particular filtering criteria you specify a separate class
+
+which defines that sort of filtering and that class is called a specification.
+
+So for example for a color you can have a class called a color specification so a color specification
+
+can it gets initialized by you specifying what color you actually want to filter by.
+
+So let's have the color here and you have some sort of method like is satisfied and this method gets
+
+called to make sure that a particular item which is fed into the specification actually satisfies whatever
+
+this criteria is.
+
+So in this case the item color has to match exactly to the color we specified in the constructor in
+
+a similar fashion what you can do is you can define for example a size specification so a size specification
+
+would look exactly the same we have a construct a which takes a size you save that size and when you
+
+implement it satisfied you just check that the size matches.
+
+Now you might think well this is a bit of an overkill.
+
+This is a bit too much perhaps for us to kind of construct but the consequence is that now every single
+
+filter is untied from another so the specification here is not related to the specification here meaning
+
+that if you need a new specification you don't modify any existing class you just make a new class which
+
+also has a constructor which takes some criteria maybe and crucially it has and is satisfied method.
+
+Now where is this method actually use.
+
+Well it's used in a filter but we're going to build a better filter we're going to build a filter which
+
+is based on specifications.
+
+So I'm gonna have my class called better filter that's actually if you take it down here maybe it's
+
+gonna have a class called better filter so better filter is also going to have a method called filter
+
+which takes a bunch of items as well as a specification.
+
+And here the thing is that we're going to filter and so we return items not filter by checking the specification
+
+against every single item so you take an item X and you make sure that the specification is satisfied
+
+whenever you call it on x.
+
+So if this specification is satisfied you get that had him.
+
+If it's not satisfied then you don't get that item.
+
+So let's actually take a look at how all of this can be put into practice.
+
+So I'm gonna make a better filter
+
+so a better filter here and let's try finding all the green products.
+
+Let's take a look at how that would work.
+
+So green products using the new approach.
+
+OK.
+
+So here you would say for let P of B F that filter.
+
+And here in the filter you have to provide two things you have to provide the set of items as before
+
+which is products and a specification.
+
+So here you have to provide not just a color or a size but any specification which is applicable to
+
+item.
+
+So here I can make a color specification providing the color green to initialize a specification and
+
+then I can output all of the items.
+
+So here I can say PDA name is Green.
+
+All right.
+
+Let's take a look at how this works.
+
+So as you can see you are getting the same output as we did with the old approach.
+
+But this approach is better.
+
+This approach is better because it's a lot more flexible and we'll see additional flexibility in just
+
+a moment.
+
+So this is how you get apples green trees green.
+
+So we've got all the green products.
+
+If you wanted to get all the large products you would make size specification and in a similar fashion
+
+you would find all the elements that are large.
+
+Now the question is what about items which are large and green at the same time.
+
+Now in order to implement this with the specification pattern what we need to do is we need to build
+
+a combinator Combinator is itself a specification which combines all the specifications.
+
+There's basically a class let's go with an specification.
+
+So this class is going to have a construct that which takes any number of specifications which I'm just
+
+going to store them and she's going to sew this dot specs equal specs so you can feed several specifications
+
+and this specification is going to require that all of them apply.
+
+So when we go to implement is satisfied where you provide the item here's what we do.
+
+We make sure that every single item in the spec is satisfied every single specification is satisfied
+
+by every single item.
+
+So we return this dot specs dot every and the item gets checked according to the specifications.
+
+So we take this specification and we say is the specification satisfied by the item provided here.
+
+And that way the only way that we're going to get a true out of this method is if every single specification
+
+from these dot specs actually got satisfied.
+
+So let me show you how this can work.
+
+So we can find all the large and green products sold here large and green products.
+
+So I'm making a composite specification now so I'm going to say let's spec equals new and specification.
+
+So we need to combine two things together.
+
+We need to combine a call a specification for color green but we also need to combine it with a size
+
+specification for size large.
+
+There we go.
+
+So this is our specification and then for let P of be FDA filter what we can do is we can feed that
+
+specification into the filter so we provide the products and we provide the specification we just made
+
+this composite specification and then we once again can output the fact that a particular item is both
+
+large and green.
+
+So PETA named name is large and green and if we run this we get a tree.
+
+The only item which actually matches both criteria.
+
+It's both large and green.
+
+So this is how you make Combinator is and in the same vein that we made an and specification right here
+
+you could make an or specification for example or even an XOR specification stuff like that.
+
+So what is the takeaway from this entire lesson.
+
+Well first of all the idea of the open closed principle is that classes are open for extension but close
+
+from modification meaning you never jump into any existing class and start to modify it unless you absolutely
+
+have to unless there is like a bug in there then yeah.
+
+But extending functionality is not such a good thing because remember product filter is something that
+
+other people might have.
+
+Other people might have just copied your class wholesale and they're using it then you modified it but
+
+it doesn't really affect their code because they just took a copy having something that has already
+
+been tested and put into production modifying it explicitly might not be the best idea.
+
+And in some cases is completely fine.
+
+In some cases if you are completely in control your code and if there are no heavy dependencies there
+
+is really no problem in doing it.
+
+But generally it's not such a great practice because it affects scalability it affects maintenance ability
+
+of your code so it's not a great thing.
+
+So a better approach is to basically use use inheritance or use some sort of way of extending functionality.
+
+Now typically an object oriented programming languages these specification classes would have some sort
+
+of base class you would have sort of maybe you would have some kind of abstract class called specification
+
+now in in JavaScript obviously there is no abstract class.
+
+But you could just force force it into constructed by making sure that if somebody calls the constructor
+
+of specification then they get an error.
+
+And here you would specify the interface here you would specify his satisfied item and then you would
+
+get other classes to extend specification thereby they all sort of become a specification in a way.
+
+Unfortunately in JavaScript it's not really so strict meaning that if you forget to implement his satisfy
+
+then everything is still going to function is just going to be a no.
+
+Basically it's going to take this implementation of his satisfied and that's not a good thing.
+
+So in Javascript things are a bit different in that there is no real need for a base class like specification.
+
+You can just do away without it and use duck typing whenever you provide specifications to a filter
+
+for example.
+
+But generally the idea is that you use inheritance of some kind or at least you use this separation
+
+of concerns effectively you separate each each criteria by which you want to filter into a separate
+
+specification like a call the specification assign specification and then you can build Combinator is
+
+out of them you can build large boolean expressions out of these and specification or specification
+
+definitions and then you can feed them into a filter which can subsequently process it better.
+
+So a filter which knows about specifications and knows about verifying them internally.
+
+So that's all that I wanted to mention with respect to the open closed principle but we are going to
+
+mention it in other lessons in the course.
+
+So stay tuned for more examples of where it is adhere to and where this principle is in fact broken
+
+as well.
+
+-----------
+
+
+The third principle from the solid design principles that I wanted to talk about is called the list
+
+of substitution principle.
+
+And it's named after Barbara lives golf.
+
+So the idea of the list of substitution principle is that if you have some method for example some function
+
+which takes some base type it should also equally be able to take a derived type.
+
+What do we mean by that.
+
+Well let me show you an example.
+
+Let's suppose that we make a class called rectangle.
+
+So typically the way you would make a rectangle is as follows You would have a construct a way you specify
+
+the width and the hides and then you would just assign them.
+
+So you will say this that with equals with this dot height equals height and you might have some sort
+
+of getter for calculating the area so you return.
+
+This would multiply by this height might also have some sort of two string implementation and you return
+
+let's just return with by height width nice multiplication sign right now.
+
+So this is very kind of basic example of defining a rectangle and you can suddenly start working with
+
+it you can you can sort of make it make one of these letters see what's new Rectangle 2 by 3 for example.
+
+And we can output this to the console so let's see you get it to buy through a rectangle.
+
+Nothing magical here.
+
+Now let's imagine that somewhere down the line you decide to also introduce a new concept called the
+
+Square.
+
+But whenever working with a square you want to enforce that the square always have the same width and
+
+height.
+
+So a square is going to be a rectangle but it's going to have a different constructor.
+
+So in the constructor you just specified size and the size happens to be both the width and height so
+
+you specify both the width and height as size.
+
+But here's the problem.
+
+The problem is that if you assume that the square height and width are always the same you have to enforce
+
+it somehow because otherwise what I can do is I can do something like the following let Eskew equals
+
+new square.
+
+So if I do this then it's gonna be a five by five.
+
+So I can ask you not to string.
+
+But then what I can do is I can say askew with equals 10 for example and I can sort of output it again
+
+and you can see that we now have.
+
+Well this gets even more interesting now because we now have undefined by undefined in the square because
+
+I didn't define the size go again.
+
+Okay.
+
+So we started out with a five by five square but then I change it to 10 by five.
+
+Strictly speaking it's no longer a square it's now a rectangle.
+
+But it's still its type is still square here.
+
+So how can we fix this.
+
+Well one really dangerous way of fixing this problem would be to rewrite both rectangle as well as square
+
+to use getters and setters instead of just ordinary or their fields as we are.
+
+So we would put everything into sort of underscore with an underscore height.
+
+And then what we would do is we would actually make getters.
+
+So we would get with like so and similarly you would get height
+
+in the rectangle you would also implement these setups as well set width to some value.
+
+And here you would say with equals value and you would do the same thing for height set height value.
+
+This height equals value something like this.
+
+So now you would have to make lots of little modifications like for example and calculating the area
+
+you then need the on this course when doing to string you not need the underscores.
+
+OK now what you want to do or what you might be tempted to do is to make sure that whenever there is
+
+a center for with a height you said both both sizes.
+
+So here you have a center for width and height which are canonical but in the rectangle you would do
+
+it differently.
+
+So for example for set width you would set both the width as well as the height so you would say this
+
+does underscore width equals this dog underscore height equals value and you would do the same thing
+
+for the height setter set height.
+
+You would do exactly the same thing.
+
+So it might be really tempting to write this kind of thing and now of course what happens is when you
+
+modify the square it always keeps itself a square.
+
+So if I log ask you not to string and then I modify the square so I said it.
+
+It's with 2 10 for example it's still going to be a square.
+
+When I run this afterwards.
+
+So as you can see I have a five by five square I resized just setting the width.
+
+But it changes both the width and height.
+
+So this might seem like a really good way of keeping a square a square as opposed to the square magically
+
+turning into a rectangle while still being a square.
+
+So the problem is that you can you can have functions which work with a base class rectangle but which
+
+fail completely with a derived class.
+
+So let me show you one example where this might actually fail.
+
+So I'm gonna make a function called use it.
+
+Now use it is going to be a function which takes a rectangle.
+
+Now remember because it takes a rectangle it can equally take a square because a square is derived from
+
+rectangle and they share an interface.
+
+So it should be okay to use either of them.
+
+Not what I'm going to do is I'm going to take the width of the rectangle here.
+
+So I'm going to say I'll let width equals that width like so and then I'm going to set its height.
+
+So I'm going to see RC dot height equals ten.
+
+Now if I'm working with a rectangle my assumption is that the area of this rectangle is going to be
+
+10 multiplied by width because remember I got the width and the height is definitely 10 so my invariant
+
+is that the area is 10 by width.
+
+Let's actually test this.
+
+So I'm gonna log things so I expected an area of 10 multiplied by width but But what I got is our C
+
+area so let's see what we actually get as we run all of this.
+
+I'm going to take a rectangle and I'm gonna call use it on this rectangle.
+
+And in addition I'll do the same thing for a square so use it Eskew.
+
+Let's see what we get here.
+
+OK so one issue that we are getting once again is we expected in the area of now.
+
+Now you probably wondering why that is so coming to this line here where we get the width.
+
+What happens is that the width doesn't actually get propagated to the drive class.
+
+So let me put an underscore here.
+
+This should hopefully be better although it's it's somewhat unpleasant side effect of the way javascript
+
+works with getters and setters.
+
+But the consequence here is that we expected an area 50 m we got unfortunately an area of one hundred.
+
+So that's a slight problem shall we say.
+
+Now the reason why you can already guess why why this happened because as soon as we set the height
+
+the width was automatically set to 10 as well so 10 by 10 is 100 which is why we get 100 here as opposed
+
+to the expectation of 50.
+
+However we've essentially broken this entire function.
+
+We've broken this entire function.
+
+So the function should work just fine because if it takes a rectangle as we see here then it should
+
+be able to take any inheritor of rectangles such as a square.
+
+And that's precisely the point of the list of substitution principle so essentially the LSP the list
+
+of substitution principle says that if you have let's say a function which takes a base class like rectangle
+
+it should be able to take a derived class like square without breaking the functionality in any way
+
+whatsoever.
+
+So how would you fix this.
+
+Well I would argue that this entire approach is wrong.
+
+The entire idea of making a square as opposed to just defining it as a special case of rectangle is
+
+a wrong approach.
+
+Not personally the way I would do this is I would just keep a rectangle.
+
+But if you do really want to make a square then maybe there is a factory method.
+
+You can make to manufacturer a square or you can have some sort of get is Square for example where you
+
+return a boolean value when the width is equal to the height and you would also avoid this issue of
+
+inheritance with with the fields and the field getters.
+
+Because remember the modification that we had to make here.
+
+This isn't a particularly pleasant thing that you want to do here.
+
+Ideally I would right.
+
+Ah see that with unfortunately that's not possible and therefore we are sort of getting into something
+
+which is hinted to be a private variable a private feel that you are not necessarily intended to access
+
+in the first place.
+
+But we are doing it here because well we.
+
+There is no other way.
+
+Suddenly you could you could add additional getters so you can do get with here where you were 10 you
+
+returned this.
+
+Dots in this code width as you can imagine.
+
+But it's it's an additional pain point.
+
+But the real takeaway from this whole thing is that sometimes you can introduce a derived class which
+
+breaks as existing functionality so the base class works just fine.
+
+But the drive class runs afoul of certain assumptions like it runs afoul of the assumption that if you
+
+cache the width and said hi to 10.
+
+The area is going to be ten times with that just didn't work for a square.
+
+So I will get rid of the squared class completely I would have some sort of special case.
+
+Have some checks in here but not keep a separate class for a square at all and if you think you can
+
+think of other solutions feel free to post them it would be interesting what you come up with.
+
+But this is a good illustration of the list of substitution principle in action.
+
+--------------
+
+
+We're now going to talk about a principle called the interface segregation principle except that there
+
+is a bit of a problem because javascript doesn't really have interfaces javascript uses duck typing
+
+and there is really very little point in actually defining your interfaces explicitly.
+
+But let's imagine that you do decide to somehow formalize the interaction with with a particular system
+
+so let's suppose that you have some sort of document class in the system and let's suppose that you
+
+have clients which want to implement different devices such as printers or multifunction printers or
+
+scanners and so on.
+
+So what you might be tempted to do is to create a class which behaves as an interface definition basically
+
+so you make a class let's call it machine.
+
+You make sure that this class cannot be constructed.
+
+So you try to make it abstract you basically just look at the construct a name and if it's a machine
+
+then you throw in you error because well you're not supposed to be instantiating this directly.
+
+So then you define the interface for whoever wants to make a machine you tell them that well if you
+
+want to make a machine you should be overriding a print method as well as a fax method as well as maybe
+
+a scan method like so.
+
+So this is all well and good.
+
+Unfortunately it doesn't work in all cases.
+
+So imagine that you have a client which really does want to make some sort of multifunction printer.
+
+They do actually want all of this functionality.
+
+So what they can do their life actually becomes a lot easier because then they can just say a class
+
+multifunction printer extends machine and then they can just use their favorite idea to basically generate
+
+all the relevant overrides and if you are making a multifunction printer then you can give each one
+
+of these methods meaningful content so you can print something you can fax a document you can maybe
+
+scanner document or OCR the document whatever so these are completely sensible things to suggest your
+
+client actually do.
+
+But let's suppose that the client doesn't really need all of this.
+
+Let's suppose the client is interested in making an old fashioned printer.
+
+So the old fashioned printer which also extends machine because that's the interface that we are asking
+
+or suggesting the clients to define the old fashioned printer is actually going to have a bit of a problem
+
+because when you go and you override the methods you have you have issues.
+
+So when it comes to implementing the printing functionality this is actually ok because an old fashioned
+
+printer can print.
+
+So that's that's absolutely no problem.
+
+The problem is down here an old fashioned printer doesn't know how to fax documents or scan documents.
+
+So the question is what do we put in these methods and do we put anything in these methods.
+
+First of all you can just avoid putting anything in here.
+
+We can just leave it blank.
+
+And this is going to do nothing.
+
+Unfortunately this also violates one principle of software design that you should be aware of.
+
+And that's called the principle of least surprise.
+
+Well what this principle basically states is that when people use your API they should not be surprised
+
+they should not be seeing some magic behavior or a lack of behavior.
+
+You don't want them to be surprised you want them to get predictable results so that they are happy
+
+if they are getting some weird data or some weird behaviors or if they see requirements to call a before
+
+they call B and that sort of stuff that violates the principle of least surprise so when we leave the
+
+facts method blank we basically break this principle and make people's lives miserable because even
+
+though everybody is going to see that this class is called old fashioned printed I guarantee you there's
+
+gonna be somebody that's going to say oh hold on.
+
+This is an old fashioned printer but I see it's interface has a fax method.
+
+Why don't we try calling that and then somebody will try calling that and they will get no result in
+
+actual fact if you want and no OP if you don't want fax to do anything you can just comment it out because
+
+in the absence of this method what's going to happen is you're going to call this method which is empty
+
+you can see that there is nothing here between the curly braces so it will be almost the same result.
+
+Now you might say well OK so we don't like the principal lovely surprise being broken so well we're
+
+going to do is we're going to throw error basically.
+
+So we're going to say throw new era not implemented.
+
+That's a possibility.
+
+That's something that you can do.
+
+That's actually kind of put it into production so to speak.
+
+So I'm gonna make a printer so I'm making new old fashioned printer and then printer dot fax or scan
+
+rather.
+
+So.
+
+So you want to scan I suppose there's there's a document that needs to be provided here but I'll I'll
+
+leave it out.
+
+So when you run this with an error you can see that you are fact getting some sort of error saying it's
+
+not implemented.
+
+Now you can you can sort of go one step further and you can be explicit in the very type of the era
+
+what kind of error it actually is.
+
+Coming back here what we can do is we can introduce a new class called not implemented ACARA which extends
+
+era.
+
+And here we can make a constructor where we first of all define the actual error message so let's suppose
+
+that you provide the name of the piece of API that's missing and then from then on we actually manufacture
+
+the message.
+
+So let them as G equal name is not implemented.
+
+So then you call super to actually initialize the base class era.
+
+But in addition to that you might want to also capture this tax race if it's possible.
+
+So this is something that's specific to extending the A class.
+
+So if error has a capture stack trace then you basically call it air capture stack trace and you provide
+
+this as well as the name of the class.
+
+So with this setup what you can do is you can actually go ahead and throw this.
+
+You can you can throw this whole thing and just just see what happens.
+
+So coming down here we can throw a new not implemented era where we provide the name of the API.
+
+That's not implemented.
+
+So that will be old fashioned printer not scan.
+
+So that's good and that's something that we can actually try running so let's see what happens here.
+
+So as you can see we're getting the right era old fashioned printer that scan is not implemented.
+
+Unfortunately this is still somewhat user unfriendly.
+
+And the reason why it is user friendly is because by defining this interface to be too full of stuff
+
+we don't need we are forcing the clients to either leave methods blank or throw errors out of those
+
+methods and neither approach is a particularly good approach.
+
+So this is where the interface segregation principle comes in.
+
+So the interface segregation principle basically means that you have to segregate or split up interfaces
+
+into different parts so that people don't implement more than what they need.
+
+So for example if you want to formalize the contract that you would have for a printer then you would
+
+make an interface which just has the print method.
+
+So you might define the following You might define a class called printer.
+
+You might introduce a constructor which makes sure it's abstract and then you define the print method.
+
+So that's that's pretty much it.
+
+Then of course you can take the old fashioned printer and you can just go ahead and implement.
+
+So extend the printer as opposed to extend machine and the same goes for a scanner for example so you
+
+can make a scanner class which also also can be abstract and once again you can you can define the interface
+
+for how you want to scan.
+
+Maybe there's a maybe there is a doc parameter here or some sort of file name where you want to put
+
+the scan whatever it happens to be.
+
+So with all of this you can now use these classes to to basically extend them in order to specify the
+
+interface explicitly in order to provide the interface.
+
+Of course this only works for Single inheritance.
+
+And the question is well what if you want to have a photocopier for example
+
+so the question is What do you do here.
+
+Because you cannot say something like Prentice scanner.
+
+Unfortunately this kind of functionality is not available to us.
+
+But what you can do is you can sort of emulate in the way the the aggregation by using additional code
+
+which basically does multiple inheritance except that in our case both a printer and scanner don't actually
+
+have any members worth calling because they are abstract and they don't have anything so they have a
+
+constructed which has a guard constructor which you don't really care about and they have empty interface
+
+definition.
+
+So in this particular case because we don't have multiple inheritance you cannot use both of these interfaces
+
+for cogeneration or whatever.
+
+So you would just you would provide the Princeton scan methods implementing them however you want but
+
+you cannot say that the photocopier extends both printer as well as counter you could suddenly kind
+
+of use functionality that we looked at that we are going to look at in a discussion of some of the patterns
+
+and that is an implementation of aggregation which looks kind of like this it's a fairly complicated
+
+stuff but basically you are allowed to have several mixing classes that you inherit from.
+
+So to speak but this really makes very little sense for interfaces.
+
+So I can certainly say that this extends aggregation of both printers as well as scanner but this doesn't
+
+give us anything at all we don't get any benefits from it.
+
+We certainly will not be able to generate the methods by using whatever idea you're using so there isn't
+
+really in the presence of duck typing there's really no benefit to doing things like this anyway.
+
+So what is the take away of this entire lesson what festival interface segregation principle.
+
+We don't really have interfaces.
+
+We don't really have anything like that.
+
+And so this principle is somewhat moot in the sense that their approach to formalizing some sort of
+
+abstract base classes where you formalize the interface it's suddenly possible it suddenly gives you
+
+a few benefits especially you know if you have clients that are expected to provide a particular type
+
+into an API you can formalize it this way and show it to them.
+
+But since it's not a strict contract and since you can never make these methods properly abstract meaning
+
+you have to give them some sort of body like we're doing here then this all becomes a bit redundant.
+
+So this is one of those principles that you should be aware of.
+
+But it's a lot more relevant in other programming languages than it is in JavaScript.
+
+-----------
+
+The principle that we're going to talk about now and the last principle of the solid design principles
+
+is called the dependency inversion principle.
+
+Now before we begin I have to say upfront that the dependency inversion principle doesn't have anything
+
+directly to do with dependency injection another term that you might have heard thrown around in different
+
+programming languages.
+
+So Dependency Injection is somewhat a consequence of the Dependency inversion principle but we're not
+
+going to focus it in this example.
+
+So what is the dependency inversion principle all about.
+
+Well the dependency inversion principle basically defines a relationship that you should have between
+
+low level modules and high level modules.
+
+So what do we mean by a low level module.
+
+Well let's take a look at an example where you are performing genealogy research so you want to do research
+
+on who's related to whom and in what way.
+
+So to begin with we might want to actually define some sort of some sort of relationship enumeration.
+
+So if you have two people then they can have different relationships like one can be a parent of another.
+
+Or you could have for example a child or you could be a sibling
+
+and so on and so forth.
+
+So imagine that you have some sort of domain object like a class which models a person.
+
+Now typically a person if you were to do real genealogy research you would have lots of information
+
+about them like their name their age or date of birth.
+
+Like where they were born where they live and so on and so forth.
+
+But we're just going to stick to having a name so we're gonna have a person that has a name.
+
+And that's pretty much it.
+
+Okay.
+
+There we go.
+
+So the first thing that we need to do is we need to store the relationships between different people.
+
+We need to store them somewhere we need some sort of data storage mechanism.
+
+And it just so happens that that data storage mechanism is what is typically called a low level module.
+
+So a low level module is something that's close to the metal.
+
+In this case we're going to define exactly the way that relationships can be stored because they can
+
+be stored in a map.
+
+They can be stored in an array and all sorts of other different ways.
+
+So I'm going to define a low level class called relationships.
+
+So this is just going to contain the data related to how people relate to one another.
+
+So let's make a constructor and here all I'm going to do is I'll initialize data to an array and that's
+
+going to be an array where every element has three fields.
+
+There is a from a two and a type.
+
+Well you'll see it in a moment because we need some sort of functionality for actually adding a parent
+
+and the child to this array.
+
+So I'm going to have a method called at Parent and Child where we take the parent we take the child
+
+and then we add this data to the array.
+
+So we save this data that push.
+
+And here we need to define the relationship somehow.
+
+I'm just going to say that there is a from field which defines where the relationship is from.
+
+There is a type of relationship in this case it's a parent and there is a two which is the direction
+
+in which the relationship is going.
+
+So who is it a parent.
+
+Off it's a parent of child.
+
+There we go.
+
+So this is how you would define a method for adding both a parent as well as a child.
+
+So this is something that we can use to initialize the whole thing.
+
+Basically we can we can build up this relationships module and we can initialize it so we can do it
+
+down here actually.
+
+So what I'm gonna do is I'll make a parent so a parent there's gonna be a person called John and John
+
+is going to have two children Chris and Matt.
+
+So I'll call those.
+
+I call them Child 1 and Child 2.
+
+Let's give them different names.
+
+So John has two kids and then we make the low level module.
+
+So then we make let rolls equals new relationships.
+
+So we do it like this and we say rails dot add parent and child we specify the parent and we specify
+
+the child and let's duplicate this and specify the other child.
+
+So this is how you set it up.
+
+But obviously the point of this whole thing is that you can perform some research on the relationships
+
+between different people.
+
+So for that we're going to define a high level manager so high level module isn't a module that's concerned
+
+with low level things like storage is concerned with high level stuff like getting the data out so to
+
+speak like how to do research.
+
+So imagine you want to perform some sort of research on the data that we've defined up above.
+
+So you have a class called research
+
+so one of the ways that you could go about this is you could just have a constructor and inside the
+
+constructor.
+
+That's what we're going to do all the research inside the constructor.
+
+You can just specify that you need the relationships class in order to be able to do the relationships
+
+and hear what you would do is let's suppose you want to find all children off John.
+
+So we want to find our children.
+
+John how do we do this.
+
+Well first of all we have to get the actual relations between different people so we all need to actually
+
+get the data somehow and we can do this by saying that relations equals relationships not data.
+
+So we're accessing the data of the relationships low level mojo and then we go through it.
+
+So we say for let rule of relations filter.
+
+And here we have to take a look at what kind of criteria we want to apply.
+
+So we want either from the name to be equal to John.
+
+And in addition we want John to be a parent of somebody.
+
+So we want our adult type to be equal to relationship not parent.
+
+So if both of those conditions are satisfy then what we can do is we can actually print this so we can
+
+for example say that John has a child name and then out to what name is what gets us the actual name
+
+of the child.
+
+So this is something that's actually going to work sort of out of the box.
+
+We don't need to do anything extra here so I can just say new research specify the rules or relationships
+
+class and run this and we should be able to get the output.
+
+OK.
+
+So as you can see we're getting the right results.
+
+We have John has a child named Chris.
+
+John has a child than that.
+
+So what is the principle.
+
+What is the dependency inversion principle.
+
+Well the dependency inversion principle basically states that high level modules such as research should
+
+not directly depend on low level modules such as relationships that they should instead depend on abstractions.
+
+And if we were using some other language like Java or C++ or C sharp by abstractions we would typically
+
+mean either abstract classes or interfaces.
+
+And of course javascript doesn't have abstract classes it doesn't have interfaces and in actual fact
+
+we don't need them because of duck typing because we can depend on something else.
+
+But the key problem is this thing right here.
+
+You'll notice that we are using the low level data storage directly what this means is that imagine
+
+you you change your mind.
+
+You decide that having an array for storing relationships is not a good idea.
+
+You decide to replace it with a map or some trees structure or something more sophisticated.
+
+What this means is not only do you have to refactor things here but you also have to refactor things
+
+here because at the moment the high level module depends on the implementation details of the low level.
+
+So you really don't want this.
+
+And so even though we don't have this idea of abstract classes or interfaces built into javascript we
+
+can still get the results that we want by simply moving the concrete implementation outside of this
+
+research module so the research module just cares about finding the children of John and this is something
+
+that cannot be done here because while you are looking into an implementation detail effectively so
+
+what can you do about this.
+
+Well you can introduce some form of action so that you know that the relationships are accessible but
+
+you don't access them by going through that storage.
+
+So let's comment out this construct and we're going to do things differently now.
+
+First of all what I'm going to do is I'm going to define a new class and as I said we don't really have
+
+interfaces or abstract classes but I am going to define class which is going to pretend that it's abstract
+
+and it's going to basically define the interface for the kind of things that we want to be able to do
+
+on the data set.
+
+So here I'm gonna make a class called relationship browser.
+
+So a relationship browser is basically a specification of an interface for the kinds of things you can
+
+do on relationship data.
+
+So here I'll make a constructor which doesn't let you instantiate this class it only lets you instantiate
+
+the descendants.
+
+And then I want to add some elements of the interface so for example you might have a method called
+
+Find All children all while you specify the name of the person and you find all of the persons children.
+
+So what does this give us.
+
+Well now we can go into the relationships class and we can say that this relationship class actually
+
+extends relationship browser.
+
+Obviously we need to go down here and add the superclass invocation.
+
+But apart from that what we really need to do is we need to implement this interface.
+
+So we need to have yet another method here called Find All children off.
+
+And this is where you're at the implementation so notice that instead of doing it down here where we
+
+were at the high level module accessing the implementation detail stuff we are now doing it inside the
+
+the relationships class itself.
+
+So we've moved to a different layer in the system in order to provide this functionality Why.
+
+Well because the storage itself might change.
+
+So you might change this from an array to something else in which case everything that's affected should
+
+also be changing in that same class.
+
+Remember we have the single responsibility principle which states that a class should have one reason
+
+to change will.
+
+If the storage changes for example and that's only an example by the way if the storage changes then
+
+we want to stay in that class and modify Justice class not the entire application.
+
+OK so we're going to implement find all children of and here it's fairly obvious it's just like what
+
+we did previously so we take the data and we filter on the data.
+
+So we take the relationship and we say well it has to match the name.
+
+So name has to be equal to name and also the relationship type has to be equal to our relationship not
+
+parent.
+
+So if both of these hold then what we do is we just get the child.
+
+So we map and we say ah goes to are the two.
+
+So that's how we actually get the people that are children off someone and then we can go into the research
+
+component and then we can rewrite this.
+
+So this time round it's actually not going to be breaking any kind of interfaces but we are going to
+
+have a different constructor in terms of the names of the argument.
+
+So the argument here is going to be called something like browser.
+
+Remember we are using a relationship browser which is just an abstraction.
+
+So here you can see that we're extending relationship browser.
+
+And certainly if you were to perform unit testing for example you could have a real relationship browser
+
+which actually has access to the database and you can also have a kind of fake relationship browser.
+
+You could be using for testing with an example hierarchy and all the rest of it.
+
+That's actually something that we'll see when we talk about the Singleton design pattern because they're
+
+in the discussion of the singleton.
+
+We're going to flesh out this whole problem of dependencies and look at how to actually inject them.
+
+But here what we're going to do is we're going to take a browser and all that happens here because we're
+
+interested in just printing the children of John.
+
+So here all we have to do is we say for let P off browser dot find all children of John and we can print
+
+them out so we can say that John has a child called and pedo name.
+
+So notice that we're not accessing the actual storage mechanics.
+
+We're not going through some sort of an array or anything.
+
+We're just calling some API called Find All children off under the assumption that it's always going
+
+to give us the right results.
+
+So the call here the call to the research constructor actually stays the same because relationships
+
+which we are providing as the constructor argument also happens to extend from relationship browsers.
+
+So it's completely valid to feed it into this new constructor that we wrote and when we run this we
+
+get exactly the same thing.
+
+So John has a child called Chris.
+
+John has a child called math.
+
+So what is the dependency inversion principle all about.
+
+Well basically it states that high level modules such as research in our case should not be depending
+
+directly on low level modules such as relationships and more specifically it should not be depending
+
+on some sort of data which should really be private because strictly speaking this data here it should
+
+be private shouldn't be accessible to anyone because it's nobody's business how relationships actually
+
+store the data.
+
+So the idea is that you're supposed to be depending on abstractions.
+
+And even though we cannot really build a proper abstraction like an interface type in JavaScript what
+
+we've done instead is we've introduced this new class which kind of acts like an abstract class you'll
+
+notice that I wrote the constructor here to basically throw an exception if it's if it's being called
+
+directly.
+
+So you cannot instantiate a relationship browser but basically it serves as a guide.
+
+So whoever wants to become a relationship browser has to implement find all children all.
+
+Once again I'm saying has to but that's not really true.
+
+Completely in the sense that if you comment this out for example everything is still going to work.
+
+There's just not going to give you and your results is going to give you an undefined because well if
+
+we cannot call this method all it's going to happen is we're going to be calling this method which has
+
+an empty definition.
+
+So nothing is going to happen and nothing is going to be returned.
+
+But these are unfortunately the limitations of JavaScript and not much.
+
+Not much that we can do about this whole thing but hopefully I've made it clear that just by depending
+
+on some sort of an abstraction is a better approach not just for development but also for other concerns
+
+such as test ability.
+
+For example.
+
+

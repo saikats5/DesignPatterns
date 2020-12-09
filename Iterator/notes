@@ -1,0 +1,947 @@
+So I want to show you an implementation of the iterator design pattern.
+
+Or rather an approach which kind of leverages the iterator design pattern that actually is sometimes
+
+useful for us in all sorts of situations.
+
+So let me show you a scenario that you can set up let's imagine that once again you're making some sort
+
+of computer game where you have creatures and those creatures have different statistics so let's imagine
+
+you have a class called classical creature with a constructor of some kind.
+
+Now let's suppose that the creature actually has certain attributes like strength agility intelligence
+
+and so on so you might want to initialize them in the constructor.
+
+So something like this
+
+Let's say you're starting with a value of 10 as a default.
+
+Now one thing that you might want to implement as part of this this whole class is being able to figure
+
+out certain statistical properties of the creature like for example what is the sum of these creatures
+
+statistics.
+
+What is the average statistic that this creature possesses.
+
+What is the maximum statistic.
+
+So imagine if you had to actually write these methods for getting the sum of the statistics you would
+
+have something like the following some of stats.
+
+So you would return strength plus agility plus intelligence.
+
+So that's already looking pretty tricky because imagine if you have like 10 of these statistics you
+
+would have to type out all these 10 some is not not very convenient and suddenly when something changes
+
+you're going to have a lot of problem.
+
+But let's imagine you also won the average statistic average stat OK.
+
+So what you need to do is you need to return the sum of stats and by the way I misspelled here should
+
+be some of the stats.
+
+So you return some of stats divided by 3.0 and obviously 3.0 is actually a magic number.
+
+Effectively there is no other way to call it is just a magic number that is going to be.
+
+So if you add the new statistic you have to go in here and you have to modify this tree to become a
+
+four for example.
+
+So that's once again somewhat brittle design.
+
+And then of course the business of getting the maximum statistic.
+
+So if you won the maximum statistic of a creature what you'd have to do is you would have to return
+
+math to Max.
+
+And luckily this is a very IDEC function so you can just feed all of this statistics in here.
+
+So this agility and this intelligence now go.
+
+So this is how you would implement this if you would just just doing it straight away so let's see let's
+
+see if we can just make a creature.
+
+We're gonna give the creature specific values of those statistics creature strength equals 10 agility
+
+equals 11 and intelligence equals 15 that we go.
+
+So now you can sort of log all of this.
+
+So creature has average stat
+
+creature average stat.
+
+OK.
+
+So that's the average statistic.
+
+And we can also have the maximum statistic creature Max that and let's also have the maximum statistic
+
+or the sum of statistics or rather some of stats equals creature some of stats now.
+
+OK.
+
+So this implementation is actually going to work.
+
+My hope as soon as I actually start to start using this correctly I then think there should be a hold
+
+on some of stats some of stats that is weird and should not be running debug here.
+
+Let's say let's say let's see I made a mistake somewhere.
+
+So what is going on.
+
+So unresolved function or method some of stats.
+
+This is just bizarre very bizarre.
+
+Some estates is not a function.
+
+Oh of course CAA.
+
+Sorry I'm being really stupid here.
+
+Like extremely stupid trying to figure out if I had ADD this prefix or not it's actually a property
+
+it's not a method.
+
+So we just write some of stats divided by 3 and then you need this.
+
+So I was kind of correct but not really correct.
+
+So here we go.
+
+So we have a creature with an average statistic of 12 maximum to 15 and some instances 36.
+
+So everything works but the design is very brutal because if you imagine that you add another statistic
+
+you add let's say wisdom or something.
+
+Then you're gonna have a problem because you're gonna have to rewrite all of these three methods and
+
+obviously that's not something we want to do.
+
+Again remember the open closed principle although you'll be breaking the open closed principle just
+
+by modifying the structure of creature but you are kind of compounding on the pain here because you're
+
+gonna have to modify at least three different methods.
+
+You're going to have to modify this magic number as well.
+
+So how can we avoid all of this.
+
+Well in actual fact it is possible to avoid all of this using an approach called array backed properties.
+
+So the idea is that you do have properties like some of stats and whatever but the backing field for
+
+those is not not something like this.
+
+It's it's not exactly stored in this way.
+
+So what we do instead is we make sure that the field where the data is actually stored is in right.
+
+So we say this that stats equals new array of three elements and we can fill it with the value of 10
+
+for example.
+
+So that is our initial array.
+
+Now obviously you want to be able to access things like strength or agility from from this class but
+
+here you can do properties so you can make a getter for strength where you return this that starts at
+
+position 0 and once again you can replace the zero with some sort of an enumeration.
+
+So it's easy for you to work with but it's not really critical and you would have a setter similarly
+
+so set strength value.
+
+And here you would say this doc starts at position zero equals value.
+
+Now we go so you would implement this for every single every single element every single property that
+
+you're interested in so you might end up with something like the following.
+
+So here you can see I have get us for and set us for strength agility as well as intelligence they all
+
+map into this one array so.
+
+Oh just accesses and mutations of cells in this array.
+
+Now the benefit that we're going to get is from implementing those summary statistics because the backing
+
+field for everything is now in the right.
+
+We have this does stats which is an array and suddenly getting descriptive statistics from an array
+
+is a lot easier than getting it from just a couple of fields.
+
+So if we won the sum of stats for example get some off stats then all we have to do is we take the stats
+
+array and we reduce it using some
+
+so we reduce it to X plus Y when the initial value of 0 0.
+
+That's that's pretty much all that you need to do to get the sum of the array.
+
+Now what about the average statistic.
+
+Well that's just the sum divided by the length of the array.
+
+So average stat is actually some off stats divided by the length of stats.
+
+There we go.
+
+And finally what about the maximum statistic.
+
+Well we can do this too.
+
+So get max stat and here we return math up Max.
+
+Now math up Max is very odd.
+
+He could takes any number of arguments so if you want to feed it and array you have to put an ellipsis
+
+in front so ellipses then there's not stats.
+
+And this is how it actually works.
+
+So if we now run this would get exactly the same results but we have a more robust design so you can
+
+see that even though we're not explicitly implementing any kind of iterator this year we're doing a
+
+trick which allows us to iterate a bunch of fields because we then no longer fields.
+
+There is no longer a field called strength or a field called agility.
+
+We got rid of them.
+
+Instead what we did is we made an array which is used as a backing field and whenever we actually want
+
+to address the individual elements like strength for example we actually just make getters and setters
+
+which is a bit more work but you you get benefits from it you get benefits when you implement.
+
+In this case the aggregate operation so you have things like some average and maximum which are implemented
+
+on an array.
+
+And if I decide to add a new ability all I'd have to do is I'd have to change a number here like from
+
+3 to 4.
+
+For example I would have to implement to get her a center for that ability and the rest of the aggregate
+
+operations do not need to change because they operate on an entire array rather than individual elements.
+
+So they need to stay as they are.
+
+So this approach is typically called array backed properties and there are situations where it's sometimes
+
+useful.
+
+--------------
+
+
+In this lesson we're going to take a look at iteration in JavaScript.
+
+How do you actually iterate things and what does it means to iterate things.
+
+So you've all met iteration already.
+
+For example let's suppose you have an array of values let's say 100 200 300.
+
+It is possible to go through every single element one by one and actually do something with it.
+
+There are different ways in JavaScript of doing that.
+
+The first is just a for in loop.
+
+So for Let Ie in values.
+
+In this case I is going to be initialized to the index of the element inside the array.
+
+So here if I want to print out every single element I have to say that element at position i is and
+
+then get actual values aren't I.
+
+So in this kind of loop the eye actually refers to the position of the element and if we run this forget
+
+element at position 0 100 the element that position one element at position 2.
+
+So that's fairly obvious stuff.
+
+There is also a for all the loop and it's fairly similar but it just just goes through the values without
+
+the indices.
+
+So you write it like this you say for let v all values.
+
+So notice the difference here we have an eon here we have as of this time round if you use the off key
+
+word then it's just going to go through the values.
+
+So here you don't get the index but you can print the value.
+
+Value is V and if I run this now you can see that we have fairly similar output here.
+
+Value is 100 200 300.
+
+So everything is okay and these are the two ways that you can go through the array.
+
+But the question is well how does javascript actually know that this array thing is iterate but how
+
+does it know that this type of data structure can be gone through one element after another.
+
+And the answer is those special provisions for that and we are going to implement our own ignorable
+
+class.
+
+So let me explain you what I mean let's suppose you have a class just any class called stuff.
+
+Now let's suppose that inside stuff we have two elements we have a with a value of eleven and we have
+
+B with value of twenty two.
+
+Now obviously just by having this kind of definition you cannot just stick stuff as part of a for loop
+
+for example.
+
+So if I make let's stuff equals new stuff what I cannot do is I cannot say for let item of stuff and
+
+try to somehow prints the item like so that's not going to work and if I try this the error message
+
+here is rather descriptive it's basically telling me that stuff is not irritable and of course it's
+
+not a horrible javascript doesn't know that we have to iterate a by yielding a and subsequently yielding
+
+B so that's not something that is going to work unless we make it work and that's exactly what this
+
+lesson is all about.
+
+I'm going to show you how to actually expose an iterator from this class.
+
+So what we want to be able to do is by default we want stuff to return the value of A and then the value
+
+of b so that's what we want to do.
+
+And in order to implement this we're going to implement an iterator now an iterator is just like an
+
+ordinary function like if you had a function called foo except that instead of foo we put something
+
+different here we put symbol either later.
+
+So this is something that allows us to define the default iterator for this stuff class and what we
+
+need to do here is we need to return a very special object and this very special object is going to
+
+have no members but it's just going to have a single function called next.
+
+So next is going to be a function and this function is going to keep giving you the next element in
+
+the set of elements that you actually want to return.
+
+Now this is where things get tricky.
+
+You see when this function is supposed to return to things.
+
+So this function is supposed to return to things it has to return a flag indicating whether or not we
+
+are done with each iteration because at some point we have to stop like after we yield that 11 and 12
+
+for example we have to stop because there's nothing else to yield.
+
+So until that time done is going to return the value we're going to set the value false.
+
+But when we're done we need to set the value of truth.
+
+So that's one thing.
+
+I'll just leave a gap in here.
+
+And the second thing is obviously the value we have to retain the value that is being iterated right
+
+now and all of this has has to happen inside this function.
+
+So how do we initialize these value as well.
+
+Clearly somewhere there needs to be a counter because we need to count how many elements we've already
+
+actually returned.
+
+So here I'm gonna make a counter with an initial value of zero.
+
+So that's one thing.
+
+The other thing is that inside this function inside this particular function I'm going to try and get
+
+elements from the class stuff.
+
+Now you might think hey I'm just going to go into the value and I'm going to say this dot a for example
+
+that's not going to work.
+
+The reason why it's not going to work is because this actually refers to the object you're returning
+
+not to the whole stuff thing.
+
+So that's not going to work and to fix this well it's actually rather easy.
+
+I'm just going to say let's self equals this.
+
+So now you have self which definitely refers to stuff as opposed to you know the type that we're returning
+
+here.
+
+So we can now use self instead of this to actually access the elements.
+
+So let's suppose that we want to return the value of a followed by the value of b how do we do this.
+
+How do we know that we are done.
+
+Well as soon as the index i that we're using here the index high as soon as it becomes greater than
+
+one we've yielded all the elements.
+
+So we're done.
+
+One eye is greater than one.
+
+Now what about the value.
+
+This one is particularly tricky now we know that we want to return a on the first run and B on the second
+
+run.
+
+And there's never going to be a third iteration because we're going to said done on that on that particular
+
+iteration.
+
+So we're using the s object.
+
+Remember self just refers to this.
+
+And now we need to check the value of AI.
+
+So if AI is zero then we're it's on a.
+
+Otherwise it's a and b.
+
+But there is only one problem in this.
+
+Where exactly do we increment AI.
+
+Because after we return all of this we need to increment the value of AI.
+
+But there is a problem.
+
+You can just say I have plus plus here because you've already returned.
+
+So because you've returned you're never going to actually reach that point that location.
+
+So the simplest way to do this is just to put a plus plus here.
+
+This is a post increment.
+
+So the old value of AI is going to be used for comparison.
+
+But as soon as that comparison is done we now actually increment the value of AI.
+
+So don't be surprised this.
+
+I know it looks a bit ugly.
+
+This this implementation but it is in fact the right implementation.
+
+So having defined symbol dot iterator here we can now automatically get all of this to work.
+
+There is no more modifications for us to do we can just run this and as you can see here is the output.
+
+So here is 11 years 22.
+
+So everything is working and everything is just fine.
+
+Now obviously when you look at the stuff class you know that symbol dot iterator is a special piece
+
+of magic because if you were to take this exact code and if you watch it just stick it into a property
+
+getter for example nothing will work.
+
+So let's suppose that you want to get the elements backwards so you decide to make a property get it
+
+called backwards.
+
+And here you just swap the order of a and b so you could be here you put a here.
+
+Now if you think that just by adding backwards here everything will be fine.
+
+Well you're wrong.
+
+Let's actually run this.
+
+OK.
+
+So as you can see we have the same problem stuff dog backwards is not it arable.
+
+Luckily for us there is a trick that you can actually do to make sure that your iterator is actually
+
+it arable.
+
+And the trick here is that when you return the object.
+
+Now at the moment we're just returning one one property and property called Next which is a function
+
+actually which does its own thing.
+
+But what you can do is you can also return symbol dot iterator from this exact location.
+
+So as a second property what you can do is you can return symbol dot iterator with a piece of magic
+
+in it.
+
+So here we are returning an iterator but notice what we're actually returning is this.
+
+So we're referring to the object that we're in right now.
+
+And as a result what's going to happen is when you try to iterate this whole thing is basically going
+
+to say oh well OK it has an iterator we got an integrator from this object so why not just use it and
+
+specifically use the implementation of next that's found here.
+
+So that's exactly what's going to happen.
+
+And now if we go back to this example once again there is no modification required.
+
+I'm just going to run this and as you can see we're getting the value of 22 followed by the value of
+
+11 so we reversed the order of the iteration and we got our items.
+
+So the takeaway from this example is as follows If your class needs to be ignorable in just one way
+
+there is only one way that you want to be able to traverse the elements if this class is stuck into
+
+a for loop for example then you just put symbol dot iterator make the function and then you return an
+
+object which has a next function which in turn has a flag called done which you set to either true or
+
+false.
+
+And the value that you actually return so that is very simple but if you have different ways of traversing
+
+your object then we're going to take a look at that in the next lecture when we look at treat her of.
+
+So if you have multiple ways of traversing then you still do the same thing but you add this extra line
+
+of code here.
+
+So you make sure that your iterator is in fact durable.
+
+We'll take a look at this once again in the next lecture.
+
+-----------
+
+All right.
+
+It's time for us to look at a more complicated example of iteration and the example that I'm going to
+
+use is that of tree traversal a very popular kind of computer science the example of data structures
+
+and algorithms.
+
+So imagine you have a tree.
+
+I'm going to have a simple tree there's gonna be an element with the value of one on top and then is
+
+going to have two nodes a node with value of two and a node with a value of three now for a given tree.
+
+There are different ways of traversing that tree.
+
+There is in order preorder and post order.
+
+So if you want to do in order traverse so you would get the values to 1 3 if you were to do pre order
+
+traverse so you'd get one two three.
+
+If you were to do post order traverse so you'll get to 3 1.
+
+How we're going to take a look at how to implement this whole thing and how to traverse it as well.
+
+So the kind of tree that I'm going to build is going to be something like the following.
+
+I'm going to build a very simple tree there's going to be a node class with a value of 1 and 2 children
+
+a node with a value of 2 and a node with a value of 3.
+
+Of course we don't have the node class yet but we're going to create this in just a moment.
+
+So a node is simply something that store is a value.
+
+But in addition it also stores lots of links to other nodes because remember they all participating
+
+in some kind of tree.
+
+So let's make a class called node so in the constructor I'm going to have lots of things.
+
+So the node can take a value and it can also optionally take the left and right children.
+
+But those will have null as defaults because some of those branches might not have any children.
+
+So let's have no one both of these cases.
+
+So first thing we'll set the value and we'll set the left and right sides.
+
+But another thing that we want to have is we want to be able for a given node to find its parents.
+
+I'm going to say this that parent equals no.
+
+Okay.
+
+Now obviously if I'm passing in the left and right sub nodes of this note then we already know their
+
+parents so we know that the left parent is the current class.
+
+We know that the right parent is the current class.
+
+So we can set those.
+
+So if this got left then left up parents equals this.
+
+And if this dot right then right the apparent equals this fairly simple stuff.
+
+Okay.
+
+So now that we have set this up and corrected all the mistakes what we can do is we can try making iterator.
+
+So I'm going to try to make an iterator which goes through the goes through the whole three in order
+
+and we're going to see how that works.
+
+So I'm just going to make a separate function so I'm going to make a function which is not part of any
+
+node classes just going to be a standalone thing.
+
+So it's going to be a function called make in order iterate.
+
+Now if you are looking on Wikipedia right now for how to do in order traverse are you're going to see
+
+me do things in a completely different way.
+
+So there is gonna be a massive mismatch between what I do right now and what is actually written in
+
+Wikipedia.
+
+And the reason for that is that these algorithms are typically recursive but we are unable to do recursion
+
+in this current paradigm because remember all we're doing is we're turning an object which has a next
+
+function which has which returns either done or not done.
+
+And the value that we're working with.
+
+So the value that we're going to be working with is going to be set to current.
+
+But what we actually need to do if we're traversing it in order is we need to go to the left most element.
+
+So while the current dot left current people's current thought left.
+
+So that's pretty much it.
+
+Most are going to have a flag indicating whether or not I feel that the starting value this is just
+
+a peculiarity of this implementation.
+
+So you did start initially false.
+
+OK so remember we need to return an object which has a next function.
+
+And next is a function which is where the magic happens and there's gonna be a lot of magic in this
+
+particular case because we basically have to perform lots of checks so first of all we check whether
+
+we yield at the start value if we have not yielded the start value then we say yield that start was
+
+true because now we are going to yield it and then we return the following.
+
+So the value that we return is the current value.
+
+And Don I'm going to assume is false where I'm just going to assume that there is some sort of extra
+
+elements in there.
+
+OK so that is that.
+
+And then of course we have to go through starting in the current parliament we have to look at the rightmost
+
+element and then find the leftmost element of that and return that.
+
+So notice once again this this is very different from how you would read about this kind of this kind
+
+of data structure.
+
+So if current right then we find that we take the right elements and we find the left most elements
+
+our current equals current.
+
+Right.
+
+But then right.
+
+But then we do a while loop while current the left current because current left so we find the leftmost
+
+element and once we done that we return it.
+
+So return value is equal to current.
+
+And once again done is equal to False because I'm assuming we're not done yet.
+
+So that's it.
+
+But if we don't have a right value that means we have to perform even more scary kind of operations
+
+else.
+
+There we go.
+
+So I'm going to get the parent of the current element let people's current parent and while while the
+
+parent is not equal to now and current is equal to Peter right.
+
+What I'm going to do is I'm going to say current equals speak and people speed up parent.
+
+So I know this might all seem like magic and in actual fact it is very difficult to understand.
+
+So let me just finish this quickly so current equals P and then we return.
+
+And here we actually perform done checks as well so value is the current value.
+
+And Don is whether or not the current is equal to not current.
+
+OK.
+
+So that was quite a lot of work.
+
+Another thing that we need to do remember this is not part of symbol iterator because it's just a function.
+
+So we need to make this iterator it arable.
+
+So that means that we also have to return the.
+
+The other part of the object.
+
+So we have the next here.
+
+And in addition to Next we also have to return that other thing a symbol that iterator where we just
+
+return this fairly simple stuff.
+
+Forgot the semicolon here but now we're done.
+
+Now we have something that is actually going to work.
+
+And what we can do is we can use this iterator so let's make one make in on the iterator root.
+
+Now if we didn't have let's imagine we didn't have this line.
+
+Let's imagine that we never actually returned a iterator symbol.
+
+How could we use the iterator anyway.
+
+Well we would have to be using it explicitly so we would say something like the following that result
+
+equals it next to get the next element.
+
+And then while result is not done Y result is not done we can log the current element.
+
+So that's going to be a result dot value dot value.
+
+Sorry about the the kind of repetition of values here and then result equals it not next.
+
+So we keep iterating manually.
+
+So let's actually run this and as you can see we get the values to 1 3 which is exactly what we wanted
+
+but it's a bit a bit too much work to actually do it like this.
+
+So you can do it kind of explicitly but you know a much simpler way it would be to to uncommon this
+
+line.
+
+And then just just you know say for let x of it log a dollar or X that's going to give the same result
+
+hopefully.
+
+Well actually no it doesn't look we're getting objects here.
+
+So why we're getting objects.
+
+Well because iteration here actually goes and gives us nodes as opposed to actual elements.
+
+So if you say don't value now we get the actual value that we got.
+
+Okay.
+
+So what else can we do with this and what else can we do with this setup.
+
+Well we can for example make it more convenient to use.
+
+So if you want to talk about trees you could make a structure called binary tree for example and then
+
+you can expose this iterator as one of the iterator.
+
+So what is a binary tree.
+
+Well it's just a reference to the root node basically.
+
+So the nodes can exist on themselves.
+
+You don't really need a binary tree structure but you can have a constructor which takes the node and
+
+then you just sign it.
+
+Here's me trying to make fields again.
+
+So you just assign it and then you can have default default iterator so I can say symbol dot iterator
+
+for example I can do it like this and I can hear here I can say return make in order iterator this dot
+
+root note.
+
+So that's going to have almost the same effect as before and we can actually.
+
+So instead of the iterator here you can make a new binary tree with the root node and that's the same
+
+operation as you can see where we're getting exactly the same output.
+
+So how can we improve all of this because honestly this chunk of code for example or this this chunk
+
+of code is is really horrendous.
+
+It's not how we describe tree traversal in computer science literature.
+
+So we need to be able to fix this somehow and it is actually possible.
+
+And it's made possible by using the yield keyword.
+
+So what we're going to do is we're going to implement a better in order traversal better traversal then
+
+than this and I'm just going to stick it into a separate function but because we're going to be yielding
+
+elements and then suspending execution what you need to do is you need to use stars so javascript uses
+
+the star symbol to indicate that the function you're working with is going to have this kind of yield
+
+keyword usage when returning elements.
+
+So the major benefit of this is going to allow us to use recursion and that's going to be totally awesome.
+
+So I'm going to have a better in order better in order traversal and by the way you cannot make a getter
+
+unfortunately you kind of make it better for better in order two of us.
+
+So that's just going to have to be a method.
+
+And what we're going to do is we're going to go through every single node of some function called called
+
+traverse where the root node and we're going to yield that node.
+
+Okay.
+
+And this function traverse is also going to be defined right here.
+
+I'm also going to define it right here.
+
+So this is gonna be a function with a star by the way because it has to be recursive and it has to be
+
+able to yield there's gonna be a culture of us and we're going to traverse starting with the current
+
+element.
+
+So starting with whatever element is provided.
+
+So typical in order traverse so easy you traverse the left part then you retain the current element
+
+then you traverse the right path.
+
+So that's exactly what we're going to do.
+
+So this time round the implementation of the algorithm that's going to be exactly the same as if you
+
+were reading Wikipedia or just your college data structures.
+
+Course textbook.
+
+So if there is a left side to this tree then for every left element of Traverse current left field left
+
+then yield the current element.
+
+Then if there is a current right then for let right off traverse current the right yield right.
+
+And that's pretty much it.
+
+So that's the entire implementation of the tree traverse so.
+
+And as you can see it's a lot easier to understand just a lot easier to see what's going on.
+
+So for every for the given node and where starting with the root node obviously what's happening is
+
+we're traversing the the left children of this note recursively.
+
+Then we retain the current element and then we return the right notes also recursively.
+
+And the reason why all of this works is because we're using that yield keyword.
+
+So we are preserving the context between the iteration calls and that's great.
+
+That's actually something that we can use.
+
+So here.
+
+Going down here what I can do is I can if I have a binary tree I can do better in order traversal.
+
+So once again this is not going to work by itself.
+
+Well actually it does amazingly enough.
+
+You don't even need the symbol iterator thing here.
+
+So that's that's another benefit I guess I somewhat assume that you need the iterator symbol but evidently
+
+not in the case of using the yield.
+
+These functions just return the values for you.
+
+So this is how you can improve the overall design so certainly implementing this kind of manual implementation
+
+of the iterator is workable.
+
+But you keep having to return these like value and done and sort of micromanage the whole thing.
+
+Whereas here the idea is that you have effectively a generator so you have a function which just just
+
+returns values up until well for as long as you are asking them is going to retain the right value and
+
+after it kills the right value is going to suspend the context of this execution until you ask for the
+
+next value and then it gives you the next value and the major benefit of this is recursion as you can
+
+see we have this function called traverse here which internally uses itself recursively and this is
+
+something that was impossible when we just work with the ordinary kind of implementations of the high
+
+in order iteration.
+
+So that's another kind of trick.
+
+Another arrow in the quiver for implementing the iterator design pattern.
+

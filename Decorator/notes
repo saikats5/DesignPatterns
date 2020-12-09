@@ -1,0 +1,290 @@
+All right so now we're going to take a look at the decorated design pattern.
+
+So what is a decorator all about.
+
+Well a decorator is just something that you use to add additional functionality to a class.
+
+Now let me show you just a simple scenario of how this can work.
+
+Let's suppose that there is some sort of base class.
+
+Let's go to shape.
+
+I'm not going to put anything in here but you can imagine things common to different geometric shapes
+
+being kept in this class.
+
+I'm going to have an inheritance.
+
+So we're gonna have a class called Circle which extends Shape so circle extends Shape and circle has
+
+a constructor.
+
+Let's suppose we want to specify the radius which by default is going to be zero.
+
+So we'll call the base class constructor and then I'll just set the radius.
+
+There's that radius equals radius.
+
+So far so good let's suppose we also want some sort of method for resizing the circle.
+
+So we want to resize the circle by a particular factor.
+
+The implementation of this is fairly easy we just assign multiply the radius by that factor.
+
+And finally let's implement some sort of two string.
+
+So we can print the whole thing out.
+
+OK.
+
+So here I'm just going to return a circle of radius and then specify this radius like so.
+
+And that's pretty much it.
+
+That's how a circle.
+
+So here is the situation.
+
+Let's suppose that you're working with the circle you're using it in your application everything is
+
+fine.
+
+However somewhere down the line you decide that you want to be able to add color to particular shapes.
+
+So the question is how do you do this.
+
+Well a very intrusive kind of way would be to go into the base class so you could go into the base class
+
+and you could add maybe a constructor which also takes a color and you assign the color like this.
+
+And now the problem is how do you get the circle to actually print information about this color inside.
+
+It's to string implementation because you want to print here that we have a red circle of radius so
+
+and so but unfortunately you are unable to do it without also modifying the circle class.
+
+So eventually you end up modifying basically the entire inheritance hierarchy and that's certainly possible
+
+but remember we have this thing called the open closed principle and the open closed principle basically
+
+states that classes should be open for extension so you should be able to extend them but you should
+
+not modify them they should be closed for modification so modifying either the base class all the inherit
+
+is might not be the best idea.
+
+So the question is well what if I really want to have color information how can I added on the side
+
+to let's say the so-called class or any other kind of shape object and in actual fact it's not that
+
+difficult because all you have to do is you have to build a decorator so a decorator is just a class
+
+which wraps the original class and adds additional information or additional functionality on the side.
+
+So let's make a college shape so a color shape is going to also extend shape and it's going to provide
+
+a constructor which takes the underlying shape the shape that you want to decorate and the color that
+
+you want to decorate it with.
+
+So here after the base class call what we're going to do is we'll set the shape and we'll set the color
+
+and what we want to be able to do is we want to be able to get a nice print out in which case we need
+
+to re implement to string so we need to effectively override the base to string implementation and we
+
+can use the underlying implementation in the sense that first of all if you have an underlying shape
+
+you can use that shape to output some information about that shape.
+
+So I can just take this dot shaved dot to string and that will give us the underlying information but
+
+also what I want to do is I want to tell everyone about the color so I can say this shape has the color
+
+and specify this color.
+
+There we go.
+
+So now we have both pieces of information and we have the underlying printout of the underlying shape
+
+where it may be a circle or a square or something else.
+
+I'm only only presenting a circle here but you can imagine other different types of shapes which also
+
+extend the shape class.
+
+And let's let's actually take a look at how this whole thing works.
+
+So essentially first of all make a circle.
+
+So just a circle with radius 2 and we can print this to the console.
+
+So let's bring this to the console just to show you what we get.
+
+We get a circle of radius too.
+
+So everything is good so far.
+
+And then what I can do is I can actually decorate this so I can make a red circle.
+
+And that's going to be our college shape decorator where the first argument is the shape we're trying
+
+to decorate.
+
+And the second argument is the color in which case it's red.
+
+So let's once again use console log on here.
+
+I'll take a red circle and call it the string on it and let's run this once again and see what we get
+
+now.
+
+So you can see that in the second case we are reusing the underlying two string functionality of the
+
+shape but in addition we're adding our own thing we're saying that this shape has the color red.
+
+Now what you can do is you can compose decorators which means that you can wrap decorators around other
+
+decorators because remember a decorator is something that goes around a shape but every decorator happens
+
+to extend shape.
+
+So a decorator can go around an existing decorator because a decorator is just a shape.
+
+So let's see how this works.
+
+Let's suppose that we have yet another decorator a decorator or a full making shapes transparent so
+
+we're gonna have a class called Transparent shape which extends Shape
+
+like so and here in the constructor once again I'll take the shape as well as some floating point transparency
+
+value.
+
+And here I'll call the base class and then I'll set the shape like so and then I'll set the transparency
+
+value.
+
+There we go.
+
+And once again I can re implement to string.
+
+So that's actually copy this implementation over and just modify it a little bit because I want to say
+
+that this shape has and then a certain transparency value.
+
+Let's actually turn it from a floating point into a percentage so I can say for example this dot transparency
+
+multiplied by hundred percent transparency.
+
+There we go.
+
+So now I have a transparent shape decorator what I can do is I can apply it to the color shape decorator
+
+and have a twice decorated object so I can have it let's say we'll have a half transparent red circle
+
+so I'll let red half circle equals new transparent shape.
+
+So I'm wrapping the red circle decorator now and I'll specify transparency as not point five.
+
+So that's 50 percent.
+
+And once again we can see what happens as we output the result of red half circle Dr string onto the
+
+console.
+
+So let's run this and this time around you can see that we're reusing the underlying functionality twice
+
+so we have a circle of radius too.
+
+That's what we got from circles to string implementation that we have has the color red which we get
+
+from the color shape him limitation.
+
+And then finally we have the transparent shape which tells us that this shape has 50 percent transparency
+
+so that's how you can compose different decorators.
+
+Now there are a few things to watch out for in this implementation because it is in no way perfect.
+
+So the first thing is that every single decorator actually loses the ability to call the underlying
+
+methods of the decorator shape directly meaning that if I have a red circle red circle is not a circle.
+
+If you look at the definition of color shape a color shape is just a shape it's not a square or a circle
+
+or a triangle it's just a shape and as a result I will not be able to call something like the following.
+
+So remember we have circle we gave circle a resize method but I cannot use it here.
+
+I cannot resize the circle by a factor of two because if I run this you'll see that I get an error.
+
+So it's telling me that red circle dot resize is not a function that makes sense because a red circle
+
+is just a shape and shape doesn't have a resize function.
+
+So we cannot call it like this what we have to do is we have to go through the underlying we have to
+
+say red circle dot shape that resize by a factor of two and this is actually going to work.
+
+This is actually going to go just fine and here we have a radius of 2 and then resize it and from then
+
+on it has the radius of 4.
+
+So that's something to watch out for that's not something that is easy to fix in JavaScript and as a
+
+result you might go through might have to jump through a few hoops to actually get to the the underlying
+
+object in order to modify it.
+
+So that's one thing and the second thing that I wanted to mention is that at the moment there is nothing
+
+preventing us from applying the same decorator more than once.
+
+Well what I mean is you can make a colored shape of a colored shapes so I can take a red circle I can
+
+wrap it in a colored shape specifying it's blue and when I prints out it's going to tell me that I have
+
+a circle of radius for that has the color red has the color blue which doesn't really make any sense.
+
+Now you can try to catch it by looking at the constructor.
+
+So whenever somebody is constructing let's say the color shape you can look at the constructor and you
+
+can check that the constructor isn't the the constructor type is in the class that you are actually
+
+working with and you can catch it that way but then you end up with the situation like what if somebody
+
+makes a colored shape of a transparent shape of a color shape.
+
+They still get to apply twice with a transparent shape in between that is going to be even more difficult
+
+to detect this kind of situation.
+
+Now it is possible you can make some sort of array that actually keeps all of the different decorated
+
+types inside it so that you know what kind of decorators have been applied but they just it's just too
+
+much work and it's probably not worth the effort in the sense that you're not really breaking things
+
+significantly by allowing the same decorator to be applied more than once of course it really depends
+
+on the scenario where you're working but in the general case I wouldn't worry about it too much.
+
+So the takeaway from this entire lecture is that a decorator is simply a wrapper around some underlying
+
+class which gives it additional functionality without modifying any elements of the hierarchy that it
+
+actually uses.
+
+So it just some extra information or some extra behavior as we can see here that goes on this side of
+
+the original implementation and doesn't really affect the underlying implementation.
+
+So the decorator and the underlying they can exist almost independently in the sense that you can modify
+
+the shape hierarchy for your benefits but the decorators aren't going to be affected then similarly
+
+you can modify the decorators without the underlying being drastic the affected either.
+

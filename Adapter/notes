@@ -1,0 +1,516 @@
+We're now going to take a look at the implementation of the adapter design pattern.
+
+Now I don't have the simplest of examples for this particular demo.
+
+We're going to take a look at an example that's reasonably convoluted so let's suppose that the mismatch
+
+in the API is that you have this mismatch between the vector objects and raster objects.
+
+So suppose that you have a very simple API for drawing points.
+
+Well let's suppose you have some sort of function for drawing up points.
+
+And this is just a function which takes a point and maybe it prints it out to a bitmap or something
+
+of course we're going to emulate the whole thing.
+
+So here I'm just going to use process dot as to the out dot right.
+
+A single dot.
+
+But you can imagine this point being drawn somewhere in 2D space.
+
+So you have a bit map and you draw all that point somewhere.
+
+So let's imagine that this is the API that you are given.
+
+So you you have to work with this API.
+
+Now let's suppose that in your own application you're not using roster objects at all.
+
+You're not using points.
+
+You don't have points anywhere in your object or maybe you do but you don't use them directly.
+
+Maybe you're working with lines and shapes and squares and circles and that sort of thing.
+
+So let's take a look at what you actually have.
+
+So if you have a class called points which is defined in terms of x and y coordinates and let's actually
+
+have these as fields I have a field for x and y
+
+if you have something like this let's also have some sort of two string representation of the whole
+
+thing.
+
+So this thought X comma this dump y.
+
+So if you have points like this then you can use these points to define geometric shapes like lines
+
+for example so you could have a line and the line is just a pair of points.
+
+Defining the start and end of the line.
+
+So in the constructor you can have the start and end points and once again we can have those as fields
+
+so Id like.
+
+So
+
+like this.
+
+OK.
+
+So we now have a line object.
+
+Now let's suppose that everything that you're working with inside your application is made up of lines
+
+and you have all sorts of wonderful vector based objects which are based on lines.
+
+So effectively you define some sort of base class called Vector object which is just an array on the
+
+array of lines basically and then you can define something concrete like a rectangle.
+
+So you can have a class called vector rectangle and the rectangle extends Vector object like so and
+
+in the constructor for the rectangle given x y width and height and after you've called Super you basically
+
+have to define the four lines to make up the rectangle so a rectangle is made up of top bottom left
+
+and right lines end.
+
+If you want to just print out all the source code for making those lines and adding them to the current
+
+container you get something like the following.
+
+So let let me just move to the beginning here.
+
+So as you can see there are four lines.
+
+There's a line from x y two x plus width y and so on and so forth.
+
+So this is your rectangle.
+
+Now you still have a major problem.
+
+You don't have an API for drawing rectangles you don't even have an API for drawing lines.
+
+All you have is you have an API for drawing a single point.
+
+So the question is Will how can you actually take a rectangle.
+
+Let's actually make a few rectangles.
+
+How can you actually draw those rectangles.
+
+So let's suppose you have a bunch of vector objects.
+
+Let's suppose you have a new vector rectangle at position one one's size 10 by 10 and you also have
+
+another one.
+
+Let's say at position 3 3 and it's size 6 by 6.
+
+How can you actually draw them right now.
+
+Well you cannot you.
+
+You don't know how to do this because you don't have any functions for drawing rectangles you have a
+
+function for drawing a single point.
+
+So if you want to actually be able to draw your fact your objects your vector rectangles using the drawing
+
+API that you're given you need to build an adapter you need to build something which transforms every
+
+single one of those objects and remember these objects are made up of lines you have to transform every
+
+single line into a set of points.
+
+So you have to build a line two point adapter effectively and that's the adapter design pattern.
+
+In a nutshell so you have a line two points adapter which is going to extend array.
+
+Why is it extending array.
+
+Well because the idea is as follows You have a constructor and you give the constructor a line and it
+
+basically turns this line into a set of points.
+
+Let's not forget to call super here.
+
+So what I'm going to do is I'm also going to keep count of the number of points that are generated and
+
+the number of lines that are processed.
+
+So down just after the class itself I'm going to say line two point adapter don't count equals zero.
+
+So that's going to be a static field which is going to keep the number of lines that we've actually
+
+processed.
+
+Now it's important for later on.
+
+So what is the idea behind the line two point adapter.
+
+Well you have to generate a set of points for a given line and that's actually have some sort of a logging
+
+statement here where we can specify.
+
+So first of all I'm going to print out the count so line two points adapter don't count.
+
+I'm going to plus plus it because this is where we make a new new adaptation of a line into a set of
+
+points and then I'm going to say that we're generating we are generating points for a line and then
+
+here we can actually just use lined up two string which I haven't implemented.
+
+So let's go back into line and then let's just implement this quickly so let's have to string and here
+
+I'm going to return.
+
+So it's a line which is starting from start dot to string and it's going all the way to.
+
+I'm going to use an arrow here it's going all the way to end not to string and let's not forget this
+
+prefix in France this dot start and this.
+
+Got it.
+
+OK so that suddenly makes things easier because now coming down here we have lined up two strings so
+
+we're generating points for line blah blah blah and I'm going to say that there is no caching here caching
+
+is going to be important later on but for now I'll just leave it as is.
+
+So now we have this challenge we're building an adapter which turns a line into a series of points.
+
+How do you do this how do you turn that line from let's say 0 2 0 0 0 to 10 0.
+
+How do you turn it into points.
+
+Well this depends on the algorithm that you use.
+
+I'm just going to drop one in here that I've written behind the scenes.
+
+So essentially I grab the left right top and bottom locations of that line and then for every single
+
+one of them I use a for loop to generate a set of points.
+
+There is no interpolation here.
+
+There is no nothing clever here.
+
+I'm just generating a bunch of points.
+
+After all we are going to output them to the console as using dots.
+
+So their coordinates don't really matter so much but I've added the implementation here just for you
+
+to enjoy.
+
+So the idea is that for every single line the adapter which extends an array by the way it extends an
+
+array the adapter is going to add into itself a bunch of points representing this line.
+
+Those are temporary objects and then we can try and have some sort of function for actually drawing
+
+a bunch of objects.
+
+So let's suppose that we have a function called draw points
+
+so inside drop points what I'm going to do is I'm going to go through every single vector object that
+
+we've defined and I'm talking about these vector objects by the way.
+
+Let's actually move them down so we get to see them.
+
+So these are the rectangles that we want to print every single rectangle is made up of lines and every
+
+single line has to be made up of points which we don't have.
+
+So for every single Vector object of vector objects what we do is we get every single one of their lines
+
+we say for let line off V O and here is where we need an adapter because we cannot just go ahead and
+
+draw a line.
+
+We make an adapter so it's a new line to point to Napster which takes a line as the argument and then
+
+we take the adapters points and we do it for each remember an adapter is in the race so we can do this
+
+and we feed it to draw point.
+
+So for every single point in that the adapter generates for us we call a draw point and draw point is
+
+our emulator point drawing function which just outputs a dot without a line break at the end because
+
+well we're not doing it in a graphical environment we're doing it in a console environment doesn't really
+
+matter for OP is this I'm just demonstrating that.
+
+So now we have this function and we can actually try calling it.
+
+Try calling dual points.
+
+Let's actually take a look if it works and what kind of output we're getting.
+
+Okay.
+
+So what's going on here.
+
+There's actually a lot going on here.
+
+So these numbers 0 1 2 and so on they indicate how many lines we've actually processed.
+
+So as you can see we've processed Ethel of eight lines considering it starting at zero could have started
+
+at 1 if I wanted to.
+
+And then the dots are the actual rendering so the dots is when we actually draw a line.
+
+So as you can see we have we're generating a bunch of points for a line going from one one to eleven
+
+and one without any caching.
+
+And and then we draw them and then we do the same thing for another line and then we draw them so at
+
+each of these points these outputs are generated by the adapter so the adapter takes a line turn this
+
+into a bunch of points and then the dots represent us actually drawing the points.
+
+Okay.
+
+So it might seem as though this implementation of the adapter is a good implementation.
+
+But what if I just duplicate this line.
+
+What if I decide to draw the points twice.
+
+Well let's run this once again.
+
+Let's take a look at what we get right now.
+
+Okay.
+
+So as you can see there is a bit of a problem here.
+
+We are using the adapter twice.
+
+We're generating the points for a line from 11 1 to 11 11 for example.
+
+And down here we're doing exactly the same thing.
+
+Now if we've already generated points for those objects why are we generating them again.
+
+That's not a good thing.
+
+So that is one of the problems we're going to solve in the next vector.
+
+I just wanted to show you that when you you have an adapter like the line to point adapter that we have
+
+here you inevitably end up generating temporary objects when we have this dot push which generates new
+
+points for us to enter.
+
+These are temporary objects you want to have some sort of control that if these temporary objects need
+
+to be generated again for the same object you don't generate them twice.
+
+That's what we're going to take a look at in the next next year.
+
+
+-------------
+
+
+All right.
+
+So in the previous lesson we looked at how to implement an adapter which adapts a Vector object a single
+
+line into a series of points that you can subsequently print.
+
+So the one problem that we've encountered is that when generating temporary objects we keep regenerating
+
+the temporary objects even though we've already done the work previously.
+
+That happens in the line to point adapter specifically here.
+
+We keep generating the points even though we've already done them for a line somewhere in the past and
+
+the question is well how can we avoid all this extra work effectively we don't want to do any extra
+
+work we don't want to sort of keep reallocating extra memory we just want to do this once.
+
+So if a line goes from zero zero to 10 zero I just want the points generated once and on every subsequent
+
+call I want to be reusing them.
+
+We're going to see the end results when we call draw points twice in succession.
+
+And what we're going to do in order to avoid this extra duplication is we're going to implement caching
+
+now caching basically means that we store the print compute at points and we just yield them if they
+
+are already available without regenerating them again.
+
+Now one piece of plumbing that I'm going to use for this is a hash code function for a string.
+
+So I'm going to drop this right here.
+
+So this hash code function what it is essentially does is for every given string it actually gives you
+
+a unique 32 bit integer.
+
+And if a string changes you're going to have a different integer representing that string.
+
+Why are we going to do this.
+
+Well the reason why we're going to do this is we're going to try avoid generating any additional points
+
+for a given provide that line.
+
+And we're going to do it right inside the constructor of our adapter so coming to the line to point
+
+adapters constructor after we call super before we actually do any kind of debugging output we're going
+
+to do the following.
+
+We're going to calculate a hash code for a given for a given line.
+
+Now the way to do this and the reason why I have a hashing function for a string is because what I'm
+
+going to do and this is a trick that I've done in other design patterns already is I'm going to turn
+
+the line into a chunk of Jason's song when to say Jason that stringy fly and I'm going to provide it
+
+a line.
+
+So this is going to give me a Jason string representation of that line.
+
+And then what I will do is I would get its hash code.
+
+So this is going to give me a unique 32 bit value for every single line.
+
+And I'm going to store it in a field called hash.
+
+OK.
+
+Now I need some sort of common storage for all of these pre computed points.
+
+So down here when I have the count variable I'm going to have yet another variable I'm going to have
+
+a variable called line to point adapter dot cache and that's going to be an empty dictionary to begin
+
+with.
+
+So this dictionary is going to have a key of the hash code for the line that we're interested in and
+
+the value is going to be an array of the actual points.
+
+So how do we proceed here.
+
+Well first of all here after we compute the hash we check whether or not the hash is already in that
+
+storage because if we already have it in cash then we just don't need to do anything here.
+
+So here we say if line to point adapter dot cache this dot hash that means we are the habit and we simply
+
+return.
+
+There is no need for us to do any extra work here.
+
+Okay.
+
+Now if that is not the case then we do things differently so what happens here is instead of adding
+
+the points to ourselves we we don't even need to become an array anymore.
+
+We don't really need this instead what we do is we just make an array of points like so and then we
+
+populate this array so instead of using this done push we use points stop push.
+
+And the same goes for the other case as well so we add we populate this array of points and then we
+
+add this array of points to the overall cache.
+
+So we say line two point adapter line two points adaptor dot cache with the hash value that we've calculated
+
+is going to store those points like so.
+
+So in this particular case we don't really need to extend the array anymore in actual fact it doesn't
+
+doesn't make much sense but I'll just leave it here for now but the way that I want to play this is
+
+I want to expose the set of points for a given line anyway.
+
+So I want to have them given out.
+
+So here I'll have a getter for items and this is just going to return that's a set of points from the
+
+cache.
+
+I'm going to say line two point adapter cache this dot hash remember we store the hash inside a field
+
+then we can use this to actually get into the cache and get all the points corresponding to this particular
+
+adapter because it adapter is associated with a line.
+
+Okay.
+
+So with this entire setup what we can do is we can now go down here and we can say and after dot items
+
+dot for each so we can go through every single one of these items and for every single one of them we
+
+can you basically draw a point as before.
+
+So going up into the adapter I'm actually going to get rid of extensively because we're no longer in
+
+the race so the super call is no longer required.
+
+But apart from that everything else stays pretty much the same now.
+
+What's interesting is when we actually run all of this this is where things are going to get interesting
+
+so as you can see we're only generating the points first time round.
+
+So here is an adopted generation here here here.
+
+So for the first eight calls we actually do this but for the next eight calls which replicate.
+
+You'll notice there is no adapter invocation anywhere because these points have already been calculated
+
+and all we have to do is just output them which is exactly what we're doing down here.
+
+So what is the take away from this example as was the previous lecture.
+
+The takeaway is that sometimes the adapter design pattern causes you to generate temporary objects and
+
+if it does it makes sense to try to cut down on the number of objects you actually generate.
+
+So if you're generating temporary use for objects that you've already encountered before it might make
+
+sense to put them into some sort of cache as we've done here.
+
+So effectively you will make a class level variable called cache that has all the cached points and
+
+then all you have to do is you have to have some sort of unique value for every single element that
+
+you might have in the cache.
+
+So here I'm using a hash code function for a string there are suddenly better implementations out there
+
+you could for example give the line itself a hash code getter that you could actually use to calculate
+
+a unique value for each line and then you would check whether or not it's actually in the cache if it's
+
+in the cache.
+
+There is no need to do any extra work but if it's not then you generate the temporary ease you add to
+
+them to appropriate locations in the cache and then you sort of you populate the cache and then you
+
+can use it from wherever it is required.
+
+So this is all that I wanted to mention with respect to the adapter design pattern.
+

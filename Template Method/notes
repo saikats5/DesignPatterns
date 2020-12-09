@@ -1,0 +1,222 @@
+We are now going to take a look at the Template Method design pattern which is very similar to these
+
+tragic design pattern but that uses a different approach.
+
+So the idea is the same you define a skeleton algorithm and you allow the client to customize this algorithm
+
+according to your needs.
+
+But in this particular case the strategy or the kind of the overall structure of the algorithm that
+
+you want to implement is defined in a base class and everyone is expected to have some sort of inheritor
+
+of this class to actually define something so let me show you an example.
+
+Let's suppose that you want to define a general purpose algorithm for a game.
+
+So let's suppose that we are talking about board games for now.
+
+So in the constructor of the game based class you can have for example the number of players so you
+
+can have the number of players which you can store in a field.
+
+Well let's just stick it in a field and we can also have some sort of property for the current player
+
+current player equals zero.
+
+So maybe this is just a number that you want to have for keeping track of the current player.
+
+Now we're going to have just one method called run and run is going to be precisely the Template Method
+
+of this entire scenario.
+
+So a template method is simply a method which defines the overall structure of what needs to be done
+
+without defining the concrete parts.
+
+So what are we going to do here.
+
+We're going to call if you are of the current classes methods we're going to say that the game starts
+
+somehow and then while there is no winner while the game doesn't have a winner we take a turn whichever
+
+is the current player takes a turn.
+
+And then finally when the game is over we can just output something to the command line so we can say
+
+for example player this start winning player wins.
+
+Yeah we go.
+
+So this is our attempt method and it has a couple of things missing so you can see that there's a stark
+
+method.
+
+There is a have when their property either is it take to a method there is a winning play a property
+
+all of these have to be defined.
+
+So what we do is we define them as blanks so that whoever inherits from this class can actually customize
+
+them to actually do something.
+
+So here I'll have a method called start I'll have a getter for have winner I'll have a method called
+
+take turn and I'll have a getter called winning player.
+
+Okay so what we've done is inside Iran we've defined a template method.
+
+So we've defined effectively a structure that every single game has to follow.
+
+But we haven't defined concrete implementations of start or have winner or take turns.
+
+Nothing like that.
+
+So it is up to the inheritor of this game class to actually give it some meaning.
+
+So let's suppose we want to define a game of chess.
+
+Now I'm not going to program all the chess rules but we are going to simulate a game which has two players.
+
+So a game of chess extends game.
+
+So no this with a template method.
+
+You extend the class in the constructor you want to call the base class remember the base class takes
+
+the number of players in a game of chess.
+
+There are two players.
+
+So we put the number two in here.
+
+In addition let's suppose that we're just going to simulate a couple of turns.
+
+We're going to say that there's gonna be a maximum of 10 turns and the current turn has index 1 for
+
+example.
+
+So now what we need to do is we need to do the overrides we need to override every single method of
+
+the template method containing parent class except for the template method itself so we don't need to
+
+override run but we need to override everything else.
+
+So I'm going to say okay here I notice I have just just a couple of these scaffolding Code defined for
+
+me and we need to customize all of this to what we actually want.
+
+So let's suppose that when the game starts we're going to just output something to the console so here
+
+I'm going to say that we are starting a game of chess
+
+with and let's define the number of players there's that number of players players.
+
+So a number of players of course comes from the base class.
+
+That is something that we've inherited.
+
+Okay.
+
+So now in terms of have winner I'm just going to simulate it by saying that the winner is the person
+
+that has taken a turn or let's not this is actually the condition when the game ends.
+
+So we have a winner and then the game ends I'm going to say that for this to happen the current turn
+
+has to be equal to the maximum number of turns.
+
+Remember we discussed that the maximum number of turns here is going to be ten because we're simulating
+
+we're not implementing a real like chess engine or anything.
+
+Finally whenever we take a turn let's also do some logging here.
+
+So I'm going to say that this is turn and then this turn plus plus.
+
+So turn so and so take and take and by and then player and let's have current player here.
+
+So we're gonna say this is turn 1 taken by player 1 and so on and so forth.
+
+So what we then do should not have a semicolon here what we then do is we actually change the current
+
+player because remember we have this current player field and what we can do is we can flip it.
+
+So for example I can say that this is going to be current player plus 1 percentage number of players.
+
+This is how you typically get a number to increment with a kind of rollover mechanic.
+
+You just get the remainder.
+
+Okay.
+
+So finally to get the winning player once again I'm just going to simulate this here I'm going to say
+
+that the current player is the winning player.
+
+So once we've gone through the 10 tonnes the player that's currently the current player is the winner
+
+so that we can simulate the whole thing let's make a chess game and we can say chess run.
+
+So we are calling the template method from the base class.
+
+So when we're calling chess that run we're essentially calling this.
+
+And from here on out we're going to start calling things like start to have winner take to winning player
+
+all the rest of it.
+
+And that is going to allow us to actually perform all of these actions that we've just defined so let's
+
+run all of this.
+
+Let's see what we get.
+
+Okay.
+
+So we are starting a game of chess with two players.
+
+That's the remember the argument we passed to the game constructor and then we're simulating the turns
+
+by alternating the players between 0 and 1 so we take at the Love nine turns and at the tenth turn.
+
+Player 1 wins.
+
+So what is the take away from this example and win.
+
+When we talked about the strategy method we saw that you basically use aggregation you basically feed
+
+a predefined class as an argument that can subsequently be used as part of an algorithm here the algorithm
+
+is in the base class and you are meant to be inheriting from this base class redefining every single
+
+one of these dummy methods except of course for the template method itself.
+
+So the template method in our case is called run this template method stays as it is but all of the
+
+all of the methods it uses like start half winner need to be redefined in the Rif class.
+
+And this of course you have no need of them in which case you don't have to redefine them because they
+
+will just be taken from the base class and they will be no.
+
+You'll see that every single one of these house empty color braces it doesn't really do anything so
+
+you can you can have this kind of approach but obviously not every single case will work.
+
+For example here we have a while loop where we check have winner.
+
+So obviously you have to have an actual return value for for the inheritance.
+
+You probably do want to override this method whereas with some of the other method like for example
+
+if there is no starting procedure for your game then you don't have to implement start inside the chess
+
+game.
+
+You can just go down here and you can take all of this and just comment it out because it's not strictly
+
+necessary.
+
+So this is the template method design pattern.
+

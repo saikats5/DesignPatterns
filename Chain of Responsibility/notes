@@ -1,0 +1,799 @@
+All right so let's talk about the chain of responsibility now.
+
+I'm going to show you a scenario where we have let's say we have a computer game and that computer game
+
+has a bunch of creatures which are kind of roaming the grounds and doing their own thing.
+
+And let's suppose that a creature can pick up a magic item for example or it can be somehow modified
+
+so that it gets a modifier it gets some sort of additional ability boost or something which actually
+
+decreases its ability something to that effect.
+
+Now the question is how do you actually stack certain modifications on top of the base creature characteristics.
+
+Well that's what we're going to implement.
+
+So first of all let's make a class called creature so a creature is going to have a constructor where
+
+you specify the creature name Well also how attack and defense values just to show you some of the aspects
+
+in which the creature can be modified.
+
+I'm going to store all of these.
+
+So that's actually make fields for all of these I don't know why these things get generated but that's
+
+the that's the thing that's like so so I'm saying all over the fields.
+
+And now let's also do a two string so we can actually print the creature.
+
+So here I'm going to put the name of the creature and then just It's attack and defense in round brackets.
+
+So this is going to be attack slash the defense like so.
+
+Okay.
+
+So that's that's a two string implementation and now let's suppose that we want to modify that creature
+
+somehow.
+
+But first of all let me actually just make a creature and print it to the console so you can see what's
+
+going on so we might have a goblin which is a new creature called goblin obviously with an attack and
+
+defence values of one let's log goblin like so and actually run this and here is the output.
+
+Well I should have used two string because the default implementation here it just gives you the kind
+
+of Jason look but that's good enough.
+
+So we have a creature which has an attack and defends values of one.
+
+So let's imagine that you want to apply modifiers to that creature.
+
+How do you do it.
+
+Well the implementation of the chain of responsibility that we're going to do here is called a method
+
+chain.
+
+And the reason for that is that we're going to have a base class with a method and that method is going
+
+to propagate onwards.
+
+So the actual modify the base class for a creature modify is going to be called a creature modifier.
+
+So a creature modify let's just make a constructor here it works on a creature so we store the creature
+
+always like so and we also have something called next.
+
+OK.
+
+So this next bit is already a hint as to what's going on next is the next modifier in a sequence of
+
+modifiers.
+
+So essentially what we are doing is we're making creature modify a linked list.
+
+We're linking to the next element and of course you can have it now which means we are to turn the model
+
+element in this whole process.
+
+So the other two pieces of the puzzle in order to make this into a fully functioning linked list out
+
+first of all being able to add additional modifiers onto the end of the list.
+
+So that is done using the add method you specify the modifier and then what happens is if there is a
+
+next if we do have a next reference here we just use that reference and we call add on that specifying
+
+the modifier.
+
+Otherwise we set this up next to the modify that's provided for us.
+
+That way we always add to the very end of the linked list.
+
+And the other part is of course when you actually get to apply the creature modify so I'll call this
+
+method handle.
+
+That's where you get to apply it of course this is just a base class.
+
+So by itself it doesn't really apply anything but this is something that you are meant to override in
+
+the derived classes here we just check if there is a next reference and if there is one then we call
+
+handle on the next reference as well.
+
+That's pretty much all that we need to do here and this default behavior is going to be augmented when
+
+we build actual modifiers.
+
+So let's suppose you want to modify the like let's say a magic item which doubles the attack value of
+
+that creature.
+
+So you'll have a class called double attack modifier
+
+so a double deck modifier obviously extends creature modifier.
+
+So we need a constructor where we just call the base class constructor providing the creature.
+
+We don't do anything specific here.
+
+All all of the interesting stuff happens in the handle method.
+
+So inside the handle method what happens is first of all we call what's actually.
+
+Do some logging.
+
+So first of all I'm going to log the fact that we are doubling the creatures attack.
+
+So we are doubling this dot creature that name attack and then out actually double it.
+
+So this dot creature dot attack and gets multiplied by two and then.
+
+And here is the interesting bit.
+
+I call super that handle.
+
+So remember super that handle is the thing that allows us to traverse the entire linked list and call
+
+handle on the next element and the next element and so on and so forth.
+
+So this is how you can write the modifier to basically change the creature.
+
+Now let's actually take a look at how this would work in the real world.
+
+So you would have some sort of root creature modifier that root equals new creature modifier.
+
+So remember this is the base as is the class that you are supposed to inherit from.
+
+But it's also the start of a linked list.
+
+And we've seen something similar when we looked at the composite design pattern as well.
+
+The fact that you can have an object which is either a scalar value or a collection depending on how
+
+you treated so the same thing is happening here and we provide the goblin but the creature modified
+
+by itself doesn't do anything.
+
+So the reason why we're making this two words in the first place is that we can add onto its elements
+
+and we can add to the overall linked list in that and subsequently invoke the whole thing.
+
+So the idea is that you take root and you add a new that's a double attack modifier on the goblin so
+
+you add the double attack modifier at some point you have to apply.
+
+So you called Rudolf handle that applies all the modifiers and then we can actually log the goblin.
+
+So this time round I will do goblin duck to string.
+
+So this is how you get to see the end result and if we run this now well we seem to have an error because
+
+I forgot the new here.
+
+But if we try this again then here we are.
+
+So everything seems to be working correctly here so we have a creature that's called goblin with attack
+
+and defense values is one we are doubling the golden syntax and then goblin is suddenly a 2 1.
+
+So that's good.
+
+That's an example of how you can apply a single modifier and obviously you can make other modifiers
+
+and stack them on top of one another.
+
+This is the whole point of the chain of responsibility that you get to apply every single one of them
+
+in a chain.
+
+So let's have another one that's call increase defense modifier.
+
+Creature modifier OK.
+
+And once again the same constructor as before.
+
+Let's see if we can actually get to generate the constructor.
+
+So constructor that would go.
+
+That was quick and then handle with veto override handle.
+
+And here.
+
+Let's suppose that we only increase the defense if they attack value is less than or equal to do so.
+
+If the creature attack value is less than or equal to 2 then we can log the fact that we're increasing
+
+the creature's defense.
+
+So this stock creature name we're increasing the creature's defense value and then I actually do it.
+
+So this creature defense plus plus for example.
+
+And then we call super handle to actually follow the entire chain of responsibility.
+
+So now what we can do is we can also add this modifier here so we can say that AB and you increase defense
+
+modifier providing the creature once again.
+
+And if we run this now you'll see that the end of it all.
+
+The problem becomes at 2 2 because we've actually increased its defense.
+
+Now if I double the attack once again here if I go ahead and just replicate it twice we're no longer
+
+going to increase the defense and you can see here that is a 4 1.
+
+So the defense didn't change from the value of one because remember we have this conditional here we
+
+have a conditional saying that this is only going to happen if the creatures attack is less than or
+
+equal to do otherwise we don't do anything.
+
+So this idea can actually be used to for example negate the entire chain.
+
+You can actually disable the entire chain and part of ours.
+
+So suppose a goblin gets put under a spell where all of its modifications do not work.
+
+We don't want every single one of them to work even though they are added at some point how do you do
+
+it.
+
+Well in terms of object oriented programming it's very simple.
+
+What you do is you fail to call the super does handle because super that Hannah is precisely the thing
+
+that allows the traversal of the entire linked list so we can think of some sort of no bonuses modifier.
+
+Let's put it up here so we're gonna have a class called no bonuses modifier which also extends creature
+
+modifier modifier like so.
+
+And the constructor is fairly obvious and then let's override handle and what we do is we do nothing.
+
+We don't call super that handle I can actually lock here that there are no bonuses for you like so and
+
+the end result is that if you add this modifier to the beginning of the root then none of the subsequent
+
+bonuses will be applied because we never call handle to follow on the linked list.
+
+So here I can say rule dog and you know bonus as modifier on the goblin and you'll see that now when
+
+we run all of this the goblin remains a 1 1.
+
+No bonuses for you because well we decided not to follow the entire chain of responsibility.
+
+So this entire implementation is effectively a thinly veiled linked list because essentially what we
+
+have is we have a creature modifier which has a next reference and next.
+
+That next reference is actually followed whenever you call handle so you overwrite handle but you always
+
+call super door handle so that you actually handle the remainders of the linked list.
+
+If there are any in actual fact.
+
+So this is one approach to implementing the chain of responsibility design pattern.
+
+-----------
+
+So one thing worth mentioning is something called Command query separation a very well-known and popular
+
+idea.
+
+So the idea is that whenever we operate on objects we separate all of the invocations into two different
+
+concepts which are called query and command.
+
+So a command is something that you send when you are asking for an action or change.
+
+So for example you want to set the attack value of a creature to do so you're sending a command which
+
+specifies that you need to modify the thing you need to modify is the attack value and the new value
+
+you want to set it is equal to two.
+
+Another thing is query and query is asking for information without necessarily changing anything.
+
+So you're simply asking for the system to give you a particular value like please give me your attack
+
+value.
+
+And so we have something called CQ s which means that you have separate means of sending commands and
+
+queries.
+
+So instead of for example at directly accessing a field of a particular class what you do is you send
+
+it a message either you send it a message telling it to please give me the contents of the field or
+
+you send a command which states please set the field to this particular value.
+
+And thanks to the chain your responsibility you can also have other listeners to this command being
+
+sent and they can override the behavior of the actual command or indeed the query.
+
+
+----------
+
+Okay so now that we've looked at a very simple kind of linked list implementation of the chain of responsibility
+
+we're going to look at a much much more complicated implementation which is the implementation using
+
+something called an event broker.
+
+So in order to have an event broker you first of all have to introduce the idea of an event and this
+
+is something that is very tightly coupled to the observed design pattern.
+
+So check out the observer lectures for more information on that.
+
+But essentially what I'm going to do is I'm going to just hand the row a very simple idea of an event
+
+and an event is simply kind of like a signal that people can subscribe to and they can get information
+
+whenever that signal was actually triggered.
+
+So I'm going to make a class called event and an event is going to have a constructor where you have
+
+a bunch of handlers.
+
+So these are the functions which actually can handle the event can handle the signal whenever it gets
+
+triggered.
+
+I'm just going to make a.
+
+Make a map here.
+
+OK.
+
+So also keep a count zero.
+
+I know what we're going to do is we're going to add functionality for subscribing to the event for on
+
+subscribing from the event as well as for actually firing the event.
+
+So in order to subscribe to this event you have to provide the handler the handler is going to be a
+
+function that actually gets invoked whenever somebody fires this.
+
+So here we say this the handlers don't set.
+
+So we use the count as a kind of index into the map.
+
+So we say this doesn't count incremented and the handler gets added to the map and then we return this
+
+count.
+
+So we return the actual index of the element that we've just added because then you can use this index
+
+as a kind of flyweight.
+
+And that's the flyweight design pattern you can use this index as a key in order to actually unsubscribe
+
+from this event.
+
+So here we can have unsubscribe index.
+
+And here I'm just going to say this dog handlers don't delete add a particular index and finally firing
+
+the event.
+
+So how do we get the event Berger to actually let everybody know that something has changed so we fire
+
+when we fire the event we need typically two pieces of information.
+
+We want to know who actually asked for the event to be fired and we want a couple of arguments to actually
+
+provide any exhibit data that might be used by whoever is actually consuming the event.
+
+So here we say this dot handlers dot for each.
+
+And we have a function where you have a value and a key and in the case of this function all we have
+
+to do is we just take the which is the value.
+
+Now remember V is the handler.
+
+It's a function that somebody has provided for us and we call this function providing the sender as
+
+well as the arguments.
+
+That's pretty much all there is to it for implementing the event.
+
+Now of course we have to get back to the real world and talk about creatures and the way that their
+
+modification happens.
+
+So this time round we're not going to have any explicit application of a modifiers instead we're going
+
+to make it so that as soon as a modifier comes into existence as soon as you construct a modifier it
+
+immediately applies to the creature and then when it goes out of scope when it gets destroyed then it
+
+no longer applies to the creature.
+
+But apart from that we're going to have things the same as before pretty much.
+
+So let's make a creature classic.
+
+So you have a class called creature now a creature is going to have a constructor and this time round
+
+we're going to have the name they attack the defense but in addition what we're going to have is we're
+
+also going to have a reference to some sort of event broke or the event broker is the central object
+
+that happens to share the events that we can work with.
+
+So the event Berger in our case is going to be called a game because all the creatures take part in
+
+a game.
+
+So here inside the constructor Well I'm going to do is I'm going to create an event called queries.
+
+Now the reason why I'm calling in queries is because this event is going to be used specifically for
+
+querying data from creatures such as you can ask a creature what is your name.
+
+What is your attack value what is your defense value.
+
+You cannot use this queries event to tell a creature to do something you can only ask for information
+
+from it.
+
+And all of us are going to have some sort of utility method let's call it perform query where you have
+
+the sender as well as the query and you say this the queries don't fire sender and query.
+
+So just the utility method for making it easier to work with there's that query so you don't have to
+
+trigger it directly.
+
+So now the idea is that the creature takes part in a game.
+
+So the first argument happens to be the game that you are taking part in and then we have the typical
+
+star.
+
+So we have name attack and defense.
+
+Now there are going to be a lot of things that are different in that in this construct.
+
+First of all we assign the game well assign the name as well.
+
+Now in terms of assigning the attack and defense values remember these can be modified so attack and
+
+defense can be modified so I don't want to call them attack defense because we want the attack properties
+
+to give us actual attack and defense values not values which are initial so I'm going to say this dot
+
+initial attack equals attack.
+
+And similarly this dot initial defense equals defense and then I want to provide an ability for us to
+
+query the creatures attack or defense values including all the modifiers.
+
+So that's the interesting part.
+
+So first of all I'll define the kind of stuff that you can query.
+
+So what to query is going to do an animation.
+
+So will numerator two things are going to have attack with a value of one.
+
+And then defense with the value of two like so.
+
+So that's something that we can query or we cannot query anything else and we cannot query the name
+
+right now which you might want to fix later on.
+
+So essentially we have we have a way of specifying what to query.
+
+But we want some sort of query object.
+
+So we have a class called query everything inside the query class is going to happen in the constructor.
+
+So here we specify what creature we want to query what what parameter we want to query as well as the
+
+initial value.
+
+Now the initial value of a query is subsequently going to be modified by every single modifier inside
+
+our chain of responsibility.
+
+In this case the chain is actually implemented as a as an array of.
+
+Well it's actually a map of the actual chain of responsibilities held right here.
+
+So coming back to the constructor all we're going to do is we're going to store all of these.
+
+So let's have let's have it like this.
+
+Let's see.
+
+I'm not letting me generate things anymore so you just want to query my query and then there's that
+
+value equals value.
+
+So let's get rid of this.
+
+Okay.
+
+So this is our query class and now what we can do is we can actually perform the query.
+
+So whenever somebody once let's say they want the creatures at shock value what we can do is we can
+
+make a better get attack.
+
+So here are what we do is we make a query.
+
+We don't just return some value that's because we don't know who is going to.
+
+We don't know what modifiers are going to affect this value.
+
+So we make a query instead so that queue equals new query.
+
+Okay.
+
+So we're going to provide the name of the creature we're going to provide what we want to query.
+
+In this case it's going to be the attack value.
+
+All right.
+
+Let's see if I got this correctly.
+
+Let me just.
+
+Oh yeah.
+
+Use the lowercase W here.
+
+Let's make it uppercase.
+
+So what's a query.
+
+That attack is what we're interested in and then we provide the initial attack value that is subsequently
+
+going to get modified.
+
+So we have the query.
+
+We can now say this dot game dot perform query to actually perform this query.
+
+We are the sender.
+
+So we provide this and the query is the one we've just constructed.
+
+And then we simply return queued up value.
+
+So that's pretty much it.
+
+That's how you actually query for the creature's attack value.
+
+Similarly we can just copy this code and replicate this for defense so here you would say defense here
+
+you would say initial defense and apart from that everything is stays pretty much the same.
+
+Now let's implement to string as well just so that we get to we get to print the creature.
+
+So here I'm going to return once again this is this dot name.
+
+And then just just put round brackets here and this dot attack.
+
+Notice I'm using those property getters slash this defense
+
+these tough defense like so I think I messed up somewhere.
+
+This should be a color brace here now again.
+
+OK.
+
+So now with this with this entire setup and by the way I forgot to call the defense like so well this
+
+entire setup we have querying done and now we can add the modifiers so the modifiers.
+
+The interesting part.
+
+So once again we're gonna have a base class called creature modifier not in the constructor.
+
+We're going to have a game as well as the creature that we get it gets applied to.
+
+We can store the game although it's not really it's not really necessary.
+
+This game equals game.
+
+We can still the creature that's relevant and then we can also store the token that gets returned from
+
+when we subscribe to all the events in the game because remember the creature modifier has to intercept
+
+whenever somebody asks for creatures.
+
+Let's say attack value it has to be able to intercept this and subsequently handle this somehow.
+
+So what I'm going to do is I'm going to say this that token equals game Duck queries don't subscribe
+
+so we subscribe to this token and we have to provide some sort of handler.
+
+We have to have some sort of method which takes the sender as well as some query data but we also want
+
+to be able to use this inside the handle.
+
+Now we know that to do this in javascript you have to be tricky you have to not just provide this that
+
+handle because this is not going to allow us to use this inside the method but we have to say this dot
+
+handled dot bind this this way.
+
+The reference to the current object is actually going to be preserved when we handle the whole thing.
+
+So this now this hand though doesn't get implemented here.
+
+You implemented in inheritance you don't implement HANO here because this is just a sort of abstract
+
+class if you will and then we're also going to implement a method called dispose for when you actually
+
+want to unsubscribe when you want to get rid of the modifier subsequently on subscribing from all of
+
+those queries.
+
+So here we say gamed all queries that unsubscribe and we provide the token that we've saved earlier.
+
+Remember we're using these integer tokens.
+
+OK.
+
+So now that we have this base class what we can do is we can make an actual modifier we can make a double
+
+attack modifier.
+
+So class double attack modifier extends creature modifier creature modify like so.
+
+So we need a constructor which is going to be generated for us.
+
+Very nice.
+
+And then we need to override the handle method.
+
+So this is how we do this.
+
+So this time round you don't have to call super handle because it's empty.
+
+There is nothing there for us to call but what we want to be able to do is we want to be able to double
+
+the attack value assuming that the creature that came in here so the creature which is the the sender
+
+or the query creature name rather matches the creature that we provided in the constructor because we
+
+only apply it to that particular creature.
+
+So here we say if the query creature name is equal to this dot creature dot name.
+
+And the second part of the requirement is that query dot what to query actually happens to be what to
+
+query does that tag.
+
+So we only modify the attack value.
+
+And here is where we take the value and multiply by 2 notice way reusing the query object to actually
+
+modify what is being returned and that allows several modifiers to be applied in sequence and change
+
+the original value to whatever it is that we're actually interested in.
+
+So let's start using it first so you have to have your event broken which it in this case is the game.
+
+That game equals new game.
+
+So let's make a goblin it's gonna be a new creature.
+
+Let's make a strong goblin.
+
+Now first all you have to provide the game reference and then we'll have the strong goblin 2 2 2 creature.
+
+So let's log goblin to string and then we'll we're going to do is we're going to actually get the double
+
+attack modifier to come into the game so let people equals new double attack modifier game and Goblin
+
+needs need to be provided into the constructor and then we can log the goblin once again.
+
+Notice there is no handle or apply or anything like that.
+
+As soon as you construct the double attack modify the whole thing kind of works.
+
+So we do goblin dot to string that's actually run this.
+
+Let's see if we get any arrows.
+
+No.
+
+It works and as you can see we're getting the right results here.
+
+So initially we started out with a two to goblin and then we applied a four two.
+
+And similarly what we can do is we can have yet another modifier that gets put on top of that let's
+
+actually write this one so I'm going to make a slight increase defense modifier.
+
+So once again this is actually going to be kind of very similar to what we've written here.
+
+So I'm I'm just going to copy and paste this.
+
+So here we have increased defense modify the constructor stays pretty much the same.
+
+Now whenever there's a query here we need to make sure the name matches.
+
+So this part stays the same but this time round some of these querying the defense value let's just
+
+assume that this time round we just increment unconditionally and we increment the defense value by
+
+one for example.
+
+So in this case what we can do is we can create that.
+
+So let IDM equals new increased defense modifiers so once again providing the game in the goblin like
+
+so.
+
+And then we log goblin to string and hopefully that gives us modified value.
+
+So let's see.
+
+Yeah.
+
+We now get a 4 3 instead of a 4 2 because the defense get got increased.
+
+But what we can also do is we can unsubscribe.
+
+We can sort of cancel the increased defense modifier I can say IDM that this bodes well you can call
+
+it like destroy all whatever you want to call it and effectively after this invocation the goblin gets
+
+back to a 4 2 because now you've destroyed that modifier.
+
+So if I run this once again you can see that is reverted back to a 4 2 because that modified no longer
+
+gets applied it unsubscribed from the event broke thereby no longer participating in any kind of queries.
+
+So the takeaway from this rather complicated example is that there is another way of making the chain
+
+of responsibility design pattern and that is using an event broker which is essentially just a centralized
+
+component.
+
+In this case it's called game and the centralized component exposes some shared object in this case
+
+it's an event called queries and everyone can subsequently subscribe to those events and unsubscribe
+
+from those events thereby kind of handling things automatically.
+
+But then of course this introduces complexity in terms of cutting the actual value.
+
+So if you want to as attack value it's not just its baseline attack value.
+
+You also have to go through every single modifier.
+
+So what we do instead is we make a query and then we perform the query by just sticking it into the
+
+event and making sure that everybody who handles the event has a chance to actually process this query
+
+and if they want to they can modify this query and that's exactly what's happening in every single one
+
+of the modifiers.
+
+So here we have for example the handle where we check that the creature name matches we check that we're
+
+querying the right thing and if that is the case we modify the query value and the final value subsequently
+
+gets modified several times by several modifiers and you get the right value at the end of it all.
+
+So this is how you implement chain of responsibility using an event broker approach.
+

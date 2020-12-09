@@ -1,0 +1,266 @@
+All right now we're going to take a look at a facade.
+
+Now this example is going to be somewhat synthetic in that I'm not going to produce any code that actually
+
+runs.
+
+But the reason why is that facade typically involves complex subsystems and we don't really have the
+
+time to build anything of sufficient complexity.
+
+So what I'm going to show you is an example which is going to be valid javascript code.
+
+And this example relates to the console like the console that we use to output tax.
+
+Now you might think that the console is a really trivial kind of construct it doesn't really require
+
+a facade because it's just a single system well that's not actually true.
+
+In actual fact they can't the kind of consoles that we build for electronic trading for example are
+
+really complicated because they involve several different classes and one of those classes is a buffer.
+
+Now the reason why you need a buffer is because obviously you need to store the characters somewhere
+
+before you actually output them to the screen.
+
+So a buffer is some sort of an array of characters that you subsequently get to output.
+
+Now it would typically have a constructive way to specify the width and height of the buffer meaning
+
+how much characters do you want to store in the horizontal and vertical dimensions so you'd define some
+
+sort of width value and you define a height value as well.
+
+Now of course since we are extending array we should call super.
+
+But in addition we'll store both the width as well as the height that's going to be useful later on
+
+and we can also allocate a sufficient amount of memory for the width and the height specified here so
+
+we can say this dot Alec for example and we can say with times height that allocates a suitable number
+
+of elements in the array.
+
+Once again what I'm showing is just pseudocode but essentially the idea of a buffer is that you write
+
+things to that buffer and a buffer is are actually circular buffers meaning that if you write and there
+
+isn't not enough space then the first item gets deleted and you become the last item.
+
+So they are circular in their nature when I'm going to implement this I'm just going to show you what
+
+the typical API looks like.
+
+So you have a way of writing text.
+
+You might want to specify a position in the buffer that you're writing just in case for example you're
+
+getting user input at a particular location you want to write to that location and this is where you
+
+would actually write the elements to that buffer.
+
+Now of course the question is how does a buffer how does an array of characters actually get presented
+
+on the screen.
+
+And the answer is well it gets presented through a view.
+
+So we have a class called viewport and a viewport is designed specifically for presenting a buffer or
+
+a part of the buffer.
+
+Now remember buffers can be massive buffers can buffer can be for example 10000 lines of characters
+
+because you wanted to scroll Well you want to be able to go back and scroll up to your previous entries
+
+but of course you don't have that much space on the screen so viewport kind of constrains that in a
+
+way if you bought a reference as a buffer.
+
+But it also defines which part of the buffer you're actually looking at.
+
+So in the constructor of a viewport you want to specify a buffer.
+
+And once again it helps to provide sensible defaults here like if you are constructing a viewport without
+
+the buffer well let's create a new buffer with default parameters.
+
+So you would store the buffer store references to the buffer.
+
+But in addition you might want to define let's say some sort of offset in the buffer where you're actually
+
+looking where you're getting your data from now.
+
+These offsets are typically a bit more complicated than just a single integer.
+
+But once again I'm kind of simulating things here.
+
+So maybe viewport can give you an ability to append text to that viewport.
+
+Now of course appending text to a viewport doesn't really make sense because if you pause there's just
+
+a view into something but you would define and append method as a way of just just making it really
+
+convenient to add a chunk of text at a particular position relative to the viewport.
+
+Mind you this is something that is relative to the view rather than just generally so what you would
+
+do is you would take the associated buffer and then you would write the text to that buffer and the
+
+position would be the position provided plus maybe the offset of the original viewport.
+
+So this is something that you might commonly do through a viewport rather than going directly into the
+
+buffer.
+
+In addition you might have kind of lower level kind of API for example being able to get a character
+
+at a particular index simply using the viewport to look into the buffer at a particular offset and getting
+
+that character because this is how you typically print Letters to the console.
+
+So here you would return this dot buffer at a particular position like this dot offsets plus index.
+
+So this is how you would look up a particular character in the buffer associated with this viewport.
+
+OK.
+
+So as you can see we're getting something that's rather complicated.
+
+I'm pretty sure that most of you don't even think about consoles in terms of buffers in your ports you
+
+just want to console you just want the console with a single buffer a single viewport and you know a
+
+sensible set of defaults basically.
+
+And that's exactly where the facade pattern comes in.
+
+Because console is effectively a facade for all of those things that we brought to a console is a facade
+
+for a subsystem related to buffers and buffer management.
+
+It's a subsystem related to view ports and if you imagine that for example a typical buffer would be
+
+using other data structures like a circular buffer to actually kind of cycle things and there are special
+
+buffers for presenting tables if we're talking about algorithmic trading and whatnot.
+
+Then all of this becomes really complicated and you just want a facade.
+
+You just want the classical console that somebody can call the constructor for and get a sensible set
+
+of defaults and get up and running quickly so that's exactly what you would typically have you'd have
+
+a constructor which first of all make some buffer so you just just a single buffer with the set of defaults
+
+that we wanted in the first place and then you would specify the current viewport.
+
+So here you would say new viewport and you would provide the buffer into that view for it.
+
+In addition you would have arrays of both buffers as well as viewport.
+
+So if you have advanced users who want multiple buffers who want multiple viewpoints they can take this
+
+facade and they can customize it.
+
+So you say this the buffers and we simply make an array where there's an initial buffer in that area
+
+to begin with the same goes for viewport.
+
+So you say this dot viewport equals and once again this current viewport once again you need a current
+
+viewport because that holds the user's input.
+
+If there is any input and then what you can do is you can provide once again high level methods for
+
+the console to operate on the underlying buffer C would have a number called the right way you're right
+
+some text here.
+
+All you do is you take the current viewport because remember that can be more than one and you maybe
+
+use use it directly to write to the buffer.
+
+Or maybe you use the buffer so you say this current viewport the buffer the right.
+
+Right.
+
+And then you write that text that you wanted to write in there.
+
+So once again this is a very nice wrapper around multiple subsystems but what you can also do for the
+
+advance users is you can actually expose the lower level API through the facade.
+
+So for example if you want to get a character at a particular position I get char path we can expose
+
+that as well.
+
+So this would be like a method for a power user where you would return this current viewport and once
+
+again you would call get char that has a particular index remember there's lots of stuff going on behind
+
+the scenes with offsets and whatever but once again you have this nice wrapper even though it's a low
+
+level function it's still it's still hiding some of the implementation details for you and as a result
+
+those implementation details can actually be.
+
+So the facade gets you lots of benefits because you can change the implementation details without really
+
+affecting the user in any way because all the user has to do they have to write let's see equals new
+
+console for example and then they can use a C that write and write Hello to the console and that would
+
+be output in a two dimensional grid of characters that we know and love and of course you have some
+
+access to a low level API as if you wanted.
+
+So if you want a character in a particular position you can say see dot get chart at position 0 and
+
+of course we have access to the underlying implementations if we do need them so for example what we
+
+can do is we can take the set of buffers because those are available and then we can push them we can
+
+make a new buffer and you know make an associated viewport all the rest of it.
+
+So this is also available to us.
+
+So the takeaway from this entire example is as follows.
+
+Sometimes you get an interplay of different complicated systems but what you want is you want first
+
+of all you want a single unified interface meaning that a console is a lot better than a micromanaging
+
+all these viewpoints and buffers.
+
+But in addition what you want to do is you want a sensible set of defaults and we've suddenly put some
+
+of them into the constructors like we put them in the constructor here for the buffer we put them in
+
+the constructor for the viewport but most crucially we'll put them in the constructor of a console.
+
+So here we create a single buffer in a single associated viewport.
+
+So we're setting all the defaults to what most users will actually want but we are allowing users to
+
+get all those Polish features.
+
+We are keeping lists of both buffers as viewport so if you want a multi buffer multi viewport console
+
+a typical trading terminal then yes you can have it.
+
+You can have your cake and eat it too.
+
+So the facade is basically hiding some of the implementation complexity hiding this interplay between
+
+different subsystems and just providing you a single interface like this single right method you can
+
+simply use to write things to the console.
+
+So it's an optimization for people who most of whom don't really need much from those complicated subsystems
+
+but it does of course allow you to get in deep and to start using those low level methods as well if
+
+that's what you want to do.
+

@@ -1,0 +1,278 @@
+We're not going to take a look at these strategy design pattern.
+
+Now there are two behavioral design patterns which are very similar.
+
+The strategy and the template method and they are all about to finding a skeleton algorithm and allowing
+
+whoever is using that algorithm to define the actual specifics while keeping the overall structure pretty
+
+much the same so that's what we're going to be doing in this demonstration.
+
+So what I want to do is I want to build a very simple text process so which processes lists.
+
+So let's suppose that you have a text processor and you want to export maybe a book or a document to
+
+different kinds of formats.
+
+So if you want to export that list to HDMI all you have to have the opening tag and then for every single
+
+item you have to say you have to have these list tags and then you have to have the closing tag line.
+
+So now we're also going to support markdown in markdown.
+
+You just put a star and then you put your item whatever and then you do a new item like so.
+
+So we want to be able to have some sort of text process of which process as lists of words and outputs
+
+them using different strategies so the overall approach is the same every single list has some sort
+
+of preamble although markdown doesn't.
+
+And then for every single list item you have to have maybe some starting element and some terminating
+
+element although once again markdown doesn't.
+
+So how can we actually implement all of this in a flexible fashion.
+
+Well what we're going to do is we're gonna be building a text processor
+
+like so.
+
+So the text processor is going to have a constructor.
+
+Let's suppose that we define the actual output format that we want in the constructor.
+
+So here I'm going to define the two different formats that we support.
+
+Let the output format equals a freeze.
+
+OK so let's freeze markdown or HMO and you can add other formats later on.
+
+So this is what we're going to include in the constructor.
+
+So here you're going to specify the output formats
+
+and we'll have a buffer.
+
+So the text processor is going to have a buffer where we're actually going to put all of the strings
+
+before they are written to the console in our case and in addition what I'm going to do is I'm going
+
+to call a method called set output format providing the output format.
+
+I just want this as a separate method so that subsequently we can switch from one format to another.
+
+So here we're gonna have this method set out but formats.
+
+So what we want to be able to do is we want to be able to look at the format and be able to switch on
+
+the format and decide what to do.
+
+So in the case well when the output format is marked down we want to adopt a particular strategy.
+
+Now remember we're talking about lists we're talking about lists of elements and how we output them
+
+in different formats.
+
+So we're going to have a list strategy.
+
+And in this case this is going to be a new markdown Mark down this strategy
+
+break and we're going to have a similar thing for output format.
+
+Don HMO.
+
+So here we're going to have list strategy equals new HMO list strategy.
+
+These classes don't exist yet but don't worry we'll make them in just a moment.
+
+OK.
+
+So these strategies are all going to have some sort of base class.
+
+So we're going to have a base class called list strategy.
+
+Now this class is supposed to be abstract but we're going to define the interface that markdown this
+
+strategy and HDMI Ellis strategy both adopt.
+
+So there are three things that we need when talking about lists.
+
+So let's come back here so a list can have some starting element like you all for example.
+
+Then you have the addition of every list item formatted accordingly and then you have the terminating
+
+element.
+
+So there are three things that we need to add we need to make a start method and this is going to take
+
+a buffer where we actually add things we're going to have an end of method.
+
+Also taking a buffer.
+
+And we're also going to have an add list item method.
+
+And in this case not only do we need the buffer but we also need the text of the item that we're actually
+
+adding.
+
+You'll notice that I'm making all of these methods empty.
+
+That means that when you inherit them you don't necessarily have to provide your own definition you
+
+can just allow the inheritance to take place in which case you'll have a no op method.
+
+So for example markdown does not need start and end.
+
+There is no start and end tag therefore you don't have to implement those methods.
+
+So in the case of a markdown this strategy
+
+which obviously extends list strategy what you need to do is you just need to override the analyst item.
+
+So let's get rid of this.
+
+Okay.
+
+So to override this all you have to do is you have to add a space then add a star and then add the item
+
+itself.
+
+So here we say buffer that push and then Space Star space and add the item.
+
+That's pretty much all that we need to do.
+
+Okay.
+
+Now let's do the HDMI.
+
+This strategy is going to be more involved because we need both a start and the end and the analyst
+
+item as well.
+
+So the HDMI list strategy which also extends from this strategy is going to look as follows I'm just
+
+going to generate the overrides for all three methods and then we're going to fill in the blanks so
+
+to speak and we don't need the super calls because we know they don't do anything.
+
+So for the start we're going to push the opening unordered list tag.
+
+And similarly for the end we're going to add the closing tag now for the ADD list item we're going to
+
+push the following so I'm going to add some nice formatting here I'll indent the elements by two spaces
+
+then have the list item tag then the actual item text then the closing tag have a go.
+
+Notice that the idea did it automatically for me.
+
+Which is really cool.
+
+Automatic HDMI completion in JavaScript.
+
+That's that's really something.
+
+OK.
+
+So now that we have this what we need to be able to do is to actually apply all of this.
+
+So let's suppose that inside the tax process we're going to have just a method for appending a whole
+
+list.
+
+So we're going to have a method called append list which takes a bunch of items and you append those
+
+items.
+
+So here is precisely where we use this strategy.
+
+So we don't know whether it's an markdown strategy or HDMI.
+
+Let's try to.
+
+We don't really care because we have that overall interface so we can say this thought list strategy
+
+dot start providing the buffer and towards the end we're going to have and here and then in the middle
+
+we go through every single item and for every single item we use the strategy to add that list item.
+
+So for led item of items list strategy dot to add list item.
+
+And here we specify the buffer as well as the item itself.
+
+That's that's all there is to it.
+
+I'm going to add a couple of utility methods I'm going to have a method called Clear which simply sets
+
+the buffer to an empty array like so and I'm also going to add two string to string is just going to
+
+take all of the elements in the buffer join them using line breaks.
+
+So I'm going to say return there's a buffer don't join backslash N.
+
+Okay.
+
+So now that we have this text process what we can do is we can actually use it.
+
+So here I can say let T.P. equals new Tax Processor and I can set the output format or I can provide
+
+it here in the constructor so I can say for example output formats dot markdown.
+
+So let's begin with the markdown and I can see T.P. dot append list.
+
+So let's append the list of items I'm going to have foo bar and bars like so.
+
+And then that's outputs the text process to the console.
+
+Now what I can do because this strategy is dynamic I can switch it at runtime is I can clear the text
+
+processor and I can set the output format so something else I can set it to the HDL format for example
+
+like so and then once again I can append list.
+
+Now let's spend a different list.
+
+Let's have Alpha Beta and Gamma like so and once again I can put it to the console like so let's actually
+
+run all of this let's see what we get.
+
+So as you can see in the top we're using that markdown list strategy so we're essentially outputting
+
+just the elements with the star prefixes and then we're using the full monty HDMI all with the opening
+
+and closing tax for the entire list as well as the individual elements all nicely formatted.
+
+So what is strategy all about strategy is about being able to define the overall algorithm.
+
+So if you look at append list append list happens to be this strategy it happens to be that skeleton
+
+algorithm that we need to apply.
+
+However the implementations are actually defined in their own separate strategies which are fed into
+
+this overall algorithm for us to consume so the algorithm doesn't know what list strategy is it can
+
+be markdown that can be HDMI it can be outputting a PD f for all I care.
+
+So that is how you apply this strategy a very simple approach for defining the high level algorithm
+
+as we've done here in append list while leaving the low level implementations to the inheritors of some
+
+class and in this case what we've done is we've introduced this list strategy class which serves to
+
+define the interface that every list strategy has to adopt and then you simply inherited to override
+
+the parts that you want.
+
+Ignoring the parts that you don't notice that full Mog down this strategy we do not define either start
+
+or end.
+
+We just we use the base class ones because they are empty and that's what we need because there is nothing
+
+for us to do.
+
+So this is how you define the strategies.
+
+And this is how you use them as well.
+

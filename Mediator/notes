@@ -1,0 +1,527 @@
+There is one classic example of the mediator pattern that every single book or almost every single book
+
+actually uses and I'm suddenly going to use it here and that is the example of a chat room.
+
+Now what do we know about chat rooms.
+
+We know that people can join and leave chat rooms at any time when they send a message to the chat room.
+
+Every single participant receives that message and there is also private messaging as well.
+
+So we're going to implement all of those things and we're going to begin by defining a class called
+
+Person which is going to model a push this happened of the chat rooms up in the constructor of person.
+
+I'm just going to specify their name so just store there's a field and in addition let's suppose that
+
+you also want some sort of chat log.
+
+So basically a log of all the all the messages that this particular participant has actually seen.
+
+So I'm going to have a chat log.
+
+I'm just going to keep it as an empty array here.
+
+OK.
+
+So what do we want a person to be able to do.
+
+Well we want the person to be able to receive messages to say something to the room or to private message
+
+somebody else.
+
+And for all of those cases you need some central component you need some component that relays a message
+
+from one person to either.
+
+Every single other person or to a particular person in the case of private messaging.
+
+So what we're going to do is we're going to build a chat room.
+
+Now I'm going to make a class call a chat room and in the constructor what we're going to do is we're
+
+going to have basically just the set of people that are in the chat room.
+
+So we're going to have this dot people equals empty array.
+
+So then the first thing we need to do is we need to have some sort of method for a person to actually
+
+join a room.
+
+So we're gonna have a method called Join where you specify the person that actually is joining and we're
+
+going to broadcast some sort of message we're going to broadcast a joining message that everybody can
+
+see that a particular person has joined the chat.
+
+So the join message is going to be something like the following we'll get the person's name and we're
+
+going to say Person name joins the chat.
+
+So what are we going to do then.
+
+Well the first thing we need to do is we need to broadcast this message to pretty much everyone that
+
+is actually in the chat room so every single person.
+
+But we haven't got any functionality for actually broadcasting anything yet.
+
+So we're going to write a method for doing exactly that.
+
+So we're gonna have a method called broadcast that's going to take two parameters.
+
+The first is the source that is who is broadcasting the message now in the case of private messaging
+
+or in the case of a person posting to the chat room it's fairly obvious what the source is but in the
+
+case of the room sending a service message that source can just be left as room.
+
+So the second parameter here is going to be the message itself and what we're going to do is we're going
+
+to go through every single person.
+
+So for that P of this that people and we're going to say well if the person isn't the source of the
+
+message because it doesn't make sense to broadcast the message to yourself.
+
+So if the person's name is not equal to the source of the message then we're going to make sure that
+
+the person actually receives the message we're going to call Peter receive specifying the source as
+
+well as the message.
+
+Now of course we haven't defined a received method inside person yet.
+
+So that's what we're going to do right now.
+
+Let's actually go back to the person class so here I'm going to have a received method.
+
+Once again there are two arguments here.
+
+The first is the sender who is sending this person the message and the second is the message itself.
+
+So here what I'm going to do is I'm going to make a more complete string so let S equals and I'm going
+
+to first of all specify the sender and then colon and specify the message may be in single quotes as
+
+well.
+
+So a message like so this is something that you can actually put in a chat logs so I can say this that
+
+chat log dot push and add this message to the chat log but in addition we want to actually be able to
+
+see it so I'm going to write it to the console and what I'm going to do is I'm also going to specify
+
+whose chat session we are actually ad because remember there might be several people in the room they'll
+
+have their own different chat sessions and we want to see who's chat session it actually is.
+
+So here I'm going to say that we have this dot name there's names chat session in square brackets and
+
+then I'm going to add the message itself so that we're going to see both who's mess session it is who
+
+sent the message and what the message actually is.
+
+OK.
+
+So coming back to the join method here what we need to be able to do is we need to be able to actually
+
+broadcast this joint message to whoever is interested.
+
+So this dot broadcast we can now broadcast it we can say that the source of this message is the room.
+
+So there's no particular person that broadcasts the message is just the room itself and the joint message
+
+is what we're broadcasting.
+
+So another thing we need to do is we need to give the person the person that's just joining the room
+
+we need to give them a reference to this current room so that they can subsequently use it to communicate
+
+with other people so I'm going to say Peter room he calls this.
+
+And finally we need to add this person to the list of people so this stop people dot push.
+
+Just this person like so.
+
+So this is how you can join a room.
+
+Now we've already got broadcasting set up the only thing that we might want to also implement is kind
+
+of directed messaging private messaging from one person to another.
+
+I'm going to add another function and other method to the chat room class there's going to be called
+
+message.
+
+Here you have to specify the source who is sending the message you also have to specify the destination
+
+who the message is intended for and then specify the message itself.
+
+So this time round we do something very similar to broadcast we do almost the same thing that is happening
+
+here except not quite except not not exactly the same because we need to make sure that the name of
+
+the person that we found is the name of the destination.
+
+We need to make sure that only this person receives the message and then we call Peter or receive once
+
+again just just receiving the message directly.
+
+You might also want to have some sort of API for a person right here to be able to say to be able to
+
+send something to the to a particular other person.
+
+But we also want them to be able to broadcasting.
+
+So a person should be able to say some message and get everyone to see it.
+
+So what we do in this case is we use the room.
+
+So we say this dot room and we say broadcast so we broadcast the message first of all we specify the
+
+source.
+
+That's our own name.
+
+And then the message itself.
+
+And we can do the same thing for actually private messaging.
+
+So here you have to specify who you're messaging as well as the message.
+
+And once again we use the room functionality to message specifying the source.
+
+That's our name specifying who the message is for as well as the message text.
+
+So this is all the setup that we need to do and we can now make a chat room and make a bunch of participants
+
+and actually see what kind of things they generate so let's also make the room so that room equals new
+
+chat room.
+
+There we go we'll make two people John and Jane.
+
+So let John equals new person.
+
+John let's make it capital and let's also make Jane.
+
+So Jane like so and then we're going to get both of them to join the room so room door join John and
+
+room or join Jane.
+
+Actually let's let's just run this to see that everything kind of works correctly.
+
+So at the moment everything's fine.
+
+So you can see that there's only one notification here.
+
+There's only a notification in John's chat session.
+
+Not in Jane's chat session.
+
+Why.
+
+Well because when John joins the room right here there's nobody to actually get the message.
+
+There's nobody else in the room.
+
+So that's why we're only getting one message when Jane joins the chat and we get to see it in John's
+
+chat session in actual fact.
+
+OK.
+
+So coming back to the code we can now get a conversation going maybe John and Jane both posts some things
+
+to the room.
+
+So John is going to say John is going to say for example high room.
+
+And Jane is going to say Oh hey John.
+
+OK.
+
+So they're putting things in the room.
+
+Let's suppose that we now get another participant.
+
+SIMON So to make a new person called Simon and room or join Simon so Simon joins the room and Simon
+
+is going to say something.
+
+Simon says Hi everyone and let's also try the private messaging functionality.
+
+So Jane is going to send a private message to Simon and she's going to say glad you could join us OK
+
+so let's run all of this.
+
+Let's see if this works.
+
+Hopefully it does.
+
+So here is a complete chat log for every single participant.
+
+So when John joins there is no message when Jane joins.
+
+John gets the message.
+
+JANE SAYS HI room.
+
+And John says hi room.
+
+And Jane receives it.
+
+Jane says Oh hey John.
+
+And John receives it.
+
+And then of course Simon joins the chat and now we have this duplications of both John's chat session
+
+than Jane's chat session.
+
+They both see that Simon has joined the chat and when he says Hi everyone.
+
+They both get to see it as well.
+
+And finally here is a private message from Jane to Simon.
+
+You can see that John does not see this message but Simon does and it says Glad you could join us.
+
+So what is the kind of take away from this example.
+
+Well the idea is that the chat room here is the mediator the chat room is the central component that
+
+everyone has a reference to but nobody has any direct references to one another which means that a person
+
+is blissfully unaware of any other people being present.
+
+Although when you do private messaging you are of course directing it to some person's name.
+
+Now imagine if you were to send a private message if you if you want to PM somebody when they've left
+
+the room so you send Tippi a private message and then the person left the room.
+
+There is absolutely no problem with this.
+
+There's absolutely no issue here because if they've left the room that that just means that when we
+
+go through this entire chunk of code when they're going to find anyone and there's nobody there to actually
+
+receive the message.
+
+So everything is fine so the mediator creates a kind of half connected scenario.
+
+So instead of having direct connections between people you have this central component which allows
+
+them to communicate and also in this case performs a kind of implicit error handling in the sense that
+
+if somebody is not available well they simply don't get the message.
+
+There's no problem here.
+
+So this is how you build a typical mediator.
+
+
+------------
+
+
+
+In the previous example when we built the chat room we used a simple array to keep all the people in
+
+the chat room and to be able to isolate them.
+
+Now we're going to do something similar but we're going to use event infrastructure.
+
+So I'm using here of the event class that we also used in the chain of responsibility broken chain implementation.
+
+And this is something that's discussed in the Observer design pattern.
+
+So we're going to use this event instead of just an ordinary list and we're going to build a mediator
+
+example on top of it.
+
+Now the example here that I'm going to use is that of a football game or a soccer game if you're in
+
+the States.
+
+So the soccer game here is going to be a mediator where events are going to be exchanged between players
+
+who might score goals as well as coaches who might want to celebrate their players scoring goals.
+
+So the central component here is going to get a game.
+
+So I'll make a class called game in the constructor.
+
+What I'm going to do is I'll just specify a single event as kind of shared the object that everyone
+
+can subscribe to so I'm going to say this dot events equals new event.
+
+OK.
+
+So this is something that everyone can address and everyone can actually monitor these events and then
+
+we're going to make a player.
+
+So this is going to be a football player or any kind of player really.
+
+So in the constructor you have to specify the name of the player but you also have to specify the game
+
+that the player is taking part in.
+
+So this is once again where you keep a reference from all the peripheral components to the mediator
+
+so that they can communicate through the mediator.
+
+So there's that name equals name.
+
+There's not game equals game.
+
+I'm just going to count the number of goals this player has scored so these goals scored.
+
+It's going to start with zero and we're going to have some sort of method for actually scoring a goal.
+
+So whenever a player school scores a goal we increment this variable so this dot goals scored plus plus.
+
+And what we want to do now is we want to let everyone know we want to let everyone who is subscribed
+
+to the Games events know that the play has actually scored.
+
+So we need some sort of class for actually storing information about what is the name of the player
+
+that score and how many goals have they scored so far.
+
+So here I'm going to have a class called player scored event args.
+
+So in the constructor what I'm going to record is I'm going to record the player name as well as the
+
+goals they scored so far.
+
+So let's just introduce fields for these like so and also like this.
+
+There we go.
+
+And now that we have this let's also implement some sort of functionality for actually printing the
+
+printing the event.
+
+So let's have a method called print where I'm just going to log that a particular player list player
+
+name has scored and here I'm going to say that they have scored their like first second third whatever
+
+goal has scored there and then goals scored so far.
+
+Go.
+
+Okay.
+
+So this is the kind of information that we might want to send to whoever is actually subscribed to the
+
+event itself.
+
+So here we're going to construct this of this argument.
+
+So let args equals new player scored the vanguards.
+
+So there's two arguments here.
+
+First of all we provide the name and then we provide the number of goals scored.
+
+So having made these arguments what we do is we take the game.
+
+So we take our mediator and we take the events of that mediator and we say fire.
+
+So fire is something that sends off the information about this event.
+
+So we specify the sender as well as the arguments.
+
+And this is how we send off this information to everyone else.
+
+Now the question is well who exactly consumes this.
+
+Let's suppose that we have the games coach and the coach is interested in the number of players that
+
+they're the number of goals that their players have scored.
+
+So if a player has scored one or two goals then the player congratulates them.
+
+Obviously if a player has scored three or more goals the player the coach is no longer so impressed
+
+and they don't congratulate the player anymore.
+
+So let's make a class called coach once again in the constructor.
+
+We have to specify the game that we are monitoring.
+
+So what we do here is we take the events of the game and we subscribe to them subscribe.
+
+So we're gonna have a function which has the sender as well as the arguments.
+
+That's the handler function and we need to check first of all whether or not the arguments are of the
+
+right type.
+
+So in a typical scenario where you have these kinds of events you can have different types of events.
+
+So here we have player scored but you might also have an event which is player sent off for example
+
+and you suddenly don't want to congratulate a player for getting sent off.
+
+So here what we're going to do is we're going to check that args is an instance of Haris as an instance
+
+of player scoreboard event ARGs and if that happens to be the case then we can check how many goals
+
+they scored.
+
+So if a player has scored less than three goals then we can actually congratulate them.
+
+Then we can actually say coach says well done karma args player name no.
+
+So this is how the coach is going to congratulate the player and notice we're not storing a reference
+
+to the game.
+
+On this we want to somehow leave the game.
+
+Imagine if the coach gets sent off they leave the game they unsubscribe from everything but we're not
+
+going to do this here.
+
+So let's make the game.
+
+Let's also make a player so the player is gonna be called Sam and they participate in the same game
+
+as the coach.
+
+Let's make the coach.
+
+The coach doesn't even get a name.
+
+In my model.
+
+Okay.
+
+And then we're going to score a goal.
+
+Player Score and let's do it three times.
+
+So the idea is that the first two times we do get to congratulate the player the third time round.
+
+We don't care.
+
+So as we run this you'll see that for the first two times the coach says Well done Sam.
+
+And on the third run the coach is no longer interested.
+
+So this is yet another illustration of how the mediator design pattern is done in the real world and
+
+this one is perhaps more realistic because instead of just using an array of objects that you kind of
+
+have to manage what happens here is we provide events.
+
+So we generate discrete events that anybody who subscribes to those events can actually catch and do
+
+something with them.
+
+-----------
+

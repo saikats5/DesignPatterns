@@ -1,0 +1,244 @@
+OK we're now going to take a look at the implementation of the bridge design pattern and first of all
+
+I want to kind of explain to you some of the situations that you may end up with as you work with the
+
+brace design pattern or the reason why it shows up in the first place.
+
+So let's imagine that you have some class called Shape now shape just describes any sort of geometric
+
+shape really.
+
+Now from that you can have several different inheritors like you.
+
+You can have a circle and let's suppose you can also have a square and so on.
+
+Now also imagine that you have different ways of rendering circles and squares you can render them using
+
+pixels.
+
+So that would be a roster rendering and you can also render them using a vector format.
+
+So that can be a vector Ender.
+
+Now if you try to implement a class hierarchy for all of this you end up with too many data types because
+
+you end up with things like a vector circle vector square a roster circle across the square.
+
+And then as you can imagine this situation doesn't really scale.
+
+If instead of three run there as if instead of to render as you have three render us in three different
+
+shapes you would end up with nine different classes and of course nobody really does that.
+
+So that is what we call a state space explosion.
+
+It's something that you don't really want in real software engineering.
+
+Now the way that you avoid this is you build a bridge between the two hierarchies.
+
+So remember you have one hierarchy which is a hierarchy of shapes and here you have you can have a square
+
+circle triangle and whatever other shapes the other hierarchy is the hierarchy of renders.
+
+So I have actually not implemented any one of them but you can imagine if we go up here for a moment
+
+just having like a vector renderer
+
+and you can have let's say a roster renderer and you can have other as like I dunno an SPG render or
+
+something.
+
+So you have this render hierarchy so you have roster you have vector and whatever other forms of rendering
+
+you want.
+
+So the idea here is that you make some sort of bridge you make some sort of connection between one of
+
+these elements and another of these elements and that is what is actually called the bridge it's actually
+
+very simple idea.
+
+So for example what I can do is I can put the render into the shape so if we go into the shape class
+
+here I can introduce a constructor which just takes the renderer that you want to be using for rendering
+
+this shape and then we just store it we say this that render it equals render like so and from then
+
+on what we can do is we can actually render the different shapes.
+
+Now let me show you how this would actually be implemented.
+
+So let's suppose that we're just dealing with circles you can sort of mentally add other classes like
+
+square and triangle and so on.
+
+But let's imagine that we have a class called Circle which extends Shape obviously and circle also have
+
+to has to have a constructor which takes a renderer so that we can call the base constructor otherwise
+
+there is no point in the whole inheritance business.
+
+So we make a constructor here and the constructor takes a render.
+
+But let's imagine it also takes something specific like the radius of the circle that you want to work
+
+with.
+
+So here we call the base class constructor providing the renderer obviously because we need to assign
+
+that and we also store the radius OK now let's imagine that a circle and indeed all the other shapes
+
+need to implement some sort of method called drool.
+
+So that's how you actually draw the circle.
+
+Now the way that we draw this is by using the renderer that we are provided and what we're doing is
+
+we're essentially saying well let's get the renderer.
+
+So there's that renderer and we're going to render a circle and render a circle of a given radius.
+
+Now of course we haven't implemented render circle yet so this is something that we actually need to
+
+be doing we need to create this method.
+
+And it has to be done inside of the renderer itself.
+
+So let's go into the render us.
+
+So as you can imagine we don't really know whether we're calling this an effect to render or a roster
+
+renderer.
+
+So the rent the second method has to be implemented in both of them.
+
+So here we would render circle of a given radius.
+
+And here I'm just going to output a log message where I'm going to say that I'm drawing a circle of
+
+radius and specify the radius like so and you have to do something very similar for the roster renderer
+
+I'm just going to put a different message here.
+
+I'm going to say drawing pixels for a circle of radius such and such.
+
+So these are the two implementations are we have a vector drawing of a circle and a cross a drawing
+
+of a circle.
+
+OK.
+
+So with this entire setup I can.
+
+Well let me show you another thing.
+
+Let me add some sort of member of the Sukkot class just so that we have this for completeness let's
+
+have some sort of resize member where you take a fact by which you want to resize the circle and you
+
+just say take the radius and multiplied by that factor and assign it back into the radius.
+
+So that is a way of resizing the circle.
+
+So how can this whole thing work.
+
+How can we actually get everything to work.
+
+So first of all you make the renderer that you want to use.
+
+So I'll I'll actually make both of them.
+
+But typically you'd only make one.
+
+So we'll have a roster under like so and we make a vector renderer like so.
+
+And then when you make a circle let's circle equals new circle you have to specify the renderer that
+
+you want to use like the vector renderer for example and then you specify the radius as well.
+
+But five in here.
+
+So we can take the circle should be an R here we can take a circle and we can draw the circle we can
+
+take the circle and resize it using its own method.
+
+So double the radius for example and then draw the circle again circle draw like so.
+
+So in this implementation what happens is we make a vector and then we pass it into the constructor
+
+of circle which in turn calls the basic class constructor here which in turn gets us into the sort of
+
+parent constructor where we simply assign that value and subsequently we call draw and draw simply gets
+
+the render him to render the appropriate element given whatever additional information that actually
+
+require.
+
+So in this case we are providing the radius.
+
+But you could have additional information here.
+
+So the point is that we got rid of the state's basic flows and in terms of a shape and a render at turning
+
+into you know a Ross desk whereas this co Ross the triangle effect square vector circle.
+
+So that's that's the advantage.
+
+Let's actually run this code let's just get to see what we get here.
+
+So we're drawing a circle of radius 5 and then drawing a stack of radius 10.
+
+If I now change this to a roster renderer for example then we're going to get something very similar.
+
+So now we're drawing pixels for a circle of radius 5 and pixels for a circle radius.
+
+And so you might feel as though this implementation actually gets away from the idea of this complexity
+
+explosion but it only gets away to a degree because if you imagine additional rendering implementations
+
+for a square.
+
+So let's suppose you introduce a square then the number of methods you have to write is equal to the
+
+number of render is because now in vector renderer you have to have a render square and then roster
+
+renderer you have to have a render square.
+
+And if you introduce even more then you would still have to go into those renders and add those relevant
+
+items.
+
+Now you can use inheritance in the sense that you can have some sort of expanded roster around there.
+
+So in this case it might be better in terms of the open closed principle but this does get us away from
+
+having too many classes it does not get us away from having too many methods.
+
+And that's not something that you can reliably deal with in this scenario.
+
+So the take away from this example is that the bridge design pattern is just a way of connecting to
+
+hierarchies of objects together.
+
+So here we have a hierarchy of shapes.
+
+We have a hierarchy of render as even though I haven't given them any common base class.
+
+But you can think of them as related objects and then we have the bridge itself and the bridge itself
+
+happens right here.
+
+So this is where you glue one hierarchy the hierarchy of render is to the other hierarchy which is a
+
+hierarchy of shapes and from then on one of those hierarchies uses another.
+
+And as you as you kind of expand you basically have to expand the hierarchy you depend upon.
+
+So as soon as you add new shapes for example you would have to modify both the roster render and the
+
+vector renderer to support the rendering of those shapes.
+
+So that's the implementation of the bridge design pattern.
+
+------------------
+

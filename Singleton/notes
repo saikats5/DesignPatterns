@@ -1,0 +1,665 @@
+There are many different ways in which you can implement the Singleton in javascript but the one that
+
+I'm going to show you is the implementation that is possible starting from Xmas script 6 and later.
+
+So let me show you how this works.
+
+This is actually a tricky implementation so I'm gonna have a class I'm just going to call it Singleton
+
+for now you can call it whatever your actual domain object that needs to be a singleton has to be called.
+
+Here we're going to make a constructor in this constructor is going to be somewhat different to what
+
+you're used to.
+
+So in the typical scenario what happens in the constructor is we just assign a bunch of different fields
+
+so for example you take in some value x here and then you say this dot X equals X and you don't really
+
+change what actually gets returned from the constructor and you don't even think about you know somehow
+
+manipulating what gets returned from the constructor but in the case of Singleton That's what we want
+
+to be doing.
+
+So essentially what we want to be doing is we want to be returning the same instance from the constructor
+
+whenever somebody actually asks for one so how does this work.
+
+Well let me show you how this can work.
+
+So if you think about constructor as just an object as opposed to you know some sort of special method
+
+inside Singleton the constructor itself can also have its own fields and as a result what we can do
+
+is we can actually store the one and only instance of the object that you're allowed to create inside
+
+the constructor itself as opposed to you know the actual object as many instances of it are created.
+
+So the idea is as follows First of all we're going to ask the constructor for that instance if that
+
+instance exists we're going to return it.
+
+Otherwise we are going to assign it.
+
+So bear with me.
+
+So the first thing we do is we say const instance equals this dot constructor dot instance.
+
+And if we do in fact have an instance then we're going to return it like so.
+
+But if we don't have an instance what we do is we assign an instance from the current object.
+
+So we say this dot construct a dot instance equals this.
+
+OK.
+
+So this is the whole implementation of the Singleton but I feel like we have to go through this once
+
+again just so you understand what's going on.
+
+So every class like the singleton class here has a constructor of some kind and this constructor you
+
+can think of it as an object that can also have fields and behaviors of it so and so what we're doing
+
+here is we're saying if this is the first time that we run the constructor if this is the first time
+
+that anyone ever calls the constructor always Singleton none of this becomes relevant and we just go
+
+to this line.
+
+So this line what it does is it takes the current instance which from now on is going to be the one
+
+and only instance that ever gets returned and it assigns it to the constructor.
+
+So we say this dot constructed dot instance equals this and afterwards after this line what happens
+
+is you simply finish the constructor and whoever actually called the constructor meaning whoever wrote
+
+something like let us want to call new Singleton they just get an ordinary instance they just get the
+
+kind of instance that you would typically get if you call a constructor.
+
+However when somebody writes Let s two equals new Singleton a completely different order of operations
+
+takes place because remember after we initialized S1 what happened is we set this up construct incense
+
+so when we call the constructor for the S to Singleton what happens is as follows so we try to get the
+
+instance as this dot constructor does a instance.
+
+And surprise surprise we actually succeed.
+
+So this time round instance is actually going to be initialized to something meaningful which means
+
+instead of just returning from the constructor we return this predefined instance and as a result what
+
+happens is S1 is the instance that will always be returned.
+
+Okay so let's just verify that we are getting identical results here so we can say are they identical
+
+question mark and then we can just compare this one and has to like so and in addition if I had some
+
+sort of method for example inside the Singleton if I had a method called foo which just logged that
+
+we are doing something you could easily call that on either S1 or S2 so that wouldn't be a problem so
+
+I can say as one dot foo or indeed as to the food.
+
+So let's actually run this just to see what we're getting here so you can see that the items are in
+
+fact identical and then we are calling some member of this Singleton object so calling a member on a
+
+singleton is no problem at all.
+
+Okay so the takeaway here is as follows what we've done is we've essentially altered the behavior of
+
+the constructor.
+
+We've changed the behavior so that whenever you call the constructor with new what really happens is
+
+you don't always knew up a brand new object so it certainly happens on the first invocation.
+
+So when you do the first call you do make a new Singleton but on the second call on the second Singleton
+
+and every subsequent call of the single thing that struck to what you get is you get a prepackaged object
+
+that has already been constructed.
+
+And this is how you guarantee that there is only one instance of your Singleton class in the entire
+
+application.
+
+--------------
+
+
+
+There is another way of implementing this Singleton design pattern called the mono state.
+
+It's somewhat similar to the implementation of a singleton that we already looked at but it is different
+
+in that it doesn't try to do any kind of constructor magic.
+
+So let's imagine that we have a class called Chief Executive Officer.
+
+So let's suppose that once again we only want to one instance of this class to exist anywhere in our
+
+page.
+
+So how can we actually guarantee that that is the case.
+
+Well one way of guaranteeing that is the case is we can make every single instance of chief executive
+
+officer actually share all their data.
+
+How can we do this.
+
+Well remember in JavaScript we can actually have getters and setters for different properties.
+
+But the question is Where do we store those properties instead of storing them at the instance level
+
+what we can do is we can store them at the class level.
+
+So what I mean by that is that we can have class level variables so for example I can say that we're
+
+going to have some underscore age variable.
+
+I'm just going to set it to undefined and we're going to have an on this core named variable here and
+
+no this I'm using on this course because you are not meant to consume these fields directly but you
+
+can provide those fields provide gathers and setters for them right outside the scope of the overall
+
+thing in the sense that you can put them as instance get us and setters.
+
+So what you can write is something like the following get name.
+
+And here you would return Chief Executive Officer and underscore a name so you can see what's happening
+
+here and then you can also set the name to some value in which case you say Chief Executive Officer
+
+dot name underscore and name equals value.
+
+So what's going on here.
+
+On the one hand the underscore age and underscore a name there is only one instance of each of these
+
+variables because it exists at the level of the chief executive officer class.
+
+It's not a per instance thing which means that the age in the name is shared between all the instances
+
+but when we come to the Chief Executive Officer itself it has getters and setters which are in fact
+
+per instance effectively.
+
+So you can construct objects.
+
+Let's finish off the implementation I'll make a getter for age where we return chief executive officer.
+
+On this core age and let's make a setter as well.
+
+So a chief executive officer underscore age equals value and that's also implement some sort of two
+
+string so we can actually print some information about this SEO so I'm going to return.
+
+CEO's name his first name and
+
+okay.
+
+And he is this dot age.
+
+Years old.
+
+There we go.
+
+So this is just some member function that we have here.
+
+And now what we can do is we can construct and you see all objects.
+
+So first of all I can make a let SEO equals new chief executive officer.
+
+I can get this SEO name SEO the name equals Adam Smith and SEO.
+
+Page equals fifty five.
+
+And what I can do then or what I can allow the clients to do subsequently is make additional instances
+
+of this SEO so you can have let SEO to equals new chief executive officer and then you can try setting
+
+some data here SEO to.
+
+Name equals John gold like so as soon as I learned how to type and see O to dot age equals let's say
+
+66 and we can print both of them out so I can print SEO dog to string and SEO to the to string as well
+
+and you'll see that when we run this.
+
+Well as soon as we correct a few errors obviously so that should be undefined with the.
+
+There we go.
+
+OK.
+
+So as you can see both of the objects now say that the CEO's name is John gold and he is 66 years old.
+
+So just to recap how the whole thing works essentially instead of messing about and returning different
+
+instances from the construct to what we're doing is we're making sure that all the data is shared between
+
+every single instance.
+
+So we initialize it here outside the scope of the actual class but the class level inside the class
+
+we provide the getters and setters for the name as well as the age which allows us to go into those
+
+shared properties get the data and either access it or indeed mutated.
+
+So this is the Mona state design pattern.
+
+-------------
+
+
+All right.
+
+So in this lesson we're going to take a look at some of the problems with a singleton design pattern
+
+which make test ability among other things a problem.
+
+So let me show you the scenario that I have here I have a file called capital start to extend on this
+
+file just has a bunch of capitals of different countries in the world together with their total populations.
+
+We can treat this file as a kind of database that needs to be loaded into memory.
+
+Now obviously the reason why we want a singleton is because we only want to load it into memory once
+
+we don't want to be doing it multiple times because there is no point if you already have the data in
+
+memory.
+
+There is no need to load that data into memory again.
+
+So I'll be going to be building in our demonstration is some sort of class let's go with my database.
+
+So my database is going to ensure that it is itself a singleton.
+
+We're going to do this using the procedure that we looked at before so let's make a constructor here.
+
+I'm going to try getting the instance from the constructor and if this instance exists I'm going to
+
+return the instance.
+
+Otherwise I'm going to initialize it.
+
+Otherwise I'm going to say this dot construct a dot instance equals this.
+
+So that's the Singleton implementation.
+
+Now what we really want to do is we want to obviously load the data from the database so first of all
+
+let me just add a log.
+
+So here I'm going to say that I'm initializing the database.
+
+Then what I'm going to do is prepare an object let's call it capitals.
+
+That's going to store the capitals as well as their total population.
+
+And then we're going to read the file.
+
+So here I need to have a few require statements so we'll going to be using the file system.
+
+So require F S and I'm also going to be using path.
+
+So require path like so.
+
+Okay.
+
+So what we need to do is we need to read the text file some getting together the lines of this text
+
+file I'm going to say FSM dot read file sync notice I'm doing it synchronous.
+
+So here I'll say path or join joining the current directory name with capitals dot t Steve which is
+
+the file where I have all the data I'm going to read it all synchronous Lee I'm going to turn it into
+
+a string and then I'm going to split it.
+
+Now this was a file made in windows so the separator here is going to be carriage return followed by
+
+a line feet.
+
+OK so we have the lines and now we can take them pear wise so we can take them in pairs because remember
+
+the first line is the name of the capital.
+
+The second line is the population so I'm going to just try to look for let I equals zero.
+
+Is this then lines the length divided by two plus plus I.
+
+What I'm going to do here is I'm going to say those DOT capitals add lines at two multiplied by I remember
+
+this is the step that we use and then I'm going to pass the data because remember we read it as a string
+
+we need to turn it into an integer so I'm going to pass end lines at 2 I plus 1 There we go.
+
+Okay.
+
+So this is the setup and now what we need to do is maybe have some sort of utility method for actually
+
+getting the population of the city so here I'll have get population where you specify the city that
+
+you're interested in and we return this dot capitals at City now obviously you can do some sort of error
+
+handling here if you want to I'm not going to because well we need to move on so this implementation
+
+of the singleton you can treat it as a low level module so remember when we talked about the dependency
+
+inversion principle we talked about high level modules and low level modules Well this is a low level
+
+module and now we're going to write some sort of high level module now the high level module is going
+
+to calculate the total population of several different cities at once.
+
+So just to kind of reiterate this is going to be a high level module so I'm going to have a class called
+
+Singleton record find him.
+
+So the idea behind the Singleton racquet finder is it helps us find records matching certain criteria.
+
+And in this case what we want is do we want the total population of several different cities.
+
+So we just basically want a count or so one to take every single city we want to get the population
+
+and then we're going to add them all together.
+
+So the implementation of this using our Singleton approach will be something like the following we would
+
+return cities dot map.
+
+So I'm going to take every single city and for a given city what I'm going to do is I'm going to grab
+
+the Singleton which in our case is new my database.
+
+So that's the Singleton object and then I'm going to get the population for a given city and then I
+
+need to add them all together so I'm going to reduce X Y gets reduced to X plus Y.
+
+So that's how you add them up and you return the total population of whatever cities the user actually
+
+wants.
+
+OK.
+
+So this might look like a implementation up until the point where you actually start writing tests for
+
+it.
+
+So let's use Jasmine to write some tests to kind of figure out whether or not this was actually a good
+
+idea so I'm going to describe a singleton database and high here let's make a function web we'll have
+
+all the different cases.
+
+So the test case while the first test case we want is we want to make sure that this thing is in fact
+
+a singleton so let's do that.
+
+So a singleton database is a singleton.
+
+That's what we want to test.
+
+So here I'm going to have a function which basically just makes two instances of the database and ensures
+
+that they are the same instance so I'll have const VB one equals new my database and let's replicate
+
+this and have these two as well and then I'm just going to expect the B one to be the to so that's how
+
+Jasmine lets us check for referential quality so that's actually run this test.
+
+Let's see.
+
+I misspelled d be here.
+
+That should be D.B. like so.
+
+Okay let's do this again.
+
+And as you can see we have a passing test.
+
+Here is the output that we had previously you know where we initialize the database so everything is
+
+fine so far everything is fine with this test that we've just written and now we want to actually test
+
+the Singleton record finder works correctly.
+
+Now remember a unit test is typically a test which just verifies the operation of a single unit of code
+
+and by unit you can typically mean a class.
+
+You typically don't mean several classes but unfortunately because we have this dependency on my database
+
+here will end up having to test multiple classes at the same time.
+
+So the second test is going to ensure that the Singleton database or the Singleton record finder calculates
+
+calculates the total population correctly.
+
+So once again is the function in here.
+
+Okay.
+
+So what are we going to do is we're going to make an instance of this and go and record find that we
+
+made and then test it let our F equals new Singleton record find it.
+
+Now it goes so far so good.
+
+But unfortunately the question is well what data do we use to test this code with at the moment.
+
+Since we have a hard dependency on the real database on a live database we need to take the test data
+
+from that live database meaning we have to go into our capitals file we have to take some values like
+
+for example we have to take these two values and we have to test specifically on these two values.
+
+We cannot bring in any kind of dummy data.
+
+So here I would make cities so that would be Seoul as well as Mexico City.
+
+And then let's get there a total population left T.P. equals R F adult total population of those cities
+
+and then let's write the actual assertion so we expect the total population to equal.
+
+And then of course I have to go into the actual database and check those values so I remember that it
+
+was seventeen point four million and seventeen point five million.
+
+So we can actually write all this data.
+
+So seventeen point four million I hope I get the zeroes correctly plus seventeen point five million.
+
+OK.
+
+Let's see fi.
+
+So these are thousands.
+
+These are zeros as thousands yes.
+
+Correct here and it seems to be correct here as well.
+
+So this is our unit test.
+
+We can actually run this and you can see we now have two specks and zero for this.
+
+So this unit test obviously passes.
+
+Now what is the problem with this unit test.
+
+The problem is that it depends on a live database.
+
+If you think of a text file like something that can change.
+
+Imagine if somebody changes the population of one of these cities then the test is broken.
+
+So it's a brittle test.
+
+It's not a good test and furthermore the real problem with this test is that it is not a unit test it's
+
+an integration test the reason why it's an integration test is because not only does it test the Singleton
+
+record finder but in addition because it takes a dependency on a database it also happens to be testing
+
+a database with all of its life data.
+
+That's never meant to be used in their real test.
+
+If you think of it as a real world database you would never be testing on real world data.
+
+You'd want some sort of dummy database but this highlights the major problem with the Singleton because
+
+we are using the Singleton here explicitly and that means that we cannot simply switch from the real
+
+database which is called My database to some sort of dummy database which is what we want to do for
+
+the purposes of unit tests.
+
+So how can you fix this problem.
+
+Well in actual fact this problem isn't really that difficult to fix because all you have to do is you
+
+have to introduce a dependency.
+
+Now remember we talked about the dependency inversion principle that high level modules should not directly
+
+depend on low level modules.
+
+That's exactly what's happening here.
+
+So at the moment we are violating the dependency inversion principle but we can fix it really easily
+
+because what we can do is we can explicitly specify the database that the Singleton record finder actually
+
+depends on.
+
+So here in the constructor if I add the constructor here what I can do is I can put in a database I
+
+can put in a database here and I can say this database equals database.
+
+In actual fact let's do a new class for this instead of modifying the Singleton record find a will make
+
+a better record finder let's call it a configurable record fine.
+
+So I'm just going to take all of this code I'm going to copy it down here and then let's call this configurable
+
+record finder so the configure a record finder as I suggested just now it has a construct a way you
+
+take the database and then you say this database equals database and then all that you have to do is
+
+you have to replace this new database call with database or this database rather.
+
+So this is how you introduce a dependency.
+
+And now of course what you can do is you can go back into the tests and we can write a better test this
+
+time round we can write a unit test.
+
+But the question is well if not a life database what kind of database should we be using.
+
+Well in actual fact this is not a problem as well because what we can do right now is we can make a
+
+dummy database so a dummy database is going to act just like a real database except its data is going
+
+to be predictable meaning we're going to know exactly what capitals and what populations this database
+
+is going to have.
+
+So here is my class dummy database and let's make a construct of for it.
+
+So in the constructor I'm going to say that is not capitals equals and then I'm just going to define
+
+an object with some capitals that I myself defined so I can define for example how with a value of one
+
+I can define better with a value of 2 I can define gamma 0 with a value of 3 and these values are never
+
+going to change because I'm in control of them they're not tied to a live database that can change at
+
+any moment.
+
+So we have the Constructor let's implement also the get population method for a given city once again
+
+here we say this dot capitals at city like so you can add additional error handling here if you want
+
+to or some sort of exception that specific to testing so this class is a test specific class it's a
+
+dummy class that you only use for the purposes of testing you wouldn't use it in the real world in the
+
+production scenario hopefully so but we can now use it inside test so we can write a better test for
+
+the total population so here let's define calculates total population better OK so here is the actual
+
+testing function.
+
+So here what I do is I do something different.
+
+I make a dummy database so let the be equals you dummy database and then what I do is I make the record
+
+finder and this time round I'm user configurable record finder.
+
+I pass in the database and now I'm using that dummy data so I can say that I expect half the total population
+
+of alpha and gamma.
+
+For example remember this is the dummy data that we are interested in.
+
+I expect this total population to equal the value of four because I remember that Alpha is 1 and gamma
+
+is 3.
+
+So the total is always going to be four.
+
+And we can run this test and hopefully everything kind of works here.
+
+Let's see.
+
+Oh I wrote the three here that should have been at four.
+
+Sorry about that.
+
+Let's run this again and this time round you can see that all of the tests once again pass.
+
+So what is the takeaway from this entire example what the takeaway is that the single done can be a
+
+problem if you take direct dependency on it but if you introduce it as a dependency if you introduce
+
+it like with it here as a construct a parameter then suddenly this problem goes away because this time
+
+round what you can do is you can just go ahead and provide whatever instance of the database you actually
+
+want to work with and that way you've removed some of the problems with the Singleton because you're
+
+no longer dependent on this type.
+
+Nowhere inside the configurable record find you to your right knew my database for example you don't
+
+have to do it though strictly speaking if you wanted to configurable record find it to work with the
+
+my database by default you could simply write the following you would thought you could write new my
+
+database and that would be the default implementation so if you were working with a configurable record
+
+finder in the production setting you just pass no arguments into the constructor and as a result the
+
+database would be initialized to the correct thing to the production Singleton database whereas for
+
+testing that's where you would actually fill in of this parameter with something useful.
+
+So this is hopefully an illustration of the fact that the singleton is not as scary as it might seem
+
+and in some situations you can totally manage all the problems with a singleton and still continue to
+
+get all the benefits of it.
+
+
+

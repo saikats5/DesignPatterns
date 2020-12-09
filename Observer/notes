@@ -1,0 +1,851 @@
+So what we're going to do in this lesson is we're going to build a reusable component that will allow
+
+certain objects to notify other objects that something is happening.
+
+Now in most of the programming that richer if you look at other programming languages that component
+
+is called an event because an event is something that's happening and that's something that you want
+
+to observe and react to.
+
+So we're going to build a class called event.
+
+Now in addition to this class I'm going to give you a very simple scenario of something that can happen
+
+which actually requires the observer pattern.
+
+So let's suppose you have a person you have a class called Person and this person let's make a constructor
+
+let's suppose a person has some address for example that we store.
+
+Let's suppose that this person can fall ill let's suppose that there is some method here for simulating
+
+the fact that a person catches a cold.
+
+What we want to be able to do is we want to have some way of knowing that so that we can react to it.
+
+So for example when this person falls ill we get a notification we get some sort of callback effectively
+
+that the person has caught a cold and we somehow handle it.
+
+Now we could suddenly just provide a callback here.
+
+We could provide a single callback let's call it C and then here whenever a person catches a cold we
+
+just call C with some arguments whatever you want them to be.
+
+So that's one approach.
+
+But it's not very scalable.
+
+The reason why it's not scalable is because well let's imagine there are several different different
+
+entities in the program that actually want to be notified when a person catches a cold.
+
+So let's suppose it's both a doctor which might want to visit as well as the person's relatives and
+
+maybe I don't know maybe there is some logging system that also wants to record everyone that falls
+
+ill something to that effect.
+
+So there are lots of systems and you don't really know when they might want to stop monitoring the person
+
+when they want to stop getting those notifications.
+
+So you don't get any of that control if you just provide a single callback.
+
+So we need something different we need some sort of different way of handling the situation so that
+
+it actually scale so that the observers.
+
+Meaning other entities which look at the person and subscribe to the person's events in this case the
+
+person's catching a cold so they can both subscribe to the event and they can unsubscribe from the event
+
+and that's the reason why we have this event class here.
+
+So let's make a constructor I'll get now the set of handlers of this event and by handler we mean somebody
+
+that actually processes the event as it happens.
+
+This is just going to be.
+
+Well let's make it a map.
+
+Handlers equals new map.
+
+Now the reason why I want to have this as a map as opposed to an array for example is on subscription
+
+is the ability to stop monitoring a particular event to unsubscribe from it.
+
+So I'm also going to have a variable here called count which is going to be just zero is going to store
+
+the number of the observers of a particular event.
+
+Actually what we're going to be using this for is we're going to be using this as a kind of improvised
+
+token generator.
+
+You'll see what I mean in just a moment.
+
+So let's skip let's suppose that you want to subscribe to this event you want to monitor this event
+
+and get notify get notified about it it's genius so you have some sort of method called subscribe and
+
+this method can take a handler now a handler as you might have guessed is a callback it's a callback
+
+that actually gets invoked whenever this event triggers.
+
+So what do we do.
+
+Well first of all we need to and the handler to the set of handlers.
+
+So we do it like this.
+
+Now the key in the map that we've constructed has to be unique.
+
+It has to be unique because every single subscriber needs to be able to unsubscribe and the question
+
+is how do you get the different subscribers to unsubscribe.
+
+Well you can give them this key.
+
+So first of all I would do here for the key is I'll say plus plus this don't count.
+
+So count is just going to be a simple counter of all the subscribers to this event.
+
+So it's gonna go like One two three and so on.
+
+And that's exactly the number that will return on the next line.
+
+And then the value that we add to this map is of course the handler itself.
+
+So here I return this dot counts.
+
+And this effectively returns just an integer but this integer is useful it's not just an integer it's
+
+an integer that you can feed back into this event if you want to unsubscribe.
+
+So here we can have a method called unsubscribe which takes this index or token or call it whatever
+
+you want.
+
+And so here we simply say this dog handlers not delete so we delete the entry with this index.
+
+Therefore removing it from the list of handlers and now the final piece of the puzzle the actual firing
+
+of the event.
+
+So whenever something happens we want the notification to take place.
+
+So I call this fire.
+
+And here we need to provide a couple of arguments so that the handlers of the event can be passed certain
+
+information.
+
+And now there are typically two pieces of information that you want to pass to the handlers of the event.
+
+The first piece of information is who who called the event who fired the event and the second piece
+
+of information is any additional data.
+
+And we sometimes call them event arguments.
+
+So event arguments they can be empty if you don't need them.
+
+But I'm going to include them in my implementation so there's gonna be two things there's gonna be the
+
+sender the person who fired the event or the component that fired the event as well as a bunch of arguments.
+
+So what we do here is very simple.
+
+We go through the list of handlers and for each one of them we basically call the callback that they
+
+provide it.
+
+So remember each of the handlers is a pair.
+
+So it's a pair where you have some value and some key but we don't really care about the key.
+
+The key is just an integer.
+
+We don't care about.
+
+We don't care about the value because the value happens to be the callback.
+
+So we invoke that callback providing the sender as the arguments.
+
+And yes this does imply that when you feed a handler into this little scribe method you have to have
+
+a reference to a function which takes two arguments the sender as well as args.
+
+Now of course it's really up to you how you want to package the information that is provided by the
+
+vet.
+
+So for example when a person falls ill what kind of information do you need to communicate to let's
+
+say the doctor that needs to come to us and maybe you want to communicate their address for example.
+
+So you make an additional class or indeed you can make hierarchies of classes specifically for storing
+
+information specific to events.
+
+So here I can make a class called falls ill args.
+
+So that's just going to have a single piece of information for the address.
+
+Actually we can just copy this constructor because at the moment it's just what we need.
+
+So we just stole the address and then let's suppose the Doctor wants to come to this address when the
+
+person falls ill.
+
+They get this arguments class and they can en back it and get the information about where they actually
+
+need to go.
+
+So coming back to Person what we're going to do is we're going to make an event we're going to make
+
+an event called falls ill.
+
+And this is going to be a new event.
+
+And from now on anybody who is who has any kind of access to the person object can actually subscribe
+
+to these events and get notifications when the person actually falls ill.
+
+Now this method here catch cold is what we're going to do to actually fire the event so we're going
+
+to say this that falls ill and fire.
+
+Now remember there are two arguments here.
+
+There are two arguments that you need to provide.
+
+So the first argument is the actual sender.
+
+So the sender is this.
+
+And the second argument is the set of all the arguments related to the event.
+
+So that would be a new falls ill args where you specify whatever it needs to be specified in this case
+
+is the address.
+
+So that is how you can simulate the situation of catching a cold and then let's actually build some
+
+sort of scenario for it so I'm gonna make a person
+
+123 London Road for example.
+
+And now what I can do is well without making any additional components I can subscribe to this event
+
+myself so I can say let's sub equals first and not falls ill subscribe.
+
+And here I can handle a bunch of arguments actually when you subscribe you have to provide a function
+
+which takes both the sender as well as the arguments.
+
+So let's put s comma a here and then let's put the actual body in here.
+
+So s is going to refer to the sender and it args for a.
+
+In this case is going to refer to the arguments.
+
+So in our scenario A is actually going to be full you event args object which is initialized with the
+
+address so we can write for example that a doctor has been called Let's do it.
+
+Line
+
+two and then specify the actual address so we can say args or a dot address in this case.
+
+So that's is this obscure and we have a subscription token remember that's just an integer that you
+
+can use to unsubscribe.
+
+So here's the idea.
+
+We can now say person dot catch a cold can catch cold like so now we can actually do it twice and we
+
+can see what kind of output that we're getting so as I run this as soon as I fix all the with errors
+
+like putting a person with a capital and in here that's silly we see that a doctor has been called twice
+
+to 123 London Road.
+
+Now we can also take a look at on subscription because essentially this sub variable now has a an index
+
+of a subscription that can be removed.
+
+So here what we can do is we can say person falls ill don't unsubscribe providing that sub variable.
+
+And now we can try person catch a cold again and hopefully we can get a printout.
+
+Third time round and that's exactly what's happening so we get the two printouts here and then the third
+
+one doesn't really get it doesn't really get processed doesn't get to do anything because we removed
+
+all subscription we removed the actual subscriber.
+
+So this is a very simple way of implementing the observed design pattern just to come back to this event
+
+definition that's the definition that we're going to use in other parts of this course and need suddenly
+
+a very useful little component for actually keeping a set of keeping a set of callbacks basically references
+
+to functions that you can call whenever something happens Emily and we're using like a map instead of
+
+an array for additional benefits like being able to effectively remove the subscriptions because sometimes
+
+what's happening is you want to subscribe to an event to get notifications but at some point you are
+
+no longer interested and then you want to unsubscribe but if it were just an ordinary array it would
+
+be very difficult to kind of find where you added that particular subscription and remove it.
+
+So this is a much simpler way of doing exactly that.
+
+-------------
+
+
+All right.
+
+So now we're going to continue our discussion of the observed design pattern.
+
+And we're going to take a look at property notifications.
+
+So what is it all about.
+
+Why do we really want property notifications.
+
+Well I'll explain in just a moment but first of all let's copy over the implementation of the event
+
+class that we had already constructed in the previous lessons.
+
+And we're going to reuse this functionality when talking about properties.
+
+So let's suppose that you have a very simple class let's make a class called Person.
+
+Now a person might have some sort of age they might have an age value.
+
+And what you might want to be notified of is changes to a person's age.
+
+So for example maybe when a person's age changes you want to notify them or give them a birthday present
+
+for example maybe you are some sort of licensing company and you want to make sure that once a person
+
+is of a certain age they can do a certain thing.
+
+So whatever it is you want to be notified whenever a person's age changes.
+
+So I can assign it here.
+
+Notice I'm using an underscore but what I really want to know is I want to know when some of changes
+
+the age value I want to get notifications.
+
+And we already have the event functionality for doing exactly that we have the event class which you
+
+can subsequently use to notify whoever is interested that the H has actually changed and we're going
+
+to take a look at how to put all of us together.
+
+So what I'm going to do is I'm going to make an event let's call it property change and this event is
+
+going to handle this situation when any kind of property has changed not just age but other properties
+
+as well.
+
+So I'm going to call this property changed.
+
+Now let's make a new event now ago.
+
+So now we have something that subscribers can actually subscribe to.
+
+So whoever has access to the person class they can just subscribe to the probably changed event and
+
+get notifications whenever something happens.
+
+But of course we need that something to happen so let's make the gather and the Center for age.
+
+You'll notice I used the underscore age here specifically so that we don't actually clash with the names
+
+of the gathers and the setters.
+
+So in terms of the getter so get.
+
+Age is just going to return underscore H.
+
+Nothing fancy here.
+
+It's the center.
+
+That's particularly interesting.
+
+So in the center way you set a value you're no longer just going to assign the field obviously there's
+
+going to be other things that you want to do here.
+
+Like for example if somebody passes in a null or if the age is already at the value that you're trying
+
+to set.
+
+We're going to return.
+
+So if not value or this does underscore age is equal to value then we simply return.
+
+Now the reason why we perform this check.
+
+The reason why we perform this kind of self assignment check is so that we don't generate the notification
+
+remember notifications have to happen when the property actually changes.
+
+And if you're setting into the same value like ages 10 and you are setting it to 10.
+
+You haven't strictly speaking changed anything.
+
+So there is no point.
+
+OK.
+
+So now that we have this check done we can certainly age and then we can generate the notification so
+
+we can say this dot property changed dot fire can we have to provide two arguments as before.
+
+The first argument is a reference to the object that's generating the notification.
+
+And the second is some sort of arguments.
+
+So once again it might be interesting to defining class which encapsulates all the information about
+
+the property changing.
+
+So I'm gonna have a class called property change dogs and in the constructor I'm going to initialize
+
+two things I'm going to specify the name of the property that changed and I'm going to specify the new
+
+value of that property and we'll just store both of these.
+
+So I'll just have them as fields of them as fields like so let's get rid of all that extra stuff.
+
+So here I'll make a new property changed args.
+
+I'll specify the name of the property that's changed as age because well that's what it is.
+
+In this case and the value that the new value happens to be value.
+
+So that's pretty much it.
+
+That's the notification that we would generate from the setter so you can see how setters can be useful
+
+in generating their notifications.
+
+Now let's suppose that you have a Web site you have a Web site that Web website has some sort of registration
+
+checker and it only allows you to register on the Web site if let's say you are 13 or older.
+
+So we want to be able to get notified when let's say some person's age actually changes so that we can
+
+tell them that it's now okay to register.
+
+It's just a simulation basically.
+
+So let's have a class called registration checker
+
+so here we are.
+
+We construct a registration check for a particular person so I'll keep the person as a field as person
+
+here and in addition what I'm going to do is I'm going to subscribe to the changes in person.
+
+And furthermore I'll keep the token.
+
+Remember we introduced this idea of subscription tokens.
+
+I'll keep that tokens so that we can subsequently unsubscribe when the person reaches a particular age.
+
+Let's suppose that at a certain point we don't really care.
+
+So once they're 13 or all that we no longer want to check anything about this person so I'm going to
+
+just say this that token equals person dot probably changed.
+
+I don't subscribe.
+
+So here we need to provide basically a handler.
+
+We need to provide some sort of method which will actually handle the situation where an age has changed.
+
+Now you can suddenly put the lambda in here but what if I want to have a separate method as part of
+
+registration check.
+
+Well it might sound easy but in actual fact it's it's not as simple so I want the method age changed
+
+to be the handler.
+
+So I send it to the sender as well as a bunch of arguments.
+
+And here I need to basically check that the sender is in actual fact of the person we are monitoring
+
+because remember when we store the person here we need to make sure that this is the person who is generating
+
+the notification.
+
+And in addition we need to only take care of changes to the age property not other properties.
+
+So I'm going to say if sender is this person and if the name of the arguments is equal to age then it's
+
+something we're actually interested in and we can look at the value of the arguments and make decisions
+
+depending on what the value is.
+
+So for example if a person is younger than 13.
+
+So if args new value is less than 13 then we can just tell them that you're too young.
+
+So I'm going to say sorry you are still too young to register whatever.
+
+Otherwise we do two things.
+
+We notify the user that they are in fact old enough to register.
+
+So we say okay you can register.
+
+And the other thing we do is we unsubscribe from the changes because now that the person is old enough
+
+we are going to assume that they're never going to get younger magically unless they find some fountain
+
+of youth or something.
+
+But but you know this isn't a science fiction movie.
+
+So here we say personal property changed on Subscribe unsubscribe and then we use the token that we
+
+saved earlier this token.
+
+So from now on we no longer care that the person's age actually changes.
+
+We don't really care at all.
+
+Okay.
+
+So with this entire setup with this entire setup what we need to do is we need to.
+
+Well actually there's one thing that is missing here that should be sender because sender is the person
+
+that we're interested in the only thing that we need to do is we need to fix a particular problem.
+
+That's only really presence in JavaScript.
+
+It's not so much presence in other languages and that is the problem that if you pass a function as
+
+a callback then the value of this changes you need to somehow make sure that the value of this when
+
+each changed is invoked as a callback doesn't refer to the actual the actual object doesn't refer to
+
+the registration checker as opposed to something else because otherwise what happens is things like
+
+this a token just become meaningless because this refers to something completely different and that's
+
+why I left a gap here.
+
+So we don't just put H changed here.
+
+We don't just do this.
+
+Instead we do something very similar.
+
+We do don't bind like this.
+
+So that's the little trick that you need to do in order to make sure that the this reference inside
+
+the handler actually refers to the registration checker as opposed to some other location.
+
+So with this entire setup what we can do is we can now build this scenario of so.
+
+Now what I'm going to do is I'm good.
+
+You just make a person and cycle their age from let's say 10 to 19 and at every turn I'm going to output
+
+a bit of debugging information so we get to see what's going on so I'll make a person.
+
+Let's call this person John so I'll make the check her so registration checkout person and then what
+
+I'm going to do is I'll just make a loop.
+
+So it's going to be going from 10 to 19.
+
+So less than 20 plus plus I hear here I'm going to do first of all let's put some logging information
+
+so I'm going to say that I'm changing the age to I.
+
+And then I'm going to actually do it.
+
+I'm going to save us end up age equals I.
+
+So this is precisely the point where the registration check her age changed method will get triggered
+
+because well essentially that's that's how we designed it.
+
+We are monitoring those changes to person that age.
+
+So let's run the whole thing let's take a look at what we get.
+
+So we're changing the age to 10.
+
+We get sorry you're still too young.
+
+Changing the age to eleven you're still too young.
+
+Changing the age to 13.
+
+OK.
+
+You can register and from then on.
+
+At this particular point on subscription happen.
+
+So remember we as soon as a person reaches 13 years of age we remove the subscription and from then
+
+on we just set changing age to whatever and it doesn't generate any additional events because we've
+
+unsubscribed from this event.
+
+So this idea of monitoring properties for changes is sufficiently common to sort of put it into a separate
+
+lecture as I've done here because it's a very common thing you want to be.
+
+For example you can have a UI control and the web page that needs to monitor changes related to variables
+
+in a class some way you want to bind the two of them together and here I've shown one way in which you
+
+can do this.
+
+So the idea is very simple you simply kind of hide the name of the actual field you don't really hide
+
+it in the sense that it becomes inaccessible but you hide it in the sense that it has an underscore
+
+in France so it's not gonna show up in people's code completion necessarily.
+
+And then what you do is you provide a getter and the setter and now the getter is typically just just
+
+returning the value of the actual field is typically no calculation happening in the getter unless you
+
+go to the next lecture where we're going to do exactly that.
+
+And the second thing is you have a setter and in the center you first of all make sure that the value
+
+did in fact change but if it did then you change the value you change the field value and then you fly
+
+that notification so whoever is monitoring the changes to this property can actually be informed that
+
+the property has changed and they can react to it.
+
+They can update the UI.
+
+They can recalculate certain things whatever you want.
+
+Basically.
+
+---------------
+
+This whole idea of having property observers is an okay idea.
+
+It works to some degree but imagine we have a situation where properties depend on other properties
+
+like for example you have a property that doesn't have a center but is instead computed through another
+
+property.
+
+Then notifications on those properties get really difficult.
+
+And I'm going to show you exactly what the problem is and the kind of things that you can encounter
+
+in the real world so to speak.
+
+So let's suppose that we get rid of the registration check.
+
+We don't care about registration at all I'm just going to delete the whole thing basically.
+
+So instead of the registration check what we're going to do is we're going to have a different component
+
+called Let's get a voting checker.
+
+Now in order to check whether a person can vote what the voting checker is going to do this is going
+
+to check a property called Count the Vote and this property gets added to the Person class here.
+
+I'm going to add a get out for count votes and I'm going to say that a person can vote from age 16 onwards.
+
+Might sound like a risky proposition really depends on the country.
+
+There's not age greater than or equal to 16 actually probably.
+
+Probably not such a great idea.
+
+But whatever.
+
+So now that we have this property you can see that it only has to get her.
+
+There is no center for can vote because it's a computed property and everything is OK so far.
+
+As long as we don't want to get notifications about can vote changing then everything is OK.
+
+But we do want notifications.
+
+You see that's the whole thing about this voting check that we're building.
+
+So the voting checker must make a constructor.
+
+It also monitors some person and the idea is pretty much the same.
+
+You want to spit out some sort of notification depending on the person's changing voting status so you
+
+want to catch the exact position when the person's voting status has changed and then you want to just
+
+write something to the log for example.
+
+So lets a store person in a field and let's also subscribe to the event.
+
+Now the question is well does this make sense.
+
+Well not yet not yet.
+
+We're going to implement it.
+
+So I'll say this dot person dot property changed and I'm going to subscribe.
+
+So once again we're going to do that same buying trick.
+
+So I'm going to have some sort of method called voting changed which I'm going to add down here voting
+
+changed and I'm going to bind it to this line this so that we get the right this reference.
+
+OK.
+
+So with this setup what we can do is we can implement voting changed and here you want to only check
+
+the can vote prop..
+
+So you want to say if sender is this person and args name is equal to who can vote then you print out
+
+the person's voting change voting status has changed to something voting status change too and then
+
+args got new value.
+
+That's how you get the new value that's been assigned so so far so good and that's actually complete
+
+this implementation.
+
+So here I'm going to have to check her voting check her for the person and once again I'll make a loop
+
+for letter equals 10 I's less than 20 plus plus I say I'm going to say changing age to a high and then
+
+person not age equals I.
+
+Now if I run this we're not going to get any notifications whatsoever.
+
+Let's take a look.
+
+So we're just changing the age line by line and there is nothing happening.
+
+Why is there nothing happening.
+
+Well because at no point is anyone generating a notification for can't vote.
+
+And the question is Where do you do it.
+
+We typically do this in the center.
+
+Typically generated in the center like here in the age but Canada doesn't have a center.
+
+It has only a getter it's a computer it probably so where can we do this.
+
+Well we know that can vote depends on on the score age and that is the age.
+
+Probably so maybe because it's so dependent on age maybe we should be doing it here.
+
+Maybe I should be duplicating this line and just saying OK let's have count both here as well okay so
+
+this might sound like a good idea but it's not.
+
+If I run this you'll see that we have really too much up output.
+
+And also you'll notice that the the value here is kind of wrong because well obviously I'm taking the
+
+age but the key problem here is that voting status hasn't changed between ten and eleven.
+
+You couldn't vote at age 10.
+
+You can vote at age eleven so the voting status hasn't really changed.
+
+We're generating extra notifications.
+
+We only need to generate them whenever the voting status has in fact been modified.
+
+So how would you do this.
+
+Well it's actually rather complicated.
+
+And Bob we're going to do this anyway in this scenario.
+
+So what you need to do is you need to cache the old value left old can vote equals this can vote.
+
+So you cache the old value and then you perform everything that you have to perform for age ignoring
+
+candidates completely and once you're done with that you check can vote again and you figure out if
+
+in fact it's been modified.
+
+So if the old can vote value is not equal to this can vote.
+
+So if the value has in fact been modified then you perform the notification then you take all of this.
+
+You stick it in here.
+
+You put can vote here and you obviously put this can vote here okay.
+
+And you run this.
+
+And this time around it's working correctly you can see that we're changing the age up until the age
+
+of 16 as soon as we change the age to 16 the voting status has changed and it doesn't change from then
+
+onward.
+
+So we got the correct operation now coming back here you can see that for a single property dependency
+
+one probably depending on another.
+
+We had to write a couple of extra stuff we had to write the line here and we had to write this whole
+
+if block.
+
+Now you can imagine the situation where you have a dependency on several different properties.
+
+Let's suppose that can vote requires not only that you're old enough but also that you're a citizen
+
+of the country where you are voting then you have the modification not just in here not just in the
+
+age setter but also in the citizenship sadder.
+
+And similarly if you have several different properties affecting one property or one property affecting
+
+several different properties you end up with lots and lots of code which means that even though this
+
+approach works and the simple cases like a case I'm showing you here it wouldn't really scale to kind
+
+of complicated enterprise applications so if you were let's say you were taking an Excel spreadsheet
+
+and converting it into javascript This is probably not the approach you want.
+
+You probably want to just formalize all the dependencies in a map somewhere and simply look into this
+
+map whenever you want to figure out whether the change to this probably also triggers changes to other
+
+properties as well.
+

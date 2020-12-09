@@ -1,0 +1,529 @@
+All right.
+
+So what we're going to do now is we're going to take a look at the first of several examples of the
+
+composite design pattern.
+
+Now the first example I want to discuss is the idea of grouping geometric shapes together.
+
+So if you think of a drawing application you know that you can drag around and resize individual shapes
+
+but you can also group several shapes together and then perform common operations on them.
+
+So what we're going to do is we're going to kind of emulate this scenario and now I'm going to introduce
+
+a class called graphic object so graphic object is going to be both a single object.
+
+If you if it's used as a base class as well as a collection of objects.
+
+If it's used by itself I know it sounds a bit tricky.
+
+Let's actually implement all of it.
+
+So I'm going to make a constructor.
+
+And in terms of every single graphic object let's say is going to have a name.
+
+So every single graphics object is going to be called something.
+
+But by default when you make a graphic object as opposed to an inheritor of this class we're going to
+
+call this item group and let's actually have these groups no.
+
+So somewhere down below what I'm going to do is I'm just going to give graphic object a single integer
+
+variable called count.
+
+So we'll have a graphic object dot count equals zero and then I'm going to increment this whenever I
+
+actually want to have a new group.
+
+So here I'm going to take graphic object dot count plus plus.
+
+So we're going to have group 0 Group 1 and so on and so forth.
+
+OK.
+
+So that is the default name for the object that we're creating so we're going to have this dot on this
+
+score and name equals name and we'll we'll expose it later on.
+
+So for example I can have a getter here get name and return this dot on this code name like so.
+
+But in addition what we're going to have is we're going to have maybe a color so maybe every object
+
+has some sort of color which initially is going to I'm just going to set it to undefined but I do want
+
+this to show up here so that we know that the color assignment is possible.
+
+So let's let's just have this.
+
+In addition what I want is I want the set of children.
+
+Okay.
+
+So the reason why we have a set of children is because this graphic object can act either as a group
+
+in which case it has a number of other graphic child objects inside it or it can act as a standalone
+
+object.
+
+So what we want to be able to do with this graphic object is we want to be able to print this object
+
+including all of its children.
+
+We want to print not just the object but also everything that it contains assuming it does in fact contain
+
+anything.
+
+So the implementation of print I'm just going to pasted down here below so I'm implementing to string.
+
+I'm making a buffer and I'm passing it into this print method and then joining the buffer together print
+
+it actually takes a depth because remember we're traversing a recursive structure the buffer objects
+
+here acts as a kind of visitor to this recursive invocation and then we use that buffer to put a number
+
+of asterisks representing the depth that we are in and print out all the objects including their colors
+
+as well assuming that the color is actually defined because remember it's undefined by default.
+
+So how can we actually start using all of this.
+
+Well on the one hand we already have graphic object which can be used by itself because if you use the
+
+children collection then you can suddenly make it just contain other graphic objects.
+
+But we do need concrete implementation.
+
+So let's go down here.
+
+Let's make a circle which extends graphic objects.
+
+So here in the constructor what I'm going to do is I'm going to call super and I'm going to provide
+
+a concrete name.
+
+So here I'm going to say that I'm making a circle that's going to be the name of the object I'm going
+
+to just say well let's provide in the color.
+
+Let's actually I'm going to stick the color in here.
+
+So here I'm going to say this The Color equals color like
+
+this dark color equals color like so so we're going to keep the color and we're going to do pretty much
+
+the same thing for a square except that the name is going to be a square.
+
+So here I'll stick square and I'll put square in here.
+
+So once again I'm just going to set the color in here.
+
+So what does all of this let us do.
+
+Well actually let us construct an object which consists of several other graphic objects so for example
+
+I can make a drawing.
+
+So let drawing course new graphic object.
+
+So I'm just going to have it as group zero and then I can take the drawing children and I can start
+
+adding additional objects here so I can make a new square.
+
+Let's have a Red Square and I'm also going to copy this and make say a yellow circle.
+
+So this this is fairly simple stuff but this stuff does not represent the composite design pattern.
+
+The composite design pattern is the next part because what I can do is I can make a group that's part
+
+of this entire drawing so I can make a group which is a new graphic object that's going to be group
+
+one and then I can take the group.
+
+I can say group that children don't push I can make a new let's say a blue circle I can also make a
+
+blue square like so.
+
+And what I can do now is I can take this group and I can add this group as another element of the drawing
+
+so I can say joining door children don't push group.
+
+So essentially I've just added a group into a group and you can have groups of groups of groups to infinity.
+
+There is no limit to how this whole thing actually goes.
+
+And essentially what's happening here is that the circles and squares and entire graphic objects get
+
+treated in a uniform manner in the sense that when you call to a string whether it's a scalar object
+
+whether it's a singular object or it's a container or a collection of different objects it doesn't really
+
+matter.
+
+It's always going to be printed correctly because while we've implemented this correctly so we can now
+
+go ahead and log the whole thing.
+
+So here I can take the entire drawing and say drawing dot to string and we'll get take a look at what
+
+we get here.
+
+So as you can see apart from the spurious commas which I seem to have added at some point why are we
+
+getting those extra commas here.
+
+We seem to be getting the the right kind of data.
+
+We have group 0 we have red square yellow circle Group 1 I don't know whether commas come from this.
+
+This is extremely bizarre to be honest.
+
+I don't know if any of these spaces have gone bad.
+
+Let me just try to kind of fix them around.
+
+Now it seems like we are ultimately.
+
+Oh wait wait wait wait wait.
+
+Let's take a look at the joint.
+
+It looks like they are joined with something which is.
+
+Let me just put an empty space in here just just to be sure.
+
+There we go.
+
+I don't know why there were commas there but this is the output that we wanted in the first place.
+
+So essentially what's happening is we are putting all the data together and we are getting first of
+
+all group 0 and then everything inside that group.
+
+So you see the scalar elements here and then we have an entire group inside that group and that group
+
+also has elements.
+
+Notice the number of asterisks kind of indicates the depth to which we have descended.
+
+So the take away from this example is this is probably the simplest implementation of the composite
+
+design pattern.
+
+And the idea here is that you can have an object in this case it's the graphic object that I made which
+
+masquerades as both a scalar element or a singular element as well as a collection of elements so it
+
+has this collection of children a list which is initially empty but you can add elements to it and subsequently
+
+you can turn this into a fully fledged container.
+
+So that's the whole idea of the composite design pattern basically treating singular objects and collections
+
+of objects in a uniform manner and in this case it's done through a base class because a single base
+
+class is useful both scalar objects and then also used by itself whenever you actually want a container
+
+of some kind.
+
+
+------------
+
+
+All right.
+
+We're not going to take a look at a more complicated implementation of the composite design pattern.
+
+Once again we're going to have singular objects as well as objects which are containers or collections
+
+of different objects and we want to treat them in a uniform manner.
+
+But this time round it's going to be a bit more fun.
+
+So what I'm going to talk about is neural networks a very popular part of machine learning nowadays.
+
+So essentially neural networks are composed of neurons which can define a neuron as follows.
+
+So it's a class which has a certain number of input and output connections.
+
+So in the constructor we have this thought in being an empty array and this dog out being an empty array.
+
+So these arrays are populated allowing us to connect neurons to other neurons.
+
+So for this you might want to define a member such as the following You might want to have a connect
+
+to method where you specify the other neuron to connect to and then you populate their respective in
+
+an out list.
+
+So here this dot out dot push farther and out other dot in dog push this.
+
+This is how you get the two neurons to connect to one another.
+
+So so far so good.
+
+Let's actually implement two strings so we get the nice implementation.
+
+Nice output for a given your answer here.
+
+I'm going to return a neuron with this dot in length inputs and and this thought out the length length
+
+outputs.
+
+Now go.
+
+So this is how you can print out a single neuron.
+
+Now this is okay and you can.
+
+You can do things like the following.
+
+So here we can like let neuron one equals the new neuron.
+
+All that well let's just duplicate this let neuron on two equals new neuron and then we can connect
+
+them together so I can see here on one dot connect to neuron two and I can print both of them out so
+
+let's actually do this let's log on neuron wonder to string and let's also log neuron to dentistry.
+
+So so far this is okay.
+
+This should work just fine.
+
+So you can see that then you're on the first neuron has zero inputs and one outputs and the second one
+
+has one inputs in zero output.
+
+So that's how we connected them together.
+
+But let's imagine that you decide to introduce collections of neurons so for example you decide to introduce
+
+something called a neuron layer now a layer is just a collection of neurons but you want to connect
+
+this layer to let's say another neuron or an entire layer and you you also want all of us to work.
+
+So we're gonna have a class called neuron layer which extends array.
+
+So I'm just going to reuse the array structure because it's essentially an array of neurons so in the
+
+constructor what I'm going to do is I'm going to specify the count so how many neurons you want in this
+
+neuron layer and then I'm going to go through every one of them.
+
+So while count goes to zero I'm going to just say this step push.
+
+Now remember we are in the race so we have a push member I'm going to make a new neuron here and just
+
+just add it to the current collection that's also implement to string.
+
+And by the way it should probably call the super constructor as well.
+
+Let's implement a string here and here I'm just going to return that we have a layer with this length
+
+neurons.
+
+There we go.
+
+Okay.
+
+So in this scenario we can create new layers.
+
+So let Layer 1 equals new neuron layer with three elements.
+
+Let's make another one with four elements.
+
+Let's call this layer two.
+
+But now we have a problem because what I want to be able to do is I want neurons and layers to be interconnected.
+
+And what I mean by that is I want to be take I want to be able to take you on one and connect it to
+
+layer one.
+
+I want to connect a neuron to a layer.
+
+I want to connect a layer to a neuron and I want to connect a layer to a layer
+
+layer 2 like so let's actually had some sort of output here.
+
+So I'm going to log Layer 1 to string and log layer to two strings.
+
+Now at the moment this isn't going to work.
+
+If I run this you can see that we cannot read the properly push of undefined blah blah blah.
+
+And the reason for this is for now we've only defined connect to to work on individual neurons not on
+
+neuron layers.
+
+Now obviously what we don't want to be doing if you look at this scenario we don't want to implement
+
+four different methods.
+
+We don't want to implement methods that connect Neurontin you're on your own to layer leads in your
+
+and then layer to layer.
+
+We want just a single method.
+
+We don't want multiple methods.
+
+So this is where the composite design pattern once again comes into play.
+
+So this implementation of connector is no longer any good.
+
+We're going to combat this out now.
+
+What I'm going to do to sort of support this whole idea is I'm going to introduce a base class.
+
+I'm going to call it connected.
+
+So here I'm going to have a class called Connecting all I'm going to implement connect to on it and
+
+I'm going to assume that both this as well as other are innumerable entities I'm going to assume that
+
+you can iterate both the connective all that you're connecting from and the other connected all that
+
+you're connecting to so I'm going to say for led from off this for left to off other and then I'm going
+
+to connect them together as with it before so I'm going to say from DOT out dot push two and two dot
+
+in dot push from okay.
+
+So this is a base class and now of course what I can do is I can get both a neuron as well as in your
+
+on layer to inherit from this.
+
+So in the case of neuron there is no problem.
+
+Class neuron extends connected.
+
+Everything is good but there is a problem.
+
+Well I have to call super here but there is a problem with the neuro on layer class.
+
+The reason is that it already extends the array class so it cannot extend to classes.
+
+There is no multiple inheritance here.
+
+What I'm going to do instead is I'm going to use essentially a chunk of library code and I will show
+
+you the link up above.
+
+I'm going to paste in a chunk of library code which allows us to sort of aggregate things together so
+
+it allows us to have several different makes sense as part of our class.
+
+So instead of just having a single class we're going to have several base classes and we're going to
+
+add all of the properties appropriately using the the implementation that's done here so you can follow
+
+this link up above.
+
+Just see the entire discussion.
+
+I'm just pasting the code here so that we can reuse it.
+
+So what this gives us is it gives us an ability to make sure that neuron layer is both a neuron both
+
+an array because it has to be an array to actually store the data and also a connected object.
+
+So here I'm going to say aggregation and I'll specify both array as well as connected all okay.
+
+So we need to.
+
+Well we are already calling Super so that's good.
+
+The only change that we now need to do is as follows.
+
+So if I try to run this.
+
+Now let's actually try to run this.
+
+We still have errors we have.
+
+This is not ignorable.
+
+Why is this not ignorable.
+
+Well the reason why it's not a durable is because neuron is not ignorable yet and it has to be ignorable
+
+not what does it mean for a non collection entity to be eatable.
+
+It basically means that this entity has to return only one item and that item happens to be itself.
+
+So it has to return itself so a class called neuron has to be able to masquerade as a collection of
+
+neurons consisting of just a single element where the element is this particularly in Europe.
+
+Luckily we can implement this in javascript we have to have the iterator symbols so here I'll have symbol
+
+dot iterator that's going to be a method.
+
+And what we need to do is we need to make sure that we just return a single item.
+
+So we have let returned equals false.
+
+And then what I'm going to return is an object where the next method is defined as follows.
+
+So the next method is going to be I'm just going to put that lambda in here the value is going to be
+
+this.
+
+So that's what we are yielding.
+
+And then the flag indicating whether we are actually done or not is going to be returned plus plus.
+
+So remember when you do a plus plus on a false it becomes true and everything becomes okay.
+
+So this is what we want to be doing here.
+
+Now this iterator symbol that we've just defined is going to be used whenever somebody does a four.
+
+So whenever somebody does a for where the right hand side or the other parameter happens to be in Neuron
+
+what's going to happen is we're going to iterate through it using this particular iterator and as we
+
+do we'll end up just returning the elements once and then returns will be flipped from false to true
+
+and we will never actually iterated again because next time round returns is going to be true and done
+
+is going to be true and so nobody is going to try to take the value twice or anything and the end result
+
+is that we now have a working scenario.
+
+So as I run this you can see that we successfully connect all the neurons in your on layers together
+
+and we get the right data in all of them.
+
+So the takeaway from this example is that you can successfully connect both the objects and collection
+
+objects together.
+
+If you can get the scalar object to masquerade itself as if it were a collection then that's exactly
+
+what we're doing here.
+
+So what's happening in the neuron case is we're basically returning an iterator which would send a single
+
+element which actually just returns ourselves and as a result we can write very generic kind of algorithms.
+
+So in the case here connect two actually takes two collections.
+
+So it assumes that this is a collection and other is also an interval object and iterate both of them.
+
+And because we've allowed ask the object to be in trouble this now works for all the four cases so instead
+
+of writing four different methods we just wrote a single different method and then we included it as
+
+a base class so we included it without any problems in your own class and we included this through a
+
+little bit of aggregation magic for the New Year on layer interval class.
+
+So this is how you can implement the composite design pattern.
+
+---------------
+
+

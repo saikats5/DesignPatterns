@@ -1,0 +1,426 @@
+Let's take a look at an implementation of the memento design pattern.
+
+So the idea is that a memento is a snapshot of the system.
+
+And the reason why you want to get a snapshot of the entire system is that you can subsequently roll
+
+back to that state that this preserved in this snapshot.
+
+So let's take a look at an example of a bank account.
+
+Now we've already used bank account in many of the discussions of different design pattern.
+
+So we're going to use it here as well.
+
+So I'll try to keep it simple this time.
+
+So we're going to have a constructive for the bank account where we're going to have the initial balance
+
+and I'm just going to store that in a field like so and as before we're going to have.
+
+Well let's just have the deposit method let's not do a withdrawal method.
+
+So we're going to have a method for depositing a certain amount of money into the bank account.
+
+And here we increment the amount obviously.
+
+So still balance amount.
+
+But in addition what we're going to do is we're going to return a memento now a memento is a separate
+
+class typically so we're going to create a new class.
+
+So this class right now I'm going to just call it memento you might think of a more appropriate name
+
+in the context of a bank account in the whole banking thing like for example a bank account snapshot
+
+would be a good name.
+
+But I would just call it memento for now.
+
+So the idea is that the memento is going to store all the state of the bank account at a particular
+
+point in time.
+
+Now the only thing that we have in the bank account if you look at the definition of a bank account
+
+we have the balance.
+
+There is nothing else.
+
+There's no additional fields no additional data to store.
+
+So that's exactly what we're going to store in the memento.
+
+So here I'm going to have the balance and I'll say this all balance equals balance.
+
+Now the thing about the memento is that typically what you want to not do is you don't want to modify
+
+this.
+
+So once a memento is constructed you don't want to modify the state of the memento itself because obviously
+
+that would allow you to incorrectly manipulate the bank account and move it maybe to a state that it
+
+was never in.
+
+But the idea is as follows so we are in the deposit method and what we would do here after we modified
+
+a balance is we would return that new memento so we return a new memento with the current balance like
+
+so.
+
+So it's kind of like saving a snapshot of the system and returning that snapshot so that whoever called
+
+deposit can subsequently use this memento to restore the bank account to the original state.
+
+Of course you have to have some sort of method for actually doing that for restoring so we're going
+
+to have a method called Restore which takes a memento and here oh we have to do is we set the balance
+
+to whatever the memento balances.
+
+Now it's pretty much all there is now of course this example is very simple because I just have a single
+
+field that I need to restore if I had more fields it would be a bit more complicated.
+
+Let me just quickly implement to string on the account as well.
+
+So here I'm going to it's just printing the balance.
+
+So just off balance like so.
+
+So now we can try using this we can try using this memento approach and here's how it would go.
+
+So we'll make a bank account.
+
+Let's say we start with a hundred dollars and let's make two deposits and for every single one of those
+
+deposits I'm going to save a memento.
+
+So let him one equals be a deposit.
+
+Let's deposit 50 and let's also deposit twenty five dollars on the next invocation.
+
+OK.
+
+So now let's print the bank accounts so just for in the state of the bank accounts and then let's take
+
+a look at how we can actually restore the bank account to those states.
+
+So what I can do is I can say be a restore and I can restore the bank account to the state that is preserved
+
+in the M1 memento.
+
+And now we can log the bank account we can once again there'll be a string and then we can try the same
+
+thing for M2 so I can say ATO restore M2M and once again and just copy this line over like so.
+
+OK.
+
+So let's run this let's take a look at what we actually get and you can see that here is the starting
+
+balance so this was our starting point.
+
+The bank account balances 175 after the 150 and it's 25.
+
+Then we roll it back to the mental and one hand that takes us to a state of 150 because remember and
+
+1 what it did is it deposited 50 dollars.
+
+So we had a state at 150 and then we wanted to M2 and that gets us to 175 because remember after the
+
+invocation of the second deposit we ended up adding that extra twenty five and so on the balance there
+
+was 175.
+
+So those are the states that we can actually go back to.
+
+Now you'll see that in general this this approach works.
+
+There's only one problem one problem is that you can never restore it to the original state you can
+
+never restore to the one hundred dollars.
+
+Why is that.
+
+Well it's really simple.
+
+The reason why we can do this is because we cannot we cannot return a memento from a constructor.
+
+Well theoretically we could but then we wouldn't be able to get the actual bank account object.
+
+So it's either or.
+
+So the point here is that a memento preserves a certain state of the bank account except that in the
+
+constructor where we are really unable to return it effectively.
+
+So that's one limitation of the current approach.
+
+And we're going to fix this.
+
+We're going to take a look at how we can mitigate this problem.
+
+And in addition we're going to implement undo and redo functionality and that's the subject of the next
+
+lecture.
+
+------------
+
+All right.
+
+So in our previous discussion of the momenta design pattern we saw how you can save the state of a bank
+
+again.
+
+So this obviously opens up additional possibilities in one of those possibilities is the ability to
+
+implement undo and redo operations on an object because remember if you have every single memento from
+
+whenever an object is changed that means you have its entire change history.
+
+And because you have it it's entire change history of what this means is you can move to any point of
+
+that history.
+
+And that's very useful.
+
+Now what we're going to do is we're going to have a set of changes so the bank account that we're with
+
+built in a previous lesson is actually going to store every single change that happened to the bank
+
+account.
+
+So what I'm going to do is I'm going to have a new array called changes and changes is going to be an
+
+array that's going to contain all the mementos representing the different states of the account.
+
+Now remember in the previous lesson I said that it was a problem for us to save the initial state.
+
+Well here it's not a problem because as soon as we make changes we make an array with a single element
+
+and that element is going to be and the mento which takes the starting balance.
+
+So that's one problem solved.
+
+I'm also going to have just a number called Current which is going to be like a pointer.
+
+It's going to tell us which Memento which state is the current state because remember you now have this
+
+array of operations and when you do undo and redo you'll basically moving some indicator moving some
+
+index of this array and this is what I'm going to call this index.
+
+I'm going to call it current.
+
+OK so now we need to modify deposit so a deposit is going to be a bit more interesting because not only
+
+do we need to return the memento but we also need to store the mento so that we can perform undo and
+
+redo so instead of just returning it I'll put it into a variable so I'm going to say let em equals new
+
+memento.
+
+So now that we've made the memento what I'm going to do is I'll add it to the set of changes so I'll
+
+say this the changes don't push em.
+
+So now we are storing this memento In addition I'll I'll update the current point at this current plus
+
+plus.
+
+So this is the variable that tells us which Memento is the current memento.
+
+So we've just added one so moving forward one point and then never it's on the memento.
+
+So that's how it's going to work and then of course we'll need to implement now what we'll need to some
+
+sort of restore functionality is going to be a bit more complicated this time round.
+
+So one thing I'm going to do is I'll check and I'll check the variable am to make sure it's actually
+
+usable.
+
+You'll see why I'm doing this in just a moment.
+
+But basically we're going to have this check.
+
+So what are we going to do it.
+
+Well not only are we going to set the balance using this memento but remember every single change in
+
+the state of the bank account has to be recorded and that includes the restoration of existing mementos.
+
+So if you have lots of mementos stored and then you restore to a particular point we also want to add
+
+this point to the set of changes I'm going to say this that changes that push hem so I'm going to set
+
+this memento as the latest memento.
+
+However the current point of this current is not going to be just incremented or anything like that
+
+because we don't know if we're going backwards and forwards or whatever.
+
+So I'm just going to have to point to the lost element in the hole in the whole set of changes and this
+
+will be this that changes the account minus one.
+
+So this is how we're going to restore to a memento and now of course the real reason why we came here.
+
+Let's implement undo and redo operations.
+
+So let's first of all implement undo it.
+
+That's just going to be a method basically so we can only undo if we have at least a one memento in
+
+in our set of mementos and the pointer has to be greater than zero because if the pointer is at zero
+
+that means we've just constructed the object there is no state to go back to.
+
+So I'm going to check that this dot current is greater than zero and if it is then yeah we can actually
+
+undo something.
+
+So here what we do is we get the memento and the previous position.
+
+So let's m equals this changes at minus minus this current.
+
+So I just I'm doing two things at the same time.
+
+First of all I'm decrement in current.
+
+So I'm moving current to the left one point I'm moving to the previous position because that's what
+
+undoing actually does he move to the previous day.
+
+So I increment that and then I get that change that memento from that location.
+
+I said the balance.
+
+So I said the balance to MDL balance and then I return the memento.
+
+However there are situations where you're doing undo and you are actually not allowed to do this like
+
+for example if there is no change if there are no changes like you've just constructed the object there's
+
+only one object one memento stored that means you cannot do undo.
+
+So it's up to you what you what to do here.
+
+But what I'm going to do is I'm going to return now and I'll use null as a kind of indicator the even
+
+though you asked to undo something we actually didn't undo anything because we were unable to do so.
+
+Now the implementation of redo is very similar.
+
+So you have to have a position forward to which you can move.
+
+So we say if there's that current plus one less than this that changes that length.
+
+So I'm checking that there is actually a position we can move to then I get the memento as before.
+
+So this that changes this time round it's plus plus it's not current.
+
+So I get the memento so that's one after the position we're in and I said the balance
+
+and I return the memento and of course if that fails if there is no possibility of doing redo it then
+
+I'm going to return.
+
+No.
+
+Okay.
+
+Hopefully this kind of tells you why there is a check here in the restore why I wrote.
+
+If am instead of just just doing the changes directly and the reason is that after you sort of perform
+
+undo and redo you might get a memento which is actually now you might want to sort of you might be tempted
+
+to feed it into restore for example and we don't want this to work generally.
+
+So that's all that's that's all that we wanted to do for undo and redo so now we're going to change
+
+this example by.
+
+Well instead of restoring explicitly we're going to use those undo operations so the idea is that we
+
+somehow moved our bank account to a state where the balance is 175.
+
+So what we want to do is we want to try undoing these things.
+
+So I'm going to say be 8 or undo and on every single step what I'm going to do is I'm actually going
+
+to print the state of the bank accounts.
+
+So once again that's going to be be able to string.
+
+So we're going to be doing lots of this.
+
+Actually what I'm going to do is I'll add some text here so I'll say this is undo one just so just so
+
+we get to see what exactly is going on.
+
+Then I'm going to undo again so undo again and this is going to be undo too.
+
+Okay.
+
+So what I'm hoping will happen is when we call this undo we get to 150.
+
+And when we get to this undo we just get to 100 which is the initial state.
+
+That's the state that we could actually never get to.
+
+Remember in the previous lesson we couldn't actually return to the initial state of the bank account.
+
+Now let's also try read it.
+
+So if I to be a redo here then hopefully this gets us back to 150.
+
+So once again I I'll put a redo here and let's actually run this let's take a look at what we get here.
+
+OK.
+
+So as you can see you are starting with a balance of 175.
+
+Once we perform the undo we get back to 150 will perform another undo we get back to 100 but perform
+
+a redo and we are now back to 150.
+
+So this illustration basically.
+
+Well this is just showing you that if you preserve every single state then all of a sudden you have
+
+an undue stack and you can actually walk this sort of forwards and backwards it's really up to you how
+
+you want to implement undo and redo because there are different implementations there are different
+
+ways of actually implementing this.
+
+One thing to point out though and I hope you've already realized this is that it's not always economical
+
+to have this kind of approach remember in our example a memento store is just a single value just as
+
+the balance.
+
+If bank accounts were a complicated class with let's say 100 fields then you would be replicating the
+
+state of those fields so you will be allocating memory for 100 different variables on every single change
+
+and it's really up to you to decide whether or not you actually have the memory to do that.
+
+Or maybe you don't have the memory in RAM but maybe you can persist it to disk for example so it's it's
+
+really up to you how you want to play this but the possibility is there.
+
+So we already saw undo and redo implementations as part of the Command pattern.
+
+And this is an alternative approach.
+
+This is an approach that is perhaps more direct because all it does is it simply stores every single
+
+state that an object has been in another allows you to move to any one of the states whenever the situation
+
+requires it.
+
